@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "id": "p1",
+      "advertiser_name": "Lawrence",
+      "completion_rate": "50871764933",
+      "price": "INR",
+      "available": "85 USDT ",
+      "min": "10 USDT",
+      "max": "100 USDT"
+    },
+    {
+      "id": "p2",
+      "advertiser_name": "John",
+      "completion_rate": "50871764963",
+      "price": "INR",
+      "available": "85 USDT ",
+      "min": "10 USDT",
+      "max": "100 USDT"
+    },
+    {
+      "id": "p3",
+      "advertiser_name": "Jack",
+      "completion_rate": "50871764983",
+      "price": "INR",
+      "available": "85 USDT ",
+      "min": "10 USDT",
+      "max": "100 USDT"
+    }
+  ]
+}
