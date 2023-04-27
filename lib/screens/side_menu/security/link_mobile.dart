@@ -93,17 +93,20 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                   FontWeight.w500,
                   'FontRegular'),
             ),
-            leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                child: SvgPicture.asset(
-                  'assets/others/arrow_left.svg',
-                  color: CustomTheme.of(context).splashColor,
-                ),
-              ),
+            leading: Padding(
+              padding: EdgeInsets.only(left: 0.0),
+              // child: InkWell(
+              //   onTap: () {
+              //     Navigator.pop(context);
+              //   },
+              //   child: Container(
+              //     padding: EdgeInsets.only(left: 16.0, right: 16.0),
+              //     child: SvgPicture.asset(
+              //       'assets/others/arrow_left.svg',
+              //       color: CustomTheme.of(context).splashColor,
+              //     ),
+              //   ),
+              // ),
             )),
         body: Container(
             height: MediaQuery.of(context).size.height,
@@ -176,8 +179,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                                 borderRadius: BorderRadius.circular(5.0),
                                 border: Border.all(
                                     color: CustomTheme.of(context)
-                                        .splashColor
-                                        .withOpacity(0.5),
+                                        .splashColor.withOpacity(0.5),
                                     width: 1),
                                 color: CustomTheme.of(context)
                                     .backgroundColor
@@ -254,16 +256,14 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                                             CustomWidget(context: context)
                                                 .CustomTextStyle(
                                                     Theme.of(context)
-                                                        .splashColor
-                                                        .withOpacity(0.5),
+                                                        .splashColor.withOpacity(0.5),
                                                     FontWeight.w300,
                                                     'FontRegular'),
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.zero,
                                           borderSide: BorderSide(
                                             color: Theme.of(context)
-                                                .backgroundColor
-                                                .withOpacity(0.5),
+                                                .splashColor,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
@@ -309,8 +309,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                                       error: "Enter Valid Email",
                                       textColor: AppColors.appColor,
                                       borderColor: CustomTheme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
+                                          .splashColor.withOpacity(0.5),
                                       fillColor: CustomTheme.of(context)
                                           .backgroundColor
                                           .withOpacity(0.5),
@@ -334,8 +333,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                                       hintStyle: CustomWidget(context: context)
                                           .CustomTextStyle(
                                               Theme.of(context)
-                                                  .splashColor
-                                                  .withOpacity(0.5),
+                                                  .splashColor.withOpacity(0.5),
                                               FontWeight.w300,
                                               'FontRegular'),
                                       textStyle: CustomWidget(context: context)
@@ -602,21 +600,17 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
   }
 
   sentOtp() {
-    apiUtils.updateEmailDetails( _selectedCountry!.callingCode.toString()+mobile.text.toString(),false,false).then((CommonModel loginData) {
-      if (loginData.status.toString() == "200") {
+    apiUtils.sendMobileOtp("sms").then((CommonModel loginData) {
+      if (loginData.status!) {
         setState(() {
           loading = false;
-          mobileCodeVerify=true;
-          CustomWidget(context: context).  custombar("Security",loginData.message.toString(), true);
-
-
-
+          CustomWidget(context: context).  custombar("Link Mobile Number",loginData.message.toString(), true);
 
         });
       } else {
         setState(() {
           loading = false;
-          CustomWidget(context: context).  custombar("Security",loginData.message.toString(), false);
+          CustomWidget(context: context).  custombar("Link Mobile Number",loginData.message.toString(), false);
         });
       }
     }).catchError((Object error) {
@@ -628,10 +622,10 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
 
   verifyEmail() {
     apiUtils.updateEmailDetails(mobile_verify.text.toString(),true,false).then((CommonModel loginData) {
-      if (loginData.status.toString() == "200") {
+      if (loginData.status!) {
         setState(() {
           loading = false;
-          CustomWidget(context: context).  custombar("Security",loginData.message.toString(), true);
+          CustomWidget(context: context).  custombar("Link Mobile Number",loginData.message.toString(), true);
 
           Navigator.pop(context,true);
 
@@ -640,7 +634,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
       } else {
         setState(() {
           loading = false;
-          CustomWidget(context: context).  custombar("Security",loginData.message.toString(), false);
+          CustomWidget(context: context).  custombar("Link Mobile Number",loginData.message.toString(), false);
 
         });
       }

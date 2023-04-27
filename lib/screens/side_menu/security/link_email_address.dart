@@ -11,6 +11,7 @@ import '../../../common/localization/localizations.dart';
 import '../../../common/text_field_custom_prefix.dart';
 import '../../../common/textformfield_custom.dart';
 import '../../../common/theme/custom_theme.dart';
+import 'link_mobile.dart';
 
 class LinkEmailAddress extends StatefulWidget {
   const LinkEmailAddress({Key? key}) : super(key: key);
@@ -56,18 +57,22 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                   FontWeight.w500,
                   'FontRegular'),
             ),
-            leading: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                padding: EdgeInsets.only(left: 16.0, right: 16.0),
-                child: SvgPicture.asset(
-                  'assets/others/arrow_left.svg',
-                  color: CustomTheme.of(context).splashColor,
-                ),
-              ),
-            )),
+            leading: Padding(
+              padding: EdgeInsets.only(left: 0.0),
+              // child: InkWell(
+              //   onTap: () {
+              //     Navigator.pop(context);
+              //   },
+              //   child: Container(
+              //     padding: EdgeInsets.only(left: 16.0, right: 16.0),
+              //     child: SvgPicture.asset(
+              //       'assets/others/arrow_left.svg',
+              //       color: CustomTheme.of(context).splashColor,
+              //     ),
+              //   ),
+              // ),
+            )
+        ),
         body: Container(
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
@@ -149,8 +154,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                 error: "Enter Valid Email",
                                 textColor: CustomTheme.of(context).splashColor,
                                 borderColor: CustomTheme.of(context)
-                                    .splashColor
-                                    .withOpacity(0.5),
+                                    .splashColor.withOpacity(0.5),
                                 fillColor: CustomTheme.of(context)
                                     .backgroundColor
                                     .withOpacity(0.5),
@@ -209,8 +213,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                         error: "Enter Valid Email",
                                         textColor: AppColors.appColor,
                                         borderColor: CustomTheme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
+                                            .splashColor.withOpacity(0.5),
                                         fillColor: CustomTheme.of(context)
                                             .backgroundColor
                                             .withOpacity(0.5),
@@ -218,7 +221,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                         focusNode: mobileVerifyFocus,
                                         maxlines: 1,
                                         text: '',
-                                        hintText: "New email Verification Code",
+                                        hintText: "Email Verification Code",
                                         obscureText: false,
                                         suffix: Container(
                                           width: 0.0,
@@ -252,7 +255,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                             color: Theme.of(context)
                                                 .splashColor
                                                 .withOpacity(0.5),
-                                            height: 20.0,
+                                            height: 18.0,
                                           ),
                                         )),
                                     flex: 2,
@@ -271,7 +274,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                               .validate()) {
                                             setState(() {
                                               loading = true;
-                                              sentOtp(true);
+                                              sentOtp();
                                             });
                                           }
                                         }
@@ -324,20 +327,24 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                   onPressed: () {
                                     FocusScope.of(context).unfocus();
 
-                                    if (emailformKey.currentState!.validate()) {
-                                      if (mobile_verify.text.isNotEmpty) {
-                                        setState(() {
-                                          loading = true;
-                                          verifyEmail();
-                                        });
-                                      } else {
-                                        CustomWidget(context: context)
-                                            .custombar(
-                                                "verify Email",
-                                                "Enter Email Verification Code",
-                                                false);
-                                      }
-                                    }
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => LinkMobileNo(),),);
+
+                                    // if (emailformKey.currentState!.validate()) {
+                                    //   if (mobile_verify.text.isNotEmpty) {
+                                    //     setState(() {
+                                    //       loading = true;
+                                    //       verifyEmail();
+                                    //     });
+                                    //   } else {
+                                    //     CustomWidget(context: context)
+                                    //         .custombar(
+                                    //             "verify Email",
+                                    //             "Enter Email Verification Code",
+                                    //             false);
+                                    //   }
+                                    // }
                                   },
                                   paddng: 0.0),
                               const SizedBox(
@@ -362,22 +369,21 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
     );
   }
 
-  sentOtp(bool emailMob) {
+  sentOtp() {
     apiUtils
-        .updateEmailDetails(email.text.toString(), false, emailMob)
+        .emailSendOTP("email")
         .then((CommonModel loginData) {
-      if (loginData.status.toString() == "200") {
+      if (loginData.status!) {
         setState(() {
           loading = false;
-          mobileCodeVerify = true;
           CustomWidget(context: context)
-              .custombar("Security", loginData.message.toString(), true);
+              .custombar("Link Email", loginData.message.toString(), true);
         });
       } else {
         setState(() {
           loading = false;
           CustomWidget(context: context)
-              .custombar("Security", loginData.message.toString(), false);
+              .custombar("Link Email", loginData.message.toString(), false);
         });
       }
     }).catchError((Object error) {
@@ -391,11 +397,11 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
     apiUtils
         .updateEmailDetails(mobile_verify.text.toString(), true, false)
         .then((CommonModel loginData) {
-      if (loginData.status.toString() == "200") {
+      if (loginData.status!) {
         setState(() {
           loading = false;
           CustomWidget(context: context)
-              .custombar("Security", loginData.message.toString(), true);
+              .custombar("Link Email", loginData.message.toString(), true);
 
           Navigator.pop(context, true);
         });
@@ -403,7 +409,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
         setState(() {
           loading = false;
           CustomWidget(context: context)
-              .custombar("Security", loginData.message.toString(), false);
+              .custombar("Link Email", loginData.message.toString(), false);
         });
       }
     }).catchError((Object error) {

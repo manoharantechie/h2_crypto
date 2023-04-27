@@ -324,22 +324,26 @@ class _LoginScreenState extends State<LoginScreen> {
                             buttonColor: CustomTheme.of(context).buttonColor,
                             splashColor: CustomTheme.of(context).buttonColor,
                             onPressed: () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => KYCPage(),),
+                              );
 
-                                setState(() {
-                                  FocusScope.of(context).unfocus();
-                                  if (email.text.isEmpty ||
-                                      !RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                          .hasMatch(email.text)) {
-                                    custombar(
-                                        "Login", "Please Enter Email ", false);
-                                  } else if (email_password.text.isEmpty) {
-                                    custombar("Login", "Please Enter Password ",
-                                        false);
-                                  } else {
-                                    loading = true;
-                                    verifyMail();
-                                  }
-                                });
+                                // setState(() {
+                                //   FocusScope.of(context).unfocus();
+                                //   if (email.text.isEmpty ||
+                                //       !RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                //           .hasMatch(email.text)) {
+                                //     custombar(
+                                //         "Login", "Please Enter Email ", false);
+                                //   } else if (email_password.text.isEmpty) {
+                                //     custombar("Login", "Please Enter Password ",
+                                //         false);
+                                //   } else {
+                                //     loading = true;
+                                //     verifyMail();
+                                //   }
+                                // });
 
                             },
                             paddng: 1.0),

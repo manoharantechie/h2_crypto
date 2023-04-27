@@ -42,6 +42,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import 'model/get_payment_details_model.dart';
+import 'model/kyc_verify.dart';
 import 'model/payment_model.dart';
 
 class APIUtils {
@@ -105,6 +106,13 @@ class APIUtils {
   static const String paymentUrl = '/api/v1/userbank/paymentmethod';
   static const String sendNewMessageUrl = '/api/v1/chat/sendchat';
   static const String chatHistoryUrl = '/api/v1/chat/chatdata';
+
+
+  static const String KycVerifyUrl = '/api/add-kyc';
+  static const String emailSendOTPUrl = '/api/send-otp';
+
+
+
 
   Future<CommonModel> doVerifyRegister(
       String first_name, String last_name, String email, String device, String location, String password,  String con_password) async {
@@ -343,29 +351,75 @@ class APIUtils {
   Future<CommonModel> updateKycDetails(
       String fname,
       String lastname,
+      String email,
+      String counrtycode,
+      String mobile,
       String dob,
       String gender,
-      String panNumber,
-      String aadharNo,
+      String country,
+      String city,
+      String states,
+      String zip,
+      String address,
+      String addressline,
+      String idproof,
+      String idnumber,
+      String expdate,
       String aadharImg,
-      String panImg,
-      String selfie) async {
+      String panImg) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var bodyData = {
       'name': fname,
       'father': lastname,
+      'email': email,
+      'counrtycode': counrtycode,
+      'mobile': mobile,
       'dob': dob,
       'gender': gender,
-      'pan_no': panNumber,
-      'aadhar_no': aadharNo,
+      'country': country,
+      'city': city,
+      'states': states,
+      "zip": zip,
+      'address': address,
+      'addressline': addressline,
+      'idproof': idproof,
+      'idnumber': idnumber,
+      'expdate': expdate,
       'aadhar_img': aadharImg,
       'pan_img': panImg,
-      'selfie_img': selfie,
       'status': "1",
     };
-    final response = await http.post(Uri.parse(baseURL + kycUrl),
+    final response = await http.post(Uri.parse(baseURL + KycVerifyUrl),
         body: bodyData,
+        headers: {"authorization": preferences.getString("token").toString()});
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> emailSendOTP(String email) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var tradeBody = {
+      'type': email,
+    };
+
+    final response = await http.post(Uri.parse(baseURL + emailSendOTPUrl),
+        body: tradeBody,
+        headers: {"authorization": preferences.getString("token").toString()});
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> sendMobileOtp(
+      String mobile ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var mobData = {
+      'type': mobile,
+    };
+
+    final response = await http.post(Uri.parse(baseURL + emailSendOTPUrl),
+        body: mobData,
         headers: {"authorization": preferences.getString("token").toString()});
 
     return CommonModel.fromJson(json.decode(response.body));
@@ -1265,4 +1319,5 @@ class APIUtils {
     print("Release Fund :" + response.body);
     return ChatDataModel.fromJson(json.decode(response.body));
   }
+
 }

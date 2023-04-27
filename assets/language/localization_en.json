@@ -152,7 +152,7 @@
   "loc_old_pass": "Old Password",
   "loc_current_pass": "New Password",
   "loc_new_pass": "Confirm Password",
-  "loc_email_address": "Change email address",
+  "loc_email_address": "Verify Email Address",
   "loc_phone_no": "Link Phone Number",
   "loc_nick_setting": "Nickname Settings"
 }
