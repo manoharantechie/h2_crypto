@@ -91,7 +91,7 @@ class _HomeState extends State<Home>
 
     loading = true;
     getDetails();
-    getSocketData();
+
 
     _tabController = TabController(vsync: this, length: 3);
   }

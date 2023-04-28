@@ -59,18 +59,6 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
             ),
             leading: Padding(
               padding: EdgeInsets.only(left: 0.0),
-              // child: InkWell(
-              //   onTap: () {
-              //     Navigator.pop(context);
-              //   },
-              //   child: Container(
-              //     padding: EdgeInsets.only(left: 16.0, right: 16.0),
-              //     child: SvgPicture.asset(
-              //       'assets/others/arrow_left.svg',
-              //       color: CustomTheme.of(context).splashColor,
-              //     ),
-              //   ),
-              // ),
             )
         ),
         body: Container(
@@ -139,67 +127,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                           padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                           child: Column(
                             children: [
-                              // TextFormFieldCustom(
-                              //   onEditComplete: () {
-                              //     emailFocus.unfocus();
-                              //     FocusScope.of(context)
-                              //         .requestFocus(emailPassFocus);
-                              //   },
-                              //   inputFormatters: [
-                              //     FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9@._]')),
-                              //   ],
-                              //   radius: 5.0,
-                              //   autovalidateMode:
-                              //       AutovalidateMode.onUserInteraction,
-                              //   error: "Enter Valid Email",
-                              //   textColor: CustomTheme.of(context).splashColor,
-                              //   borderColor: CustomTheme.of(context)
-                              //       .splashColor.withOpacity(0.5),
-                              //   fillColor: CustomTheme.of(context)
-                              //       .backgroundColor
-                              //       .withOpacity(0.5),
-                              //   textInputAction: TextInputAction.next,
-                              //   focusNode: emailFocus,
-                              //   maxlines: 1,
-                              //   text: '',
-                              //   hintText:
-                              //       AppLocalizations.instance.text("loc_email"),
-                              //   obscureText: false,
-                              //   suffix: Container(
-                              //     width: 0.0,
-                              //   ),
-                              //   textChanged: (value) {},
-                              //   onChanged: () {},
-                              //   validator: (value) {
-                              //     if (value!.isEmpty) {
-                              //       return "Please enter email";
-                              //     } else if (!RegExp(
-                              //             r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              //         .hasMatch(value)) {
-                              //       return "Please enter valid email";
-                              //     }
-                              //
-                              //     return null;
-                              //   },
-                              //   enabled: true,
-                              //   textInputType: TextInputType.emailAddress,
-                              //   controller: email,
-                              //   hintStyle: CustomWidget(context: context)
-                              //       .CustomTextStyle(
-                              //           Theme.of(context)
-                              //               .splashColor
-                              //               .withOpacity(0.5),
-                              //           FontWeight.w300,
-                              //           'FontRegular'),
-                              //   textStyle: CustomWidget(context: context)
-                              //       .CustomTextStyle(
-                              //           Theme.of(context).splashColor,
-                              //           FontWeight.w400,
-                              //           'FontRegular'),
-                              // ),
-                              // const SizedBox(
-                              //   height: 20.0,
-                              // ),
+
                               Row(
                                 children: [
                                   Flexible(
@@ -393,7 +321,13 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
           CustomWidget(context: context)
               .custombar("Link Email", loginData.message.toString(), true);
 
-          Navigator.pop(context, true);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => LinkMobileNo(
+
+              ),
+            ),
+          );
         });
       } else {
         setState(() {

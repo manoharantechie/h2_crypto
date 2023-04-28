@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:h2_crypto/data/crypt_model/coin_list.dart';
 import 'package:h2_crypto/data/model/login_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:h2_crypto/data/model/allopenorderhistory_model.dart';
@@ -59,7 +60,7 @@ class APIUtils {
   static const String loginURL = 'api/login';
   static const String forgotMobURL = '/api/v1/users/forgot';
   static const String walletListURL = '/api/v1/wallet/get_wallet';
-  static const String tradePairURL = '/api/v1/tradepair/get';
+
   static const String limitSellUrl = '/api/v1/trade/selllimit';
   static const String limitBuyUrl = '/api/v1/trade/buylimit';
   static const String getBalUrl = '/api/v1/asset/getCoin';
@@ -109,11 +110,12 @@ class APIUtils {
   static const String chatHistoryUrl = '/api/v1/chat/chatdata';
 
 
-  static const String KycVerifyUrl = '/api/add-kyc';
-  static const String emailSendOTPUrl = '/api/send-otp';
-  static const String verifyOTPUrl = '/api/verify-otp';
-  static const String logoutUrl = '/api/logout';
-  static const String countryCodesUrl = '/api/country';
+  static const String KycVerifyUrl = 'api/add-kyc';
+  static const String emailSendOTPUrl = 'api/send-otp';
+  static const String verifyOTPUrl = 'api/verify-otp';
+  static const String logoutUrl = 'api/logout';
+  static const String countryCodesUrl = 'api/country';
+  static const String tradePairURL = 'api/trade-pairs';
 
 
 
@@ -248,11 +250,20 @@ class APIUtils {
 
   Future<TradePairListModel> getTradePair() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.get(Uri.parse(baseURL + tradePairURL),
+    final response = await http.get(Uri.parse(crypto_baseURL + tradePairURL),
         headers: {"authorization": preferences.getString("token").toString()});
 
     return TradePairListModel.fromJson(json.decode(response.body));
   }
+  Future<CoinListModel> getCoinList() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final response = await http.post(Uri.parse(crypto_baseURL + tradePairURL),
+        headers: {"authorization": "Bearer "+preferences.getString("token").toString()});
+
+    print(response.body);
+    return CoinListModel.fromJson(json.decode(response.body));
+  }
+
 
   Future<TradepairDetailsModel> getTradePairDetails(String id) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -375,10 +386,10 @@ class APIUtils {
     return GoogletfaModel.fromJson(json.decode(response.body));
   }
 
-  Future<CommonModel> updateKycDetails(
-      String fname,
+
+
+  Future<CommonModel> updateKycDetails( String fname,
       String lastname,
-      String email,
       String counrtycode,
       String mobile,
       String dob,
@@ -396,32 +407,39 @@ class APIUtils {
       String panImg) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    var bodyData = {
-      'name': fname,
-      'father': lastname,
-      'email': email,
-      'counrtycode': counrtycode,
-      'mobile': mobile,
-      'dob': dob,
-      'gender': gender,
-      'country': country,
-      'city': city,
-      'states': states,
-      "zip": zip,
-      'address': address,
-      'addressline': addressline,
-      'idproof': idproof,
-      'idnumber': idnumber,
-      'expdate': expdate,
-      'aadhar_img': aadharImg,
-      'pan_img': panImg,
-      'status': "1",
-    };
-    final response = await http.post(Uri.parse(crypto_baseURL + KycVerifyUrl),
-        body: bodyData,
-        headers: {"authorization": preferences.getString("token").toString()});
+    var request =
+    http.MultipartRequest("POST", Uri.parse(crypto_baseURL + KycVerifyUrl));
+    request.headers['authorization'] = "Bearer "+ preferences.getString("token").toString();
+    request.headers['Accept'] = 'application/json';
 
-    return CommonModel.fromJson(json.decode(response.body));
+    var pic = await http.MultipartFile.fromPath("front_upload_id", aadharImg);
+    var pic1 = await http.MultipartFile.fromPath("back_upload_id", panImg);
+    request.files.add(pic);
+    request.files.add(pic1);
+
+    request.fields['first_name'] =fname;
+    request.fields['last_name'] =lastname;
+
+    request.fields['phone_code'] =counrtycode;
+    request.fields['phone_no'] =mobile;
+    request.fields['dob'] =dob;
+    request.fields['gender_type'] =gender;
+    request.fields['country'] =country;
+    request.fields['city'] =city;
+    request.fields['state'] =states;
+    request.fields['zip_code'] =zip;
+    request.fields['address'] =address;
+    request.fields['addressline'] =addressline;
+    request.fields['id_type'] =idproof;
+    request.fields['id_number'] =idnumber;
+    request.fields['address_line1'] =address;
+    request.fields['address_line2'] =addressline;
+    request.fields['id_exp'] =expdate;
+
+    http.Response response =
+    await http.Response.fromStream(await request.send());
+    print("Upload"+response.body);
+    return CommonModel.fromJson(json.decode(response.body.toString()));
   }
 
   Future<CommonModel> emailSendOTP(String email) async {

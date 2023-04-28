@@ -22,6 +22,8 @@ import 'package:h2_crypto/screens/basic/register.dart';
 import 'package:h2_crypto/screens/p2p/p2p_home.dart';
 
 import 'package:h2_crypto/screens/side_menu/security/kyc_info.dart';
+import 'package:h2_crypto/screens/side_menu/security/link_email_address.dart';
+import 'package:h2_crypto/screens/side_menu/security/link_mobile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/model/sent_otp_model.dart';
@@ -98,6 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     initCountry();
     super.initState();
+    // email=TextEditingController(text: "vinoth.alpharive@gmail.com");
+    // email_password=TextEditingController(text: "Vinoth@2020");
 
   }
 
@@ -124,14 +128,53 @@ class _LoginScreenState extends State<LoginScreen> {
           loading = false;
           CustomWidget(context: context)
               .custombar("Login", loginData.message.toString(), true);
+          storeData(loginData.result!.accessToken.toString(),loginData.result!.userDetails!.sfoxKey.toString());
         });
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => Home(
 
+        if(loginData.result!.userDetails!.kycVerify!.toString()=="0")
+          {
+
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => KYCPage(
+
+                ),
+              ),
+            );
+          }
+        else if(loginData.result!.userDetails!.emailVerify!.toString()=="0")
+          {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => LinkEmailAddress(
+
+                ),
+              ),
+            );
+          }
+        else if(loginData.result!.userDetails!.smsVerify!.toString()=="0")
+        {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => LinkMobileNo(
+
+              ),
             ),
-          ),
-        );
+          );
+        }
+        else
+          {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => Home(
+
+                ),
+              ),
+            );
+
+          }
+
+
 
         }
       else {
@@ -324,26 +367,23 @@ class _LoginScreenState extends State<LoginScreen> {
                             buttonColor: CustomTheme.of(context).buttonColor,
                             splashColor: CustomTheme.of(context).buttonColor,
                             onPressed: () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => KYCPage(),),
-                              );
 
-                                // setState(() {
-                                //   FocusScope.of(context).unfocus();
-                                //   if (email.text.isEmpty ||
-                                //       !RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                //           .hasMatch(email.text)) {
-                                //     custombar(
-                                //         "Login", "Please Enter Email ", false);
-                                //   } else if (email_password.text.isEmpty) {
-                                //     custombar("Login", "Please Enter Password ",
-                                //         false);
-                                //   } else {
-                                //     loading = true;
-                                //     verifyMail();
-                                //   }
-                                // });
+
+                                setState(() {
+                                  FocusScope.of(context).unfocus();
+                                  if (email.text.isEmpty ||
+                                      !RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                          .hasMatch(email.text)) {
+                                    custombar(
+                                        "Login", "Please Enter Email ", false);
+                                  } else if (email_password.text.isEmpty) {
+                                    custombar("Login", "Please Enter Password ",
+                                        false);
+                                  } else {
+                                    loading = true;
+                                    verifyMail();
+                                  }
+                                });
 
                             },
                             paddng: 1.0),
@@ -940,11 +980,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  storeData(String token, String userID, String refresh, bool google) async {
+  storeData(String token, String sfox) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("token", token);
-    preferences.setString("exp", userID);
-    preferences.setString("refresh", refresh);
-    preferences.setBool("tfa", google);
+    preferences.setString("sfox", sfox);
+
   }
 }

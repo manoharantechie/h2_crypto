@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:h2_crypto/data/api_utils.dart';
+import 'package:h2_crypto/data/crypt_model/coin_list.dart';
 import 'package:h2_crypto/data/model/market_list_model.dart';
 import 'package:h2_crypto/data/model/new_socket_data.dart';
 import 'package:h2_crypto/data/model/socket_data.dart';
@@ -37,28 +38,11 @@ class _MarketSceen1State extends State<MarketSceen>
   ScrollController controller = ScrollController();
   late TabController _tabController;
 
-  List<TradePairList> tradePairList = [];
+  List<CoinList> tradePairList = [];
 
   IOWebSocketChannel? channelOpenOrder;
   List arrData=[];
   List<SocketData> socktList=[];
-
-  List<Tag> transList = [];
-
-  String arrayObjsText =
-      '{"tags": ['
-      '{"name": "BTC/USDT", "value": 0.00,"quantity": 0.00,"change": 0.00,"coin": "btcusdt"},'
-      ' {"name": "ETH/USDT","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "ethusdt"},'
-      ' {"name": "LINK/USDT","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "linkusdt"},'
-      ' {"name": "LTC/BTC","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "ltcbtc"},'
-      ' {"name": "BCH/USD","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "bchusd"},'
-      ' {"name": "LTC/USD","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "ltcusd"},'
-      ' {"name": "SOL/BTC","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "solbtc"},'
-      ' {"name": "ZRX/USD","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "zrxusd"},'
-      ' {"name": "USDT/USD","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "usdtusd"},'
-      ' {"name": "ETH/BUSD","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "ethbusd"},'
-      ' {"name": "LTC/USDT","value": 0.00, "quantity": 0.00,"change": 0.00,"coin": "ltcusdt"}]}';
-
 
 
 
@@ -71,68 +55,13 @@ class _MarketSceen1State extends State<MarketSceen>
 
     _tabController = TabController(vsync: this, length: 1);
 
-
-    var tagObjsJson = jsonDecode(arrayObjsText)['tags'] as List;
-    transList = tagObjsJson.map((tagJson) => Tag.fromJson(tagJson)).toList();
-    //getCoinList();
+    getCoinList();
 
     channelOpenOrder = IOWebSocketChannel.connect(
         Uri.parse("wss://ws.sfox.com/ws"),
         pingInterval: Duration(seconds: 30));
 
-    // var messageJSON = {
-    //   "method": "SUBSCRIBE",
-    //   "params": [
-    //     "btcusdt@ticker",
-    //     "ethusdt@ticker",
-    //     "xrpusdt@ticker",
-    //     "ltcusdt@ticker",
-    //     "uniusdt@ticker",
-    //     "maticusdt@ticker",
-    //     "ethbtc@ticker",
-    //     "xrpbtc@ticker",
-    //     "ltcusdt@ticker",
-    //     "unibtc@ticker",
-    //     "maticbtc@ticker",
-    //     "xrpeth@ticker",
-    //     "ltceth@ticker",
-    //     "unieth@ticker",
-    //     "maticeth@ticker",
-    //     "btcusdt@ticker",
-    //     "ethusdt@ticker",
-    //     "xrpusdt@ticker",
-    //     "ltcusdt@ticker",
-    //     "uniusdt@ticker",
-    //     "maticusdt@ticker"
-    //   ],
-    //   "id": "1"
-    // };
 
-    var messageJSON = {
-      "type": "subscribe",
-      "feeds": [
-        "ticker.sfox.btcusdt",
-        "ticker.sfox.ethusdt",
-        "ticker.sfox.ltcusdt",
-        "ticker.sfox.linkusdt",
-        "ticker.sfox.ltcbtc",
-        "ticker.sfox.bchusd",
-        "ticker.sfox.ltcusd",
-        "ticker.sfox.solbtc",
-        "ticker.sfox.zrxusd",
-        "ticker.sfox.usdtusd",
-        "ticker.sfox.batusdt",
-        "ticker.sfox.ethbusd",
-      ],
-
-
-
-
-    };
-    channelOpenOrder!.sink.add(json.encode(messageJSON));
-
-    print(messageJSON);
-    socketData();
 
 
   }
@@ -153,16 +82,22 @@ class _MarketSceen1State extends State<MarketSceen>
           });
 
           var decode = jsonDecode(data);
-          print(decode);
           NewSocketData ss=NewSocketData.fromJson(decode);
-          for(int m=0;m<transList.length;m++)
+          for(int m=0;m<tradePairList.length;m++)
           {
-            if(transList[m].coin.toString().toLowerCase()==ss.payload.pair.toString().toLowerCase())
+            if(tradePairList[m].symbol.toString().toLowerCase()==ss.payload.pair.toString().toLowerCase())
             {
 
-              transList[m].change=double.parse(ss.payload.open.toString());
-              transList[m].value=double.parse(ss.payload.last.toString());
-              transList[m].quantity=double.parse(ss.payload.volume.toString());
+
+              double open =
+              double.parse(ss.payload.open.toString());
+              double close =
+              double.parse(ss.payload.last.toString());
+              double data = ((close - open) / open)*100;
+
+              tradePairList[m].hrExchange=data.toString();
+              tradePairList[m].currentPrice=double.parse(ss.payload.last.toString()).toString();
+              tradePairList[m].hrVolume=double.parse(ss.payload.volume.toString()).toString();
             }
           }
 
@@ -177,23 +112,7 @@ class _MarketSceen1State extends State<MarketSceen>
         await Future.delayed(Duration(seconds: 10));
         var messageJSON = {
           "type": "subscribe",
-          "feeds": [
-            "ticker.sfox.btcusdt",
-            "ticker.sfox.ethusdt",
-            "ticker.sfox.ltcusdt",
-            "ticker.sfox.linkusdt",
-            "ticker.sfox.ltcbtc",
-            "ticker.sfox.bchusd",
-            "ticker.sfox.ltcusd",
-            "ticker.sfox.solbtc",
-            "ticker.sfox.zrxusd",
-            "ticker.sfox.usdtusd",
-            "ticker.sfox.batusdt",
-            "ticker.sfox.ethbusd",
-          ],
-
-
-
+          "feeds": arrData,
         };
         channelOpenOrder = IOWebSocketChannel.connect(
             Uri.parse("wss://ws.sfox.com/ws"),
@@ -205,40 +124,6 @@ class _MarketSceen1State extends State<MarketSceen>
       onError: (error) => print("Err" + error),
     );
   }
-  // getSocketData() async {
-  //   await apiUtils.socketChatConnection(() {
-  //     if (apiUtils.socketChat!.connected) {
-  //       apiUtils.socketChat!.emit('join', 'test');
-  //
-  //       apiUtils.socketChat!.on('reply', (data) {
-  //          var resp = data
-  //             .map<MarketListModel>((json) => MarketListModel.fromJson(json))
-  //             .toList();
-  //
-  //         if (mounted) {
-  //           setState(() {
-  //             marketList = [];
-  //             tradePair = [];
-  //             marketList.clear;
-  //             marketList = resp;
-  //             for (int m = 0; m < marketList.length; m++) {
-  //               if (marketList[m].pair.toString().toLowerCase() ==
-  //                   tradePairList[m].displayName.toString().toLowerCase()) {
-  //                 if (tradePairList[m].favorite!) {
-  //                   tradePair.add(marketList[m]);
-  //                 }
-  //               }
-  //             }
-  //           });
-  //         }
-  //       });
-  //       apiUtils.socketChat!.onDisconnect((_) => print('disconnect'));
-  //     } else {
-  //
-  //       // getSocketData();
-  //     }
-  //   });
-  // }
 
   dispose() {
     super.dispose();
@@ -254,20 +139,7 @@ class _MarketSceen1State extends State<MarketSceen>
           leading: Container(
             width: 0.0,
           ),
-          // leading: Container(
-          //     padding: const EdgeInsets.all(16.0),
-          //     child: InkWell(
-          //       onTap: () {
-          //         Navigator.pop(context);
-          //       },
-          //       child: SvgPicture.asset(
-          //         'assets/images/edit.svg',
-          //         height: 22.0,
-          //         width: 22.0,
-          //         allowDrawingOutsideViewBox: true,
-          //         color: CustomTheme.of(context).splashColor,
-          //       ),
-          //     )),
+
           centerTitle: true,
           title: Text(
             "Markets",
@@ -1074,15 +946,12 @@ class _MarketSceen1State extends State<MarketSceen>
                 height: 10.0,
               ),
               ListView.builder(
-                itemCount: transList.length,
+                itemCount: tradePairList.length,
                 shrinkWrap: true,
                 controller: controller,
                 itemBuilder: (BuildContext context, int index) {
-                  double open =
-                  double.parse(transList[index].value.toString());
-                  double close =
-                  double.parse(transList[index].change.toString());
-                  double data = (open - close) / 100;
+
+                  double data = double.parse(tradePairList[index].hrExchange.toString());
                   return Column(
                     children: [
                       Row(
@@ -1094,7 +963,7 @@ class _MarketSceen1State extends State<MarketSceen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    transList[index].name.toString(),
+                                    tradePairList[index].tradePair.toString(),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
                                         13.0,
@@ -1108,9 +977,9 @@ class _MarketSceen1State extends State<MarketSceen>
                                     height: 5.0,
                                   ),
                                   Text(
-                                    double.parse(transList[index].quantity
+                                    double.parse(tradePairList[index].hrVolume
                                         .toString())
-                                        .toStringAsFixed(4),
+                                        .toStringAsFixed(2),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
                                         12.0,
@@ -1130,8 +999,8 @@ class _MarketSceen1State extends State<MarketSceen>
                               child: Column(
                                 children: [
                                   Text(
-                                    double.parse(transList[index]
-                                        .value.toString())
+                                    double.parse(tradePairList[index]
+                                        .currentPrice.toString())
                                         .toStringAsFixed(4),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
@@ -1215,29 +1084,29 @@ class _MarketSceen1State extends State<MarketSceen>
   }
 
   getCoinList() {
-    apiUtils.getTradePair().then((TradePairListModel loginData) {
-      if (loginData.statusCode == 200) {
+    apiUtils.getCoinList().then((CoinListModel loginData) {
+      if (loginData.success! ) {
         setState(() {
+          loading=false;
           tradePairList = [];
-          tradePairList = loginData.data!;
+          tradePairList = loginData.result!;
           for(int m=0;m<tradePairList.length;m++)
           {
-            if(tradePairList[m].marketAsset!.symbol.toString().toLowerCase()=="usdt")
-            {
-              arrData.add(tradePairList[m].pairSymbol.toString()+"@ticker");
-            }
+
+              arrData.add("ticker.sfox."+tradePairList[m].symbol.toString());
+
 
           }
-          ///getSocketData();
+
           loading = false;
 
 
           var messageJSON = {
-            "method": "SUBSCRIBE",
-            "params": arrData,
-            "id": 1
+            "type": "subscribe",
+            "feeds": arrData,
           };
           channelOpenOrder!.sink.add(json.encode(messageJSON));
+
 
           socketData();
         });

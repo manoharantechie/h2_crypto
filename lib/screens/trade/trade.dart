@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:h2_crypto/data/crypt_model/coin_list.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:h2_crypto/common/custom_widget.dart';
@@ -24,6 +25,7 @@ import 'package:h2_crypto/data/model/trade_pair_list_model.dart';
 import 'package:h2_crypto/data/model/wallet_bal_model.dart';
 import 'package:h2_crypto/data/model/wallet_list_model.dart';
 import 'package:h2_crypto/screens/trade/chart_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
@@ -49,9 +51,9 @@ class _SellTradeScreenState extends State<TradeScreen>
   List<String> transferFutureType = ["Spot-Future", "Future-Spot"];
   String selectedTime = "";
 
-  List<TradePairList> tradePair = [];
-  List<TradePairList> searchPair = [];
-  TradePairList? selectPair;
+  List<CoinList> tradePair = [];
+  List<CoinList> searchPair = [];
+  CoinList? selectPair;
   WalletList? selectAsset;
   final _formKey = GlobalKey<FormState>();
   List<OpenOrderList> openOrders = [];
@@ -122,7 +124,7 @@ class _SellTradeScreenState extends State<TradeScreen>
   String leverageVal = "1";
   String tleverageVal = "1";
   IOWebSocketChannel? channelOpenOrder;
-  IOWebSocketChannel? livePriceData;
+
   List<BuySellData> buyData = [];
   List<BuySellData> marginBuyData = [];
   List<BuySellData> sellData = [];
@@ -143,6 +145,8 @@ class _SellTradeScreenState extends State<TradeScreen>
   String selectedHistoryTradeType = "";
   String marginTradeAmount = "0.00";
 
+  String token = "";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -158,15 +162,20 @@ class _SellTradeScreenState extends State<TradeScreen>
     loading = true;
     getCoinList();
     getLoanCoinList();
+
     channelOpenOrder = IOWebSocketChannel.connect(
-        Uri.parse("wss://api.huobi.pro/ws"),
+        Uri.parse("wss://ws.sfox.com/ws"),
         pingInterval: Duration(seconds: 30));
-    livePriceData = IOWebSocketChannel.connect(
-        Uri.parse("wss://api.huobi.pro/ws"),
-        pingInterval: Duration(seconds: 30));
-    getAllOpenOrder();
-    getAllHistory("0");
   }
+
+  getData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      token = preferences.getString("sfox").toString();
+    });
+  }
+
+  socketConnection() {}
 
   socketData() {
     setState(() {
@@ -178,38 +187,27 @@ class _SellTradeScreenState extends State<TradeScreen>
     channelOpenOrder!.stream.listen(
       (data) {
         if (data != null || data != "null") {
-          List<int> gzipBytes = data;
-          List<int> stringBytes = gzip.decode(gzipBytes);
-          var datas = utf8.decode(stringBytes);
-
-          var decode = jsonDecode(datas);
+          var decode = jsonDecode(data);
           if (mounted) {
             setState(() {
-              if (decode.toString().contains('tick')) {
-                loading = false;
-                buyData.clear();
-                sellData.clear();
-                buyData = [];
-                sellData = [];
-                var list1 = List<dynamic>.from(decode['tick']['bids']);
-                var list2 = List<dynamic>.from(decode['tick']['asks']);
-
-                for (int m = 0; m < list1.length; m++) {
-                  if (double.parse(list1[m][1].toString()) > 0) {
-                    buyData.add(BuySellData(
-                      list1[m][0].toString(),
-                      list1[m][1].toString(),
-                    ));
-                  }
-                  if (list2[m].toString() != null) {
-                    if (double.parse(list2[m][1].toString()) > 0) {
-                      sellData.add(BuySellData(
-                        list2[m][0].toString(),
-                        list2[m][1].toString(),
-                      ));
-                    }
-                  }
-                }
+              loading = false;
+              buyData.clear();
+              sellData.clear();
+              buyData = [];
+              sellData = [];
+              var list1 = List<dynamic>.from(decode['payload']['bids']);
+              var list2 = List<dynamic>.from(decode['payload']['asks']);
+              for (int m = 0; m < list1.length; m++) {
+                buyData.add(BuySellData(
+                  list1[m][0].toString(),
+                  list1[m][1].toString(),
+                ));
+              }
+              for (int m = 0; m < list2.length; m++) {
+                sellData.add(BuySellData(
+                  list2[m][0].toString(),
+                  list2[m][1].toString(),
+                ));
               }
             });
           }
@@ -217,66 +215,16 @@ class _SellTradeScreenState extends State<TradeScreen>
       },
       onDone: () async {
         await Future.delayed(Duration(seconds: 10));
-        var messageJSON = {
-          "sub": "market." +
-              firstCoin.toLowerCase() +
-              secondCoin.toLowerCase() +
-              ".depth.step0",
-          "id": "id1"
-        };
-        channelOpenOrder = IOWebSocketChannel.connect(
-            Uri.parse("wss://api.huobi.pro/ws"),
-            pingInterval: Duration(seconds: 30));
+        String pair = selectPair!.symbol.toString();
 
+        var messageJSON = {
+          "type": "subscribe",
+          "feeds": ['orderbook.sfox.$pair'],
+        };
         channelOpenOrder!.sink.add(json.encode(messageJSON));
         socketData();
       },
       onError: (error) => print("Err" + error),
-    );
-  }
-
-  socketLivepriceData() {
-    // print("LiveMano");
-    String pong = "";
-    livePriceData!.stream.listen(
-      (data) {
-        if (data != null || data != "null") {
-          List<int> gzipBytes = data;
-          List<int> stringBytes = gzip.decode(gzipBytes);
-          var datas = utf8.decode(stringBytes);
-
-          var decode = jsonDecode(datas);
-          /*   print("Mano");
-          print(decode);*/
-
-          if (mounted) {
-            setState(() {
-              if (decode['tick'] == null || decode['tick'] == "null") {
-                //   livePrice="0.00";
-
-                if (decode.toString().contains("ping")) {
-                  pong = decode['ping'].toString();
-                }
-              } else {
-                livePrice = decode['tick']['lastPrice'].toString();
-              }
-            });
-          }
-        }
-      },
-      onDone: () async {
-        var messageJSON = {
-          "pong": pong,
-        };
-
-        livePriceData = IOWebSocketChannel.connect(
-            Uri.parse("wss://api.huobi.pro/ws"),
-            pingInterval: Duration(seconds: 10));
-
-        livePriceData!.sink.add("pong:$pong");
-        socketLivepriceData();
-      },
-      onError: (error) {},
     );
   }
 
@@ -328,7 +276,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                   }
                 }
               });
-
             }
           }
         });
@@ -862,7 +809,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                           marginBuyData = [];
                                           marginSellData = [];
                                           getCoinList();
-                                          getFutureOpenOrder();
+
                                           enableTrade = false;
                                           selectedTime = chartTime.first;
                                           totalAmount = "0.0";
@@ -968,7 +915,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                       ),
                       tradePair.length > 0
                           ? Text(
-                              selectPair!.displayName.toString(),
+                              selectPair!.tradePair.toString(),
                               style: CustomWidget(context: context)
                                   .CustomSizedTextStyle(
                                       16.0,
@@ -1171,7 +1118,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                       padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
                       child: InkWell(
                         onTap: () {
-                         /* Navigator.push(
+                          /* Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
@@ -1210,10 +1157,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                         onTap: () {
                           setState(() {
                             if (favValue) {
-                              addTOFav(selectPair!.pairSymbol.toString(), "2");
-                            } else {
-                              addTOFav(selectPair!.pairSymbol.toString(), "1");
-                            }
+                            } else {}
                           });
                         },
                         child: SvgPicture.asset(
@@ -1497,46 +1441,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                                               onTap: () {
                                                 setState(() {
                                                   buySell = true;
-                                                  if (selectedTime ==
-                                                      "Market Order") {
-                                                    amountController.text =
-                                                        marginSellData[index]
-                                                            .quantity
-                                                            .toString()
-                                                            .replaceAll(
-                                                                ",", "");
-                                                  } else {
-                                                    priceController.text =
-                                                        marginSellData[index]
-                                                            .price
-                                                            .toString()
-                                                            .replaceAll(
-                                                                ",", "");
-                                                    amountController.text =
-                                                        marginSellData[index]
-                                                            .quantity
-                                                            .toString()
-                                                            .replaceAll(
-                                                                ",", "");
-                                                  }
-                                                  totalAmount = (double.parse(
-                                                              amountController
-                                                                  .text
-                                                                  .toString()) *
-                                                          double.parse(
-                                                              priceController
-                                                                  .text
-                                                                  .toString()))
-                                                      .toStringAsFixed(4);
-                                                  coinName = selectPair!
-                                                      .baseAsset!.symbol
-                                                      .toString();
-                                                  coinTwoName = selectPair!
-                                                      .marketAsset!.symbol
-                                                      .toString();
-                                                  getCoinDetailsList(selectPair!
-                                                      .id
-                                                      .toString());
                                                 });
                                               },
                                               child: Row(
@@ -1641,54 +1545,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                                             onTap: () {
                                               setState(() {
                                                 buySell = false;
-                                                if (selectedTime ==
-                                                    "Market Order") {
-                                                  amountController.text =
-                                                      marginBuyData[index]
-                                                          .quantity
-                                                          .toString()
-                                                          .replaceAll(",", "");
-                                                } else {
-                                                  priceController.text =
-                                                      marginBuyData[index]
-                                                          .price
-                                                          .toString()
-                                                          .replaceAll(",", "");
-                                                  amountController.text =
-                                                      marginBuyData[index]
-                                                          .quantity
-                                                          .toString()
-                                                          .replaceAll(",", "");
-                                                }
-
-                                                takerFee = ((double.parse(
-                                                                amountController
-                                                                    .text
-                                                                    .toString()) *
-                                                            double.parse(
-                                                                priceController
-                                                                    .text
-                                                                    .toString()) *
-                                                            double.parse(
-                                                                takerFeeValue
-                                                                    .toString())) /
-                                                        100)
-                                                    .toStringAsFixed(4);
-                                                totalAmount = ((double.parse(
-                                                            priceController
-                                                                .text) *
-                                                        double.parse(
-                                                            amountController
-                                                                .text)))
-                                                    .toStringAsFixed(4);
-                                                coinName = selectPair!
-                                                    .baseAsset!.symbol
-                                                    .toString();
-                                                coinTwoName = selectPair!
-                                                    .marketAsset!.symbol
-                                                    .toString();
-                                                getCoinDetailsList(
-                                                    selectPair!.id.toString());
                                               });
                                             },
                                             child: Row(
@@ -1801,271 +1657,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                       ),
                     ),
                   ),
-
-        /* buyData.length > 0 && sellData.length > 0
-                ? Column(
-                    children: [
-                      sellOption
-                          ? SizedBox(
-                              height: !buyOption
-                                  ? MediaQuery.of(context).size.height * 0.34
-                                  : MediaQuery.of(context).size.height * 0.17,
-                              child: sellData.length > 0
-                                  ? ListView.builder(
-                                      controller: controller,
-                                      itemCount: sellData.length,
-                                      itemBuilder:
-                                          ((BuildContext context, int index) {
-                                        return Column(
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  marginbuySell = true;
-                                                  marginpriceController.text = sellData[index]
-                                                      .price
-                                                      .toString()
-                                                      .replaceAll(",", "");
-                                                  marginamountController.text = sellData[index]
-                                                      .quantity
-                                                      .toString()
-                                                      .replaceAll(",", "");
-                                                  totalAmount = (double.parse(
-                                                      marginamountController.text.toString()) *
-                                                      double.parse(
-                                                          marginpriceController.text.toString()))
-                                                      .toStringAsFixed(4);
-                                                  coinName = selectPair!.baseAsset!.symbol.toString();
-                                                  getCoinDetailsList(selectPair!.id.toString());
-                                                });
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    double.parse(sellData[index].price.toString())
-                                                        .toStringAsFixed(decimalIndex),
-                                                    style: CustomWidget(context: context)
-                                                        .CustomSizedTextStyle(
-                                                        10.0,
-                                                        Theme.of(context)
-                                                            .scaffoldBackgroundColor,
-                                                        FontWeight.w500,
-                                                        'FontRegular'),
-                                                  ),
-                                                  Text(
-                                                    double.parse(sellData[index]
-                                                        .quantity
-                                                        .toString()
-                                                        .replaceAll(",", ""))
-                                                        .toStringAsFixed(decimalIndex),
-                                                    style: CustomWidget(context: context)
-                                                        .CustomSizedTextStyle(
-                                                        10.0,
-                                                        Theme.of(context).splashColor,
-                                                        FontWeight.w500,
-                                                        'FontRegular'),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        );
-                                      }))
-                                  : Container(
-                                      height: !buyOption
-                                          ? MediaQuery.of(context).size.height *
-                                              0.38
-                                          : MediaQuery.of(context).size.height *
-                                              0.17,
-                                      decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              // Add one stop for each color
-                                              // Values should increase from 0.0 to 1.0
-                                              stops: [
-                                            0.1,
-                                            0.5,
-                                            0.9,
-                                          ],
-                                              colors: [
-                                            CustomTheme.of(context)
-                                                .primaryColor,
-                                            CustomTheme.of(context)
-                                                .backgroundColor,
-                                            CustomTheme.of(context).accentColor,
-                                          ])),
-                                      child: Center(
-                                          child: Text(
-                                            " No Data Found..!",
-                                            style: TextStyle(
-                                              fontFamily: "FontRegular",
-                                              color: CustomTheme.of(context).splashColor,
-                                            ),
-                                          ),
-                                          ),
-                                    ),
-                            )
-                          : Container(
-                              color: Colors.white,
-                            ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      buyOption
-                          ? SizedBox(
-                              height: !sellOption
-                                  ? MediaQuery.of(context).size.height * 0.40
-                                  : MediaQuery.of(context).size.height * 0.20,
-                              child: buyData.length > 0
-                                  ? ListView.builder(
-                                      controller: controller,
-                                      itemCount: buyData.length,
-                                      itemBuilder:
-                                          ((BuildContext context, int index) {
-                                        return InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                marginbuySell = false;
-                                                marginpriceController.text =
-                                                    buyData[index]
-                                                        .price
-                                                        .toString()
-                                                        .replaceAll(",", "");
-                                                marginamountController.text =
-                                                    buyData[index]
-                                                        .quantity
-                                                        .toString()
-                                                        .replaceAll(",", "");
-
-                                                takerFee = ((double.parse(
-                                                                marginamountController
-                                                                    .text
-                                                                    .toString()) *
-                                                            double.parse(
-                                                                marginpriceController
-                                                                    .text
-                                                                    .toString()) *
-                                                            double.parse(
-                                                                takerFeeValue
-                                                                    .toString())) /
-                                                        100)
-                                                    .toStringAsFixed(4);
-                                                totalAmount = ((double.parse(
-                                                                marginpriceController
-                                                                    .text) *
-                                                            double.parse(
-                                                                marginamountController
-                                                                    .text) -
-                                                        double.parse(takerFee)))
-                                                    .toStringAsFixed(4);
-                                                coinName = selectPair!
-                                                    .baseAsset!.symbol
-                                                    .toString();
-
-                                                getCoinDetailsList(
-                                                    selectPair!.id.toString());
-                                              });
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                // Text(
-                                                //   double.parse(buyData[index].price.toString())
-                                                //       .toStringAsFixed(decimalIndex),
-                                                //   style: CustomWidget(context: context)
-                                                //       .CustomSizedTextStyle(
-                                                //       10.0,
-                                                //       Theme.of(context).indicatorColor,
-                                                //       FontWeight.w500,
-                                                //       'FontRegular'),
-                                                // ),
-                                                // Text(
-                                                //   double.parse(buyData[index]
-                                                //       .quantity
-                                                //       .toString()
-                                                //       .replaceAll(",", ""))
-                                                //       .toStringAsFixed(decimalIndex),
-                                                //   style: CustomWidget(context: context)
-                                                //       .CustomSizedTextStyle(
-                                                //       10.0,
-                                                //       Theme.of(context).splashColor,
-                                                //       FontWeight.w500,
-                                                //       'FontRegular'),
-                                                // ),
-                                              ],
-                                            ));
-                                      }))
-                                  : Container(
-                                      height: !sellOption
-                                          ? MediaQuery.of(context).size.height *
-                                              0.40
-                                          : MediaQuery.of(context).size.height *
-                                              0.20,
-                                      decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              // Add one stop for each color
-                                              // Values should increase from 0.0 to 1.0
-                                              stops: [
-                                            0.1,
-                                            0.5,
-                                            0.9,
-                                          ],
-                                              colors: [
-                                            CustomTheme.of(context)
-                                                .primaryColor,
-                                            CustomTheme.of(context)
-                                                .backgroundColor,
-                                            CustomTheme.of(context).accentColor,
-                                          ])),
-                                      child: Center(
-                                          child: Text(
-                                            " No Data Found..!",
-                                            style: TextStyle(
-                                              fontFamily: "FontRegular",
-                                              color: CustomTheme.of(context).splashColor,
-                                            ),
-                                          ),
-                                          ),
-                                    ))
-                          : Container(),
-                    ],
-                  )
-                : Container(
-                    height: MediaQuery.of(context).size.height * 0.40,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            // Add one stop for each color
-                            // Values should increase from 0.0 to 1.0
-                            stops: [
-                          0.1,
-                          0.5,
-                          0.9,
-                        ],
-                            colors: [
-                          CustomTheme.of(context).primaryColor,
-                          CustomTheme.of(context).backgroundColor,
-                          CustomTheme.of(context).accentColor,
-                        ])),
-                    child: Center(
-                        // child: Text(
-                        //   " No Data Found..!",
-                        //   style: TextStyle(
-                        //     fontFamily: "FontRegular",
-                        //     color: CustomTheme.of(context).splashColor,
-                        //   ),
-                        // ),
-                        ),
-                  ),*/
         const SizedBox(
           height: 12.0,
         ),
@@ -2129,10 +1720,10 @@ class _SellTradeScreenState extends State<TradeScreen>
               ),
             ),
             PopupMenuButton(
-              // add icon, by default "3 dot" icon
-              // icon: Icon(Icons.book)
+                // add icon, by default "3 dot" icon
+                // icon: Icon(Icons.book)
                 color: CustomTheme.of(context).backgroundColor,
-                icon:Container(
+                icon: Container(
                   padding: EdgeInsets.all(3.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
@@ -2143,7 +1734,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                     height: 30.0,
                   ),
                 ),
-                itemBuilder: (context){
+                itemBuilder: (context) {
                   return [
                     PopupMenuItem<int>(
                       value: 0,
@@ -2156,7 +1747,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                         textAlign: TextAlign.center,
                       ),
                     ),
-
                     PopupMenuItem<int>(
                       value: 1,
                       child: Text(
@@ -2168,7 +1758,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                         textAlign: TextAlign.center,
                       ),
                     ),
-
                     PopupMenuItem<int>(
                       value: 2,
                       child: Text(
@@ -2184,26 +1773,25 @@ class _SellTradeScreenState extends State<TradeScreen>
                     ),
                   ];
                 },
-                onSelected:(value){
-                  if(value == 0){
+                onSelected: (value) {
+                  if (value == 0) {
                     setState(() {
                       buyOption = true;
                       sellOption = true;
                     });
-                  }else if(value == 1){
+                  } else if (value == 1) {
                     setState(() {
                       buyOption = true;
                       sellOption = false;
                     });
-                  }else if(value == 2){
+                  } else if (value == 2) {
                     setState(() {
                       buyOption = false;
                       sellOption = true;
                     });
                   }
-                }
-            ),
-           /* InkWell(
+                }),
+            /* InkWell(
               onTap: () {
 
                 showSuccessAlertDialog();
@@ -2296,34 +1884,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                                               onTap: () {
                                                 setState(() {
                                                   buySell = true;
-                                                  priceController.text =
-                                                      sellData[index]
-                                                          .price
-                                                          .toString()
-                                                          .replaceAll(",", "");
-                                                  amountController.text =
-                                                      sellData[index]
-                                                          .quantity
-                                                          .toString()
-                                                          .replaceAll(",", "");
-                                                  totalAmount = (double.parse(
-                                                              amountController
-                                                                  .text
-                                                                  .toString()) *
-                                                          double.parse(
-                                                              priceController
-                                                                  .text
-                                                                  .toString()))
-                                                      .toStringAsFixed(4);
-                                                  coinName = selectPair!
-                                                      .baseAsset!.symbol
-                                                      .toString();
-                                                  coinTwoName = selectPair!
-                                                      .marketAsset!.symbol
-                                                      .toString();
-                                                  getCoinDetailsList(selectPair!
-                                                      .id
-                                                      .toString());
                                                 });
                                               },
                                               child: Row(
@@ -2426,45 +1986,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                                             onTap: () {
                                               setState(() {
                                                 buySell = false;
-                                                priceController.text =
-                                                    buyData[index]
-                                                        .price
-                                                        .toString()
-                                                        .replaceAll(",", "");
-                                                amountController.text =
-                                                    buyData[index]
-                                                        .quantity
-                                                        .toString()
-                                                        .replaceAll(",", "");
-
-                                                takerFee = ((double.parse(
-                                                                amountController
-                                                                    .text
-                                                                    .toString()) *
-                                                            double.parse(
-                                                                priceController
-                                                                    .text
-                                                                    .toString()) *
-                                                            double.parse(
-                                                                takerFeeValue
-                                                                    .toString())) /
-                                                        100)
-                                                    .toStringAsFixed(4);
-                                                totalAmount = ((double.parse(
-                                                            priceController
-                                                                .text) *
-                                                        double.parse(
-                                                            amountController
-                                                                .text)))
-                                                    .toStringAsFixed(4);
-                                                coinName = selectPair!
-                                                    .baseAsset!.symbol
-                                                    .toString();
-                                                coinTwoName = selectPair!
-                                                    .marketAsset!.symbol
-                                                    .toString();
-                                                getCoinDetailsList(
-                                                    selectPair!.id.toString());
                                               });
                                             },
                                             child: Row(
@@ -2985,13 +2506,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                               ),
                                             ),
                                             onTap: () {
-                                              setState(() {
-                                                loading = true;
-                                                updatecancelOrder(
-                                                    openOrders[index]
-                                                        .id
-                                                        .toString());
-                                              });
+                                              setState(() {});
                                             },
                                           ),
                                         ],
@@ -3378,14 +2893,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                 ),
                                               ),
                                               onTap: () {
-                                                setState(() {
-                                                  loading = true;
-                                                  updatecancelOrder(
-                                                    FutureopenOrders[index]
-                                                        .id
-                                                        .toString(),
-                                                  );
-                                                });
+                                                setState(() {});
                                               },
                                             ),
                                           ],
@@ -3548,9 +3056,9 @@ class _SellTradeScreenState extends State<TradeScreen>
                       totalAmount = "0.0";
                       _currentSliderValue = 0;
                       tleverageVal = "1";
-                      getCoinDetailsList(selectPair!.id.toString());
-                      coinName = selectPair!.baseAsset!.symbol.toString();
-                      coinTwoName = selectPair!.marketAsset!.symbol.toString();
+
+                      coinName = selectPair!.baseAsset.toString();
+                      coinTwoName = selectPair!.marketAsset.toString();
                     });
                   },
                   child: Container(
@@ -3594,9 +3102,9 @@ class _SellTradeScreenState extends State<TradeScreen>
                     totalAmount = "0.0";
                     _currentSliderValue = 0;
                     tleverageVal = "1";
-                    getCoinDetailsList(selectPair!.id.toString());
-                    coinName = selectPair!.baseAsset!.symbol.toString();
-                    coinTwoName = selectPair!.marketAsset!.symbol.toString();
+
+                    coinName = selectPair!.baseAsset.toString();
+                    coinTwoName = selectPair!.marketAsset.toString();
                   });
                 },
                 child: Container(
@@ -4808,8 +4316,8 @@ class _SellTradeScreenState extends State<TradeScreen>
                                 stopPriceController.text = tradeAmount;
                                 totalAmount = "0.00";
                               }
-                            }else{
-                              stopPriceController.text="0.01";
+                            } else {
+                              stopPriceController.text = "0.01";
                             }
                           });
                         }
@@ -4935,153 +4443,162 @@ class _SellTradeScreenState extends State<TradeScreen>
               thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
               overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
             ),
-            child: spotOption?Slider(
-              value: _currentSliderValue,
-              max: 100,
-              divisions: 4,
-              label:_currentSliderValue.round().toString(),
-              inactiveColor:
-                  CustomTheme.of(context).splashColor.withOpacity(0.5),
-              activeColor: buySell
-                  ? CustomTheme.of(context).indicatorColor
-                  : CustomTheme.of(context).scaffoldBackgroundColor,
-              onChanged: (double value) {
-                setState(() {
-                  _currentSliderValue = value;
-                  if (_currentSliderValue > 0) {
-                    _tLevSliderValue = _currentSliderValue.toInt();
-                    // print(_currentSliderValue.round().toString());
-                    int val = _currentSliderValue.toInt();
-                    setState(() {
-                      if(spotOption){
-                        priceController.clear();
-                        amountController.clear();
-                      }
-                      if (spotOption) {
-                        if (!enableTrade) {
-                          priceController.text = livePrice;
-                        }
-                        if (double.parse(livePrice) > 0) {
-                          if (buySell) {
-                            double perce = ((double.parse(balance) * val) /
-                                    double.parse(livePrice)) /
-                                100;
+            child: spotOption
+                ? Slider(
+                    value: _currentSliderValue,
+                    max: 100,
+                    divisions: 4,
+                    label: _currentSliderValue.round().toString(),
+                    inactiveColor:
+                        CustomTheme.of(context).splashColor.withOpacity(0.5),
+                    activeColor: buySell
+                        ? CustomTheme.of(context).indicatorColor
+                        : CustomTheme.of(context).scaffoldBackgroundColor,
+                    onChanged: (double value) {
+                      setState(() {
+                        _currentSliderValue = value;
+                        if (_currentSliderValue > 0) {
+                          _tLevSliderValue = _currentSliderValue.toInt();
+                          // print(_currentSliderValue.round().toString());
+                          int val = _currentSliderValue.toInt();
+                          setState(() {
+                            if (spotOption) {
+                              priceController.clear();
+                              amountController.clear();
+                            }
+                            if (spotOption) {
+                              if (!enableTrade) {
+                                priceController.text = livePrice;
+                              }
+                              if (double.parse(livePrice) > 0) {
+                                if (buySell) {
+                                  double perce =
+                                      ((double.parse(balance) * val) /
+                                              double.parse(livePrice)) /
+                                          100;
 
-                            amountController.text =
-                                double.parse(perce.toString())
-                                    .toStringAsFixed(4);
-                            double a = double.parse(perce
-                                .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
-                            double b = double.parse(livePrice);
-                            totalAmount = double.parse((a * b).toString())
-                                .toStringAsFixed(4);
-                          } else {
-                            double perce = (double.parse(balance) * val) / 100;
+                                  amountController.text =
+                                      double.parse(perce.toString())
+                                          .toStringAsFixed(4);
+                                  double a = double.parse(perce
+                                      .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+                                  double b = double.parse(livePrice);
+                                  totalAmount = double.parse((a * b).toString())
+                                      .toStringAsFixed(4);
+                                } else {
+                                  double perce =
+                                      (double.parse(balance) * val) / 100;
 
-                            amountController.text =
-                                double.parse(perce.toString())
-                                    .toStringAsFixed(4);
-                            double a = double.parse(perce
-                                .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
-                            double b = double.parse(livePrice);
-                            totalAmount = double.parse((a * b).toString())
-                                .toStringAsFixed(4);
+                                  amountController.text =
+                                      double.parse(perce.toString())
+                                          .toStringAsFixed(4);
+                                  double a = double.parse(perce
+                                      .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+                                  double b = double.parse(livePrice);
+                                  totalAmount = double.parse((a * b).toString())
+                                      .toStringAsFixed(4);
+                                }
+                              }
+                            }
+                          });
+                        } else {
+                          if (spotOption) {
+                            amountController.text = "0.00";
+                            if (!enableTrade) {
+                              priceController.text = "0.00";
+                            }
+                            totalAmount = "0.00";
                           }
+                          tleverageVal = "0";
                         }
-                      }
-                    });
-                  } else {
-                    if(spotOption){
-                      amountController.text = "0.00";
-                      if (!enableTrade) {
-                        priceController.text = "0.00";
-                      }
-                      totalAmount = "0.00";
-                    }
-                    tleverageVal = "0";
-                  }
-                });
-              },
-            )
-                :Slider(
-              value: _currentSliderValue,
-              max: 100,
-              divisions: 4,
-              label: tleverageVal,
-              inactiveColor:
-                  CustomTheme.of(context).splashColor.withOpacity(0.5),
-              activeColor: buySell
-                  ? CustomTheme.of(context).indicatorColor
-                  : CustomTheme.of(context).scaffoldBackgroundColor,
-              onChanged: (double value) {
-                setState(() {
-                  _currentSliderValue = value;
-                  if (_currentSliderValue > 0) {
-                    _tLevSliderValue = _currentSliderValue.toInt();
-                    // print(_currentSliderValue.round().toString());
-                    setState(() {
-                      if (_currentSliderValue.round().toString() == "25") {
-                        tleverageVal = "1";
-                      } else if (_currentSliderValue.round().toString() == "50") {
-                        tleverageVal = "10";
-                      } else if (_currentSliderValue.round().toString() == "75") {
-                        tleverageVal = "50";
-                      } else if (_currentSliderValue.round().toString() == "100"){
-                        tleverageVal = "75";
-                      }
-                    });
-                    int val = _currentSliderValue.toInt();
-                    setState(() {
-                      if(spotOption){
-                        priceController.clear();
-                        amountController.clear();
-                      }
-                      if (spotOption) {
-                        if (!enableTrade) {
-                          priceController.text = livePrice;
-                        }
-                        if (double.parse(livePrice) > 0) {
-                          if (buySell) {
-                            double perce = ((double.parse(balance) * val) /
-                                    double.parse(livePrice)) /
-                                100;
+                      });
+                    },
+                  )
+                : Slider(
+                    value: _currentSliderValue,
+                    max: 100,
+                    divisions: 4,
+                    label: tleverageVal,
+                    inactiveColor:
+                        CustomTheme.of(context).splashColor.withOpacity(0.5),
+                    activeColor: buySell
+                        ? CustomTheme.of(context).indicatorColor
+                        : CustomTheme.of(context).scaffoldBackgroundColor,
+                    onChanged: (double value) {
+                      setState(() {
+                        _currentSliderValue = value;
+                        if (_currentSliderValue > 0) {
+                          _tLevSliderValue = _currentSliderValue.toInt();
+                          // print(_currentSliderValue.round().toString());
+                          setState(() {
+                            if (_currentSliderValue.round().toString() ==
+                                "25") {
+                              tleverageVal = "1";
+                            } else if (_currentSliderValue.round().toString() ==
+                                "50") {
+                              tleverageVal = "10";
+                            } else if (_currentSliderValue.round().toString() ==
+                                "75") {
+                              tleverageVal = "50";
+                            } else if (_currentSliderValue.round().toString() ==
+                                "100") {
+                              tleverageVal = "75";
+                            }
+                          });
+                          int val = _currentSliderValue.toInt();
+                          setState(() {
+                            if (spotOption) {
+                              priceController.clear();
+                              amountController.clear();
+                            }
+                            if (spotOption) {
+                              if (!enableTrade) {
+                                priceController.text = livePrice;
+                              }
+                              if (double.parse(livePrice) > 0) {
+                                if (buySell) {
+                                  double perce =
+                                      ((double.parse(balance) * val) /
+                                              double.parse(livePrice)) /
+                                          100;
 
-                            amountController.text =
-                                double.parse(perce.toString())
-                                    .toStringAsFixed(4);
-                            double a = double.parse(perce
-                                .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
-                            double b = double.parse(livePrice);
-                            totalAmount = double.parse((a * b).toString())
-                                .toStringAsFixed(4);
-                          } else {
-                            double perce = (double.parse(balance) * val) / 100;
+                                  amountController.text =
+                                      double.parse(perce.toString())
+                                          .toStringAsFixed(4);
+                                  double a = double.parse(perce
+                                      .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+                                  double b = double.parse(livePrice);
+                                  totalAmount = double.parse((a * b).toString())
+                                      .toStringAsFixed(4);
+                                } else {
+                                  double perce =
+                                      (double.parse(balance) * val) / 100;
 
-                            amountController.text =
-                                double.parse(perce.toString())
-                                    .toStringAsFixed(4);
-                            double a = double.parse(perce
-                                .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
-                            double b = double.parse(livePrice);
-                            totalAmount = double.parse((a * b).toString())
-                                .toStringAsFixed(4);
+                                  amountController.text =
+                                      double.parse(perce.toString())
+                                          .toStringAsFixed(4);
+                                  double a = double.parse(perce
+                                      .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+                                  double b = double.parse(livePrice);
+                                  totalAmount = double.parse((a * b).toString())
+                                      .toStringAsFixed(4);
+                                }
+                              }
+                            }
+                          });
+                        } else {
+                          if (spotOption) {
+                            amountController.text = "0.00";
+                            if (!enableTrade) {
+                              priceController.text = "0.00";
+                            }
+                            totalAmount = "0.00";
                           }
+                          tleverageVal = "0";
                         }
-                      }
-                    });
-                  } else {
-                    if(spotOption){
-                      amountController.text = "0.00";
-                      if (!enableTrade) {
-                        priceController.text = "0.00";
-                      }
-                      totalAmount = "0.00";
-                    }
-                    tleverageVal = "0";
-                  }
-                });
-              },
-            ),
+                      });
+                    },
+                  ),
           ),
         ),
         Container(
@@ -5116,119 +4633,7 @@ class _SellTradeScreenState extends State<TradeScreen>
         ),
         InkWell(
           onTap: () {
-            setState(() {
-              if(tradeOrder){
-                tradeOrder=false;
-              if (enableTrade) {
-                if (amountController.text.isNotEmpty) {
-                  if (double.parse(balance) >= double.parse(totalAmount)) {
-                    loading = true;
-                    if (buySell) {
-                        if (marginVisibleOption) {
-                          placeMarginOrder(
-                              false, false, "buy-market", "1", tleverageVal);
-                        } else if (futureOption) {
-                          placeMarginOrder(
-                              false, false, "buy-market", "2", tleverageVal);
-                        } else {
-                          placeMarginOrder(true, false, "buy-market", "0", "");
-                        }
-                      } else {
-                        if (marginVisibleOption) {
-                          placeMarginOrder(
-                              false, false, "sell-market", "1", tleverageVal);
-                        } else if (futureOption) {
-                          placeMarginOrder(
-                              false, false, "sell-market", "2", tleverageVal);
-                        } else {
-                          placeMarginOrder(true, false, "sell-market", "0", "");
-                        }
-                      }
-                  } else {
-                    CustomWidget(context: context)
-                        .custombar("Trade", "Insufficient Balance", false);
-                  }
-                } else {
-                  CustomWidget(context: context)
-                      .custombar("Trade", "Enter Trade Quantity", false);
-                }
-              } else {
-                if (priceController.text.isNotEmpty) {
-                  if (amountController.text.isNotEmpty) {
-                    if (double.parse(balance) >= double.parse(totalAmount)) {
-                      if (buySell) {
-                        if (marginVisibleOption) {
-                          enableStopLimit ? "" : loading = true;
-                          placeMarginOrder(
-                              false, true, "buy", "1", tleverageVal);
-                          if (enableStopLimit) {
-                            if (stopPriceController.text.isNotEmpty) {
-                              loading = true;
-                              stopLimit(
-                                  false, "buy-stop-limit", "1", tleverageVal);
-                            } else {
-                              CustomWidget(context: context).custombar(
-                                  "Trade", "Enter the stop limit-price", false);
-                            }
-                          }
-                        } else if (enableStopLimit) {
-                          if (stopPriceController.text.isNotEmpty) {
-                            loading = true;
-                            stopLimit(true, "buy-stop-limit", "0", "");
-                          } else {
-                            CustomWidget(context: context).custombar(
-                                "Trade", "Enter the stop limit-price", false);
-                          }
-                        } else if (futureOption) {
-                          placeMarginOrder(
-                              false, true, "buy", "2", tleverageVal);
-                        } else {
-                          placeMarginOrder(true, true, "buy", "0", "");
-                        }
-                      } else {
-                        if (marginVisibleOption) {
-                          placeMarginOrder(
-                              false, true, "sell", "1", tleverageVal);
-                          if (enableStopLimit) {
-                            if (stopPriceController.text.isNotEmpty) {
-                              loading = true;
-                              stopLimit(
-                                  false, "sell-stop-limit", "1", tleverageVal);
-                            } else {
-                              CustomWidget(context: context).custombar(
-                                  "Trade", "Enter the stop limit-price", false);
-                            }
-                          }
-                        } else if (enableStopLimit) {
-                          if (stopPriceController.text.isNotEmpty) {
-                            loading = true;
-                            stopLimit(true, "sell-stop-limit", "0", "");
-                          } else {
-                            CustomWidget(context: context).custombar(
-                                "Trade", "Enter the stop limit-price", false);
-                          }
-                        } else if (futureOption) {
-                          placeMarginOrder(
-                              false, true, "sell", "2", tleverageVal);
-                        } else {
-                          placeMarginOrder(true, true, "sell", "0", "");
-                        }
-                      }
-                    } else {
-                      CustomWidget(context: context)
-                          .custombar("Trade", "Insufficient Balance", false);
-                    }
-                  } else {
-                    CustomWidget(context: context)
-                        .custombar("Trade", "Enter Trade Quantity", false);
-                  }
-                } else {
-                  CustomWidget(context: context)
-                      .custombar("Trade", "Enter Trade Price", false);
-                }
-              }
-              }
-            });
+            setState(() {});
           },
           child: Container(
               width: MediaQuery.of(context).size.width,
@@ -6234,12 +5639,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                 onTap: () {
                                                   setState(() {
                                                     Navigator.pop(context);
-                                                    loading = true;
-                                                    updatecancelOrder(
-                                                      openOrders[index]
-                                                          .id
-                                                          .toString(),
-                                                    );
                                                   });
                                                 },
                                               ),
@@ -6643,12 +6042,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                 onTap: () {
                                                   setState(() {
                                                     Navigator.pop(context);
-                                                    loading = true;
-                                                    updatecancelOrder(
-                                                      FutureopenOrders[index]
-                                                          .id
-                                                          .toString(),
-                                                    );
                                                   });
                                                 },
                                               ),
@@ -7169,16 +6562,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                                 'FontRegular'),
                                                       ),
                                                     )),
-                                                onTap: () {
-                                                  placeMarginOrder(
-                                                      true,
-                                                      true,
-                                                      Futureposition[index]
-                                                          .tradeType
-                                                          .toString(),
-                                                      "3",
-                                                      "");
-                                                },
+                                                onTap: () {},
                                               ),
                                               InkWell(
                                                 child: Container(
@@ -7234,19 +6618,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                                 'FontRegular'),
                                                       ),
                                                     )),
-                                                onTap: () {
-                                                  placeMarginOrder(
-                                                      true,
-                                                      false,
-                                                      Futureposition[index]
-                                                                  .tradeType
-                                                                  .toString() ==
-                                                              "buy"
-                                                          ? "buy-market"
-                                                          : "sell-market",
-                                                      "3",
-                                                      "");
-                                                },
+                                                onTap: () {},
                                               ),
                                             ],
                                           ),
@@ -7338,20 +6710,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                               value: value,
                             ))
                         .toList(),
-                    onChanged: (value) async {
-                      updateState(() {
-                        selectedHistoryTradeType = value.toString();
-                        if (selectedHistoryTradeType == "Spot") {
-                          print(selectedHistoryTradeType);
-                          getFutureAllHistory("0", updateState);
-                        } else if (selectedHistoryTradeType == "Margin") {
-                          print(selectedHistoryTradeType);
-                          getFutureAllHistory("1", updateState);
-                        } else {
-                          getFutureAllHistory("2", updateState);
-                        }
-                      });
-                    },
+                    onChanged: (value) async {},
                     hint: Text(
                       "Trade Mode",
                       style: CustomWidget(context: context)
@@ -7847,71 +7206,22 @@ class _SellTradeScreenState extends State<TradeScreen>
   }
 
   getCoinList() {
-    apiUtils.getTradePair().then((TradePairListModel loginData) {
-      if (loginData.statusCode == 200) {
+    apiUtils.getCoinList().then((CoinListModel loginData) {
+      if (loginData.success!) {
         setState(() {
-          buyData = [];
-          marginBuyData = [];
-          sellData = [];
-          marginSellData = [];
-          marginBuyData.clear();
-          marginSellData.clear();
-          tradePair = loginData.data!;
-          // tradePair = tradePair.reversed.toList();
-          // searchPair = tradePair.reversed.toList();
-          searchPair = tradePair;
-          selectPair = tradePair[0];
-          coinName = selectPair!.baseAsset!.symbol.toString();
-          selectPairSymbol = selectPair!.pairSymbol.toString();
-          coinTwoName = selectPair!.marketAsset!.symbol.toString();
-          takerFeeValue = buySell
-              ? selectPair!.buyTradeCommission.toString()
-              : selectPair!.sellTradeCommission.toString();
+          loading = false;
+          tradePair = loginData.result!;
+          selectPair = tradePair.first;
+          searchPair = loginData.result!;
+          String pair = selectPair!.symbol.toString();
 
-          firstCoin = selectPair!.baseAsset!.symbol.toString();
-          secondCoin = selectPair!.marketAsset!.symbol.toString();
-
-          getCoinDetailsList(selectPair!.id.toString());
-          if (selectPair!.tradeLogic == 0) {
-            normalTrade = true;
-            channelOpenOrder!.sink.close(status.goingAway);
-            livePriceData!.sink.close(status.goingAway);
-            getOpenOrder();
-            getOrderBook();
-          } else {
-            normalTrade = false;
-            getOpenOrder();
-            socketData();
-            socketLivepriceData();
-          }
-
-          /* var messageJSON = {
-            "sub": "market." +
-                firstCoin.toLowerCase() +
-                secondCoin.toLowerCase() +
-                ".depth.step0",
-            "id": "id1"
-          };
-          var messageLiveJSON = {
-            "sub": "market." +
-                firstCoin.toLowerCase() +
-                secondCoin.toLowerCase() +
-                ".ticker",
+          var messageJSON = {
+            "type": "subscribe",
+            "feeds": ['orderbook.sfox.$pair'],
           };
           channelOpenOrder!.sink.add(json.encode(messageJSON));
-          livePriceData!.sink.add(json.encode(messageLiveJSON));
 
-
-          selectedIndex = selectPair!.id.toString();
-
-          for (int m = 0; m < tradePair.length; m++) {
-            cheerList.add(LikeStatus(
-              tradePair[m].id.toString(),
-              tradePair[m].favorite!,
-            ));
-          }*/
-
-          loading = false;
+          socketData();
         });
       } else {
         setState(() {
@@ -7929,34 +7239,6 @@ class _SellTradeScreenState extends State<TradeScreen>
         setState(() {
           // tradePair = tradePair.reversed.toList();
           // searchPair = tradePair.reversed.toList();
-          searchPair = tradePair;
-          selectPair = loginData.data!;
-          coinName = selectPair!.baseAsset!.symbol.toString();
-          coinTwoName = selectPair!.marketAsset!.symbol.toString();
-          takerFeeValue = buySell
-              ? selectPair!.buyTradeCommission.toString()
-              : selectPair!.sellTradeCommission.toString();
-
-          firstCoin = selectPair!.baseAsset!.symbol.toString();
-          secondCoin = selectPair!.marketAsset!.symbol.toString();
-          if (futureOption) {
-            getBalance(selectPair!.marketWallet!.id.toString());
-          } else {
-            getBalance(buySell
-                ? selectPair!.marketWallet!.id.toString()
-                : selectPair!.baseWallet!.id.toString());
-          }
-
-          selectedIndex = selectPair!.id.toString();
-
-          for (int m = 0; m < tradePair.length; m++) {
-            cheerList.add(LikeStatus(
-              tradePair[m].id.toString(),
-              tradePair[m].favorite!,
-            ));
-          }
-          livePrice = selectPair!.price.toString();
-          loading = false;
         });
       } else {
         setState(() {
@@ -8016,9 +7298,7 @@ class _SellTradeScreenState extends State<TradeScreen>
           searchAssetController.clear();
           searchAssetController.text = "";
           amtController.text = "";
-          getBalance(buySell
-              ? selectPair!.marketWallet!.id.toString()
-              : selectPair!.baseWallet!.id.toString());
+
           CustomWidget(context: context).custombar(
               marginVisibleOption ? "Margin" : "Future",
               loginData.message.toString(),
@@ -8104,9 +7384,7 @@ class _SellTradeScreenState extends State<TradeScreen>
           amtController.text = "";
           searchAssetController.clear();
           searchAssetController.text = "";
-          getBalance(buySell
-              ? selectPair!.marketWallet!.id.toString()
-              : selectPair!.baseWallet!.id.toString());
+
           CustomWidget(context: context).custombar(
               marginVisibleOption ? "Margin" : "Future",
               loginData.message.toString(),
@@ -8144,9 +7422,7 @@ class _SellTradeScreenState extends State<TradeScreen>
           amtController.text = "";
           searchAssetController.clear();
           searchAssetController.text = "";
-          getBalance(buySell
-              ? selectPair!.marketWallet!.id.toString()
-              : selectPair!.baseWallet!.id.toString());
+
           CustomWidget(context: context).custombar(
               marginVisibleOption ? "Margin" : "Future",
               loginData.message.toString(),
@@ -8170,9 +7446,6 @@ class _SellTradeScreenState extends State<TradeScreen>
   }
 
   getBalance(String coin) {
-    print(buySell
-        ? selectPair!.marketWallet!.id.toString()
-        : selectPair!.baseWallet!.id.toString());
     apiUtils.getBalance(coin).then((WalletBalanceModel loginData) {
       if (loginData.statusCode == 200) {
         setState(() {
@@ -8217,10 +7490,9 @@ class _SellTradeScreenState extends State<TradeScreen>
   }
 
   placeOrder(bool check, String type) {
-    print("Hello" + selectPair!.id.toString());
     apiUtils
         .placeTradeOrder(
-            selectPair!.id.toString(),
+            "selectPair!.id.toString()",
             priceController.text.toString(),
             amountController.text.toString(),
             type,
@@ -8234,12 +7506,6 @@ class _SellTradeScreenState extends State<TradeScreen>
           amountController.clear();
           totalAmount = "0.00";
           _currentSliderValue = 0;
-          getAllHistory("0");
-          getOpenOrder();
-          getAllOpenOrder();
-          getBalance(buySell
-              ? selectPair!.marketWallet!.id.toString()
-              : selectPair!.baseWallet!.id.toString());
 
           CustomWidget(context: context)
               .custombar("Place Order", loginData.message.toString(), true);
@@ -8249,114 +7515,6 @@ class _SellTradeScreenState extends State<TradeScreen>
           loading = false;
           CustomWidget(context: context)
               .custombar("Place Order", loginData.message.toString(), false);
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  placeMarginOrder(bool spotTrade, bool check, String type, String tradeMode,
-      String leverage) {
-    apiUtils
-        .doMarginPostTrade(
-            spotTrade,
-            selectPair!.id.toString(),
-            amountController.text.toString(),
-            priceController.text.toString(),
-            type,
-            check,
-            tradeMode,
-            leverage)
-        .then((MarginTradeModel loginData) {
-      if (loginData.statusCode == 200) {
-        setState(() {
-          tradeOrder=true;
-          loading = false;
-          loading = true;
-          priceController.clear();
-          amountController.clear();
-          marginBuyData = [];
-          marginSellData = [];
-          orderBook = [];
-          orderSellBook = [];
-          totalAmount = "0.00";
-          _currentSliderValue = 0;
-          getAllHistory("0");
-          getOpenOrder();
-          getOrderBook();
-          getAllOpenOrder();
-          getBalance(buySell
-              ? selectPair!.marketWallet!.id.toString()
-              : selectPair!.baseWallet!.id.toString());
-
-          CustomWidget(context: context)
-              .custombar("Place Order", loginData.message.toString(), true);
-        });
-      } else {
-        setState(() {
-          loading = false;
-          CustomWidget(context: context)
-              .custombar("Place Order", loginData.message.toString(), false);
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  stopLimit(
-    bool spotStop,
-    String type,
-    String tradeMode,
-    String leverage,
-  ) {
-    apiUtils
-        .doStopLimit(
-            spotStop,
-            selectPair!.id.toString(),
-            priceController.text.toString(),
-            stopPriceController.text.toString(),
-            amountController.text.toString(),
-            type,
-            tradeMode,
-            leverage)
-        .then((CommonModel loginData) {
-      if (loginData.status == 200) {
-        setState(() {
-          loading = false;
-          loading = true;
-          marginBuyData = [];
-          marginSellData = [];
-          orderBook = [];
-          orderSellBook = [];
-          priceController.clear();
-          stopPriceController.clear();
-          amountController.clear();
-          totalAmount = "0.00";
-          _currentSliderValue = 0;
-          getAllHistory("0");
-          getOpenOrder();
-          getOrderBook();
-          getAllOpenOrder();
-          getBalance(buySell
-              ? selectPair!.marketWallet!.id.toString()
-              : selectPair!.baseWallet!.id.toString());
-
-          CustomWidget(context: context)
-              .custombar("Stop Limit", loginData.message.toString(), true);
-        });
-      } else {
-        setState(() {
-          loading = false;
-          CustomWidget(context: context)
-              .custombar("Stop Limit", loginData.message.toString(), false);
         });
       }
     }).catchError((Object error) {
@@ -8392,250 +7550,6 @@ class _SellTradeScreenState extends State<TradeScreen>
     }).catchError((Object error) {
       print(error);
 
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  getOpenOrder() {
-    apiUtils
-        .openOrderList(selectPair!.id.toString())
-        .then((OpenOrderListModel loginData) {
-      if (loginData.statusCode == 200) {
-        setState(() {
-          // loading = false;
-          openOrders = [];
-          openOrders = loginData.data!;
-          /*if (normalTrade) {
-            for (int i = 0; i < openOrders.length; i++) {
-              if (selectedIndex == openOrders[i].tradePairId) {
-                if (openOrders[i].tradeType == "buy") {
-                  marginBuyData.add(BuySellData(
-                    openOrders[i].price.toString(),
-                    openOrders[i].volume.toString(),
-                  ));
-                } else if (openOrders[i].tradeType == "sell") {
-                  marginSellData.add(BuySellData(
-                    openOrders[i].price.toString(),
-                    openOrders[i].volume.toString(),
-                  ));
-                }
-              }
-            }
-            print("BuyData" + marginBuyData.length.toString());
-          }*/
-        });
-      } else {
-        setState(() {
-          openOrders = [];
-          //  loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  getOrderBook() {
-    apiUtils
-        .getOrderBook(selectPair!.pairSymbol.toString())
-        .then((OrderBookModel loginData) {
-      if (loginData.statusCode == 200) {
-        setState(() {
-          // loading = false;
-            orderBook = [];
-          orderSellBook = [];
-          localSocketData();
-          orderBook = loginData.data!.buytrade!;
-          orderSellBook = loginData.data!.selltrade!;
-           if (normalTrade) {
-            for (int i = 0; i < orderBook.length; i++) {
-              marginBuyData.add(BuySellData(
-                orderBook[i].id.toString(),
-                orderBook[i].volume.toString(),
-              ));
-            }
-            for (int i = 0; i < orderSellBook.length; i++) {
-              marginSellData.add(BuySellData(
-                orderSellBook[i].id.toString(),
-                orderSellBook[i].volume.toString(),
-              ));
-            }
-            print("BuyData" + marginBuyData.length.toString());
-          }
-        });
-      } else {
-        setState(() {
-          orderBook = [];
-          orderSellBook = [];
-          //  loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  getAllOpenOrder() {
-    apiUtils.AllopenOrderList(false).then((OpenOrderListModel loginData) {
-      if (loginData.statusCode == 200) {
-        setState(() {
-          //   loading = false;
-          AllopenOrders = [];
-          AllopenOrders = loginData.data!;
-        });
-      } else {
-        setState(() {
-          AllopenOrders = [];
-          loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      setState(() {
-        // loading = false;
-      });
-    });
-  }
-
-  getFutureOpenOrder() {
-    apiUtils.FutureOpenOrderList().then((FutureOpenOrderModel loginData) {
-      if (loginData.statusCode == 200) {
-        setState(() {
-          //   loading = false;
-          FutureopenOrders = [];
-          FutureopenOrders = loginData.data!;
-          getPositionOrder();
-        });
-      } else {
-        setState(() {
-          FutureopenOrders = [];
-          loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      setState(() {
-        // loading = false;
-      });
-    });
-  }
-
-  getPositionOrder() {
-    apiUtils.FuturePositionList().then((PositionOrderModel loginData) {
-      if (loginData.statusCode == 200) {
-        setState(() {
-          //   loading = false;
-          Futureposition = [];
-          Futureposition = loginData.data!;
-          // for (int m = 0; m < Futureposition.length; m++) {
-          //   if(selectedIndex==Futureposition[m].tradePairId){
-          //     Futureposition.add(Futureposition[m]);
-          //   }
-          // }
-        });
-      } else {
-        setState(() {
-          Futureposition = [];
-          loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      setState(() {
-        // loading = false;
-      });
-    });
-  }
-
-  getAllHistory(String tradeType) {
-    print(tradeType);
-    apiUtils.AllopenOrderHistory(tradeType).then((AllOpenOrderModel loginData) {
-      if (loginData.statusCode == 200) {
-        setState(() {
-          //  loading = false;
-          historyOrders = [];
-
-          historyOrders.clear();
-          historyOrders = loginData.data!;
-          // historyOrders = historyOrders.reversed.toList();
-        });
-      } else {
-        setState(() {
-          historyOrders = [];
-          loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  getFutureAllHistory(String tradeType, StateSetter setState) {
-    print(tradeType);
-    apiUtils.AllopenOrderHistory(tradeType).then((AllOpenOrderModel loginData) {
-      if (loginData.statusCode == 200) {
-        setState(() {
-          //  loading = false;
-          historyOrders = [];
-          historyOrders.clear();
-          historyOrders = loginData.data!;
-          // historyOrders = historyOrders.reversed.toList();
-        });
-      } else {
-        setState(() {
-          historyOrders = [];
-          loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  updatecancelOrder(String id) {
-    apiUtils.cancelTrade(id).then((CommonModel loginData) {
-      if (loginData.status == 200) {
-        setState(() {
-          loading = false;
-          openOrders = [];
-          FutureopenOrders = [];
-          AllopenOrders = [];
-          marginBuyData = [];
-          marginSellData = [];
-          getOpenOrder();
-          getFutureOpenOrder();
-          getOrderBook();
-          getAllOpenOrder();
-          getAllHistory("0");
-          if (futureOption) {
-            getBalance(selectPair!.marketWallet!.id.toString());
-          } else {
-            getBalance(buySell
-                ? selectPair!.marketWallet!.id.toString()
-                : selectPair!.baseWallet!.id.toString());
-          }
-        });
-        CustomWidget(context: context)
-            .custombar("Cancel", loginData.message.toString(), true);
-      } else {
-        setState(() {
-          AllopenOrders = [];
-          loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
       setState(() {
         loading = false;
       });
@@ -8678,43 +7592,17 @@ class _SellTradeScreenState extends State<TradeScreen>
                               },
                               onChanged: (value) {
                                 setState(() {
-                                  setState(() {
-                                    buyData = [];
-                                    marginBuyData = [];
-                                    sellData = [];
-                                    marginSellData = [];
-                                    marginBuyData.clear();
-                                    marginSellData.clear();
-                                    searchPair = [];
-
-                                    for (int m = 0; m < tradePair.length; m++) {
-                                      if (tradePair[m]
-                                              .baseAsset!
-                                              .symbol
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(value
-                                                  .toString()
-                                                  .toLowerCase()) ||
-                                          tradePair[m]
-                                              .marketAsset!
-                                              .symbol
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(value
-                                                  .toString()
-                                                  .toLowerCase()) ||
-                                          tradePair[m]
-                                              .displayName
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(value
-                                                  .toString()
-                                                  .toLowerCase())) {
-                                        searchPair.add(tradePair[m]);
-                                      }
+                                  searchPair = [];
+                                  for (int m = 0; m < tradePair.length; m++) {
+                                    if (tradePair[m]
+                                        .symbol
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(
+                                            value.toString().toLowerCase())) {
+                                      searchPair.add(tradePair[m]);
                                     }
-                                  });
+                                  }
                                 });
                               },
                               decoration: InputDecoration(
@@ -8806,78 +7694,28 @@ class _SellTradeScreenState extends State<TradeScreen>
                               return Column(
                                 children: [
                                   InkWell(
-                                    onTap: () {
+                                    onTap: () { Navigator.pop(context);
+                                      buyData = [];
+                                      marginBuyData = [];
+                                      sellData = [];
+                                      marginSellData = [];
+
                                       setState(() {
-                                        buyData = [];
-                                        marginBuyData = [];
-                                        sellData = [];
-                                        marginSellData = [];
-                                        marginBuyData.clear();
-                                        marginSellData.clear();
-                                        selectPair = searchPair[index];
-                                        selectedIndex =
-                                            selectPair!.id.toString();
-                                        selectPairSymbol =
-                                            selectPair!.pairSymbol.toString();
-                                        priceController.clear();
-                                        amountController.clear();
-                                        totalAmount = "0.00";
-                                        _currentSliderValue = 0;
-                                        coinName = selectPair!.baseAsset!.symbol
-                                            .toString();
-                                        coinTwoName = selectPair!
-                                            .marketAsset!.symbol
-                                            .toString();
-                                        getCoinDetailsList(
-                                            selectPair!.id.toString());
-                                        loading = true;
-                                        firstCoin = selectPair!
-                                            .baseAsset!.symbol
-                                            .toString();
-                                        secondCoin = selectPair!
-                                            .marketAsset!.symbol
-                                            .toString();
-                                        Navigator.pop(context);
-                                      });
-                                      searchController.clear();
-                                      livePriceData!.sink
-                                          .close(status.goingAway);
-                                      channelOpenOrder!.sink
-                                          .close(status.goingAway);
-                                      if (selectPair!.tradeLogic == 1) {
-                                        normalTrade = false;
-                                        channelOpenOrder =
-                                            IOWebSocketChannel.connect(
-                                                Uri.parse(
-                                                    "wss://api.huobi.pro/ws"),
-                                                pingInterval:
-                                                    Duration(seconds: 30));
-                                        livePriceData =
-                                            IOWebSocketChannel.connect(
-                                                Uri.parse(
-                                                    "wss://api.huobi.pro/ws"),
-                                                pingInterval:
-                                                    Duration(seconds: 30));
+                                        selectPair = tradePair[index];
+                                        String pair=selectPair!.symbol.toString();
+
+
+                                        var messageJSON = {
+                                          "type": "subscribe",
+                                          "feeds": ['orderbook.sfox.$pair'],
+                                        };
+                                        channelOpenOrder!.sink.add(json.encode(messageJSON));
+
+
                                         socketData();
-                                        socketLivepriceData();
-                                        getOpenOrder();
-                                        getFutureOpenOrder();
-                                        getAllOpenOrder();
-                                        getAllHistory("0");
-                                        checkFav(selectPair!.id.toString());
-                                      } else {
-                                        normalTrade = true;
-                                        livePriceData!.sink
-                                            .close(status.goingAway);
-                                        channelOpenOrder!.sink
-                                            .close(status.goingAway);
-                                        getOpenOrder();
-                                        getFutureOpenOrder();
-                                        getOrderBook();
-                                        getAllOpenOrder();
-                                        getAllHistory("0");
-                                        checkFav(selectPair!.id.toString());
-                                      }
+                                      });
+
+
                                     },
                                     child: Row(
                                       children: [
@@ -8891,7 +7729,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                                             "https://cifdaq.in/api/color/" +
                                                 searchPair[index]
                                                     .baseAsset!
-                                                    .assetname
                                                     .toString()
                                                     .toLowerCase() +
                                                 ".svg",
@@ -8903,7 +7740,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                         ),
                                         Text(
                                           searchPair[index]
-                                              .displayName
+                                              .tradePair
                                               .toString(),
                                           style: CustomWidget(context: context)
                                               .CustomSizedTextStyle(
@@ -9107,12 +7944,10 @@ class _SellTradeScreenState extends State<TradeScreen>
                                             ? selectPair!.marketWallet!.id.toString()
                                             : selectPair!.baseWallet!.id.toString());*/
                                         /*loading = true;*/
-                                        firstCoin = selectPair!
-                                            .baseAsset!.symbol
-                                            .toString();
-                                        secondCoin = selectPair!
-                                            .marketAsset!.symbol
-                                            .toString();
+                                        firstCoin =
+                                            selectPair!.baseAsset.toString();
+                                        secondCoin =
+                                            selectPair!.marketAsset.toString();
                                         Navigator.pop(context);
                                       });
                                     },

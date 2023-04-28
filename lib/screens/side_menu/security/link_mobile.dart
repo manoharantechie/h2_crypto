@@ -16,6 +16,7 @@ import 'package:h2_crypto/common/textformfield_custom.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
 import 'package:h2_crypto/data/model/common_model.dart';
+import 'package:h2_crypto/screens/basic/home.dart';
 
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -590,6 +591,13 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
         setState(() {
           loading = false;
           CustomWidget(context: context).  custombar("Link Mobile Number",loginData.message.toString(), true);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => Home(
+
+              ),
+            ),
+          );
 
         });
       } else {
