@@ -548,7 +548,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
 
                                   }
                                   else{
-                                    CustomWidget(context: context).  custombar("verify Email", "Enter Email Verification Code", false);
+                                    CustomWidget(context: context).  custombar("verify Mobile Number", "Enter Verification Code", false);
 
                                   }
                                 },
