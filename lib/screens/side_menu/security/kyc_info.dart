@@ -16,6 +16,7 @@ import '../../../common/custom_button.dart';
 import '../../../common/custom_widget.dart';
 import '../../../common/localization/localizations.dart';
 import '../../../common/theme/custom_theme.dart';
+import '../../../data/model/country_code.dart';
 import 'link_email_address.dart';
 
 class KYCPage extends StatefulWidget {
@@ -65,22 +66,14 @@ class _KYCPageState extends State<KYCPage> {
     "Male",
     "Female",
   ];
-  List<String> countryType = [
-    "Afghanistan",
-    "Australia",
-    "Cambodia",
-    "France",
-    "India",
-    "Italy",
-    "Japan"
-  ];
+  List<CountryCodeResult> countryList = [ ];
   List<String> idProofType = [
     "Passport",
     "Driving Licence",
   ];
   String selectedGender = "";
   String selectedIdProof = "";
-  String selectedCountryType = "";
+  CountryCodeResult? selectedCountryType ;
   String panUrl = "";
   String aadharUrl = "";
   String faceUrl = "";
@@ -110,7 +103,7 @@ class _KYCPageState extends State<KYCPage> {
 
     selectedGender = genderType.first;
     selectedIdProof = idProofType.first;
-    selectedCountryType = countryType.first;
+    getCountryCodeDetils();
   }
 
 
@@ -758,10 +751,10 @@ class _KYCPageState extends State<KYCPage> {
                           child: DropdownButton(
                             menuMaxHeight:
                             MediaQuery.of(context).size.height * 0.7,
-                            items: countryType
+                            items: countryList
                                 .map((value) => DropdownMenuItem(
                               child: Text(
-                                value.toString(),
+                                value.name!.toString(),
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
                                     14.0,
@@ -775,11 +768,12 @@ class _KYCPageState extends State<KYCPage> {
                                 .toList(),
                             onChanged: (value) async {
                               setState(() {
-                                selectedCountryType = value.toString();
+                                selectedCountryType = value;
+                                print("hai"+ selectedCountryType!.code.toString(),);
                               });
                             },
                             hint: Text(
-                              "Select Category",
+                              "Select Country",
                               style: CustomWidget(context: context)
                                   .CustomSizedTextStyle(
                                   14.0,
@@ -1536,7 +1530,7 @@ class _KYCPageState extends State<KYCPage> {
         mobile.text.toString(),
         dobController.text.toString(),
         selectedGender.toString(),
-        selectedCountryType.toString(),
+        selectedCountryType!.code.toString(),
         cityController.text.toString(),
         statesController.text.toString(),
         zipController.text.toString(),
@@ -1580,5 +1574,30 @@ class _KYCPageState extends State<KYCPage> {
       });
     }
   }
+
+  getCountryCodeDetils() {
+    apiUtils
+        .countryCodeDetils()
+        .then((CountryCodeModelDetails loginData) {
+      if (loginData.success!) {
+        setState(() {
+          loading = false;
+          countryList=loginData.result!;
+          selectedCountryType = countryList.first;
+
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+    }).catchError((Object error) {
+      print(error);
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
 }
 

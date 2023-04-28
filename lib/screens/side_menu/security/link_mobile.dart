@@ -174,128 +174,128 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                         padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                         child: Column(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                                border: Border.all(
-                                    color: CustomTheme.of(context)
-                                        .splashColor.withOpacity(0.5),
-                                    width: 1),
-                                color: CustomTheme.of(context)
-                                    .backgroundColor
-                                    .withOpacity(0.5),
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                        left: 10.0,
-                                        right: 10.0,
-                                        top: 14.0,
-                                        bottom: 14.0),
-                                    color: CustomTheme.of(context)
-                                        .backgroundColor
-                                        .withOpacity(0.5),
-                                    child: InkWell(
-                                      onTap: _onPressedShowBottomSheet,
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            countryB
-                                                ? _selectedCountry!.callingCode
-                                                    .toString()
-                                                : "+1",
-                                            style:
-                                                CustomWidget(context: context)
-                                                    .CustomTextStyle(
-                                                        Theme.of(context)
-                                                            .splashColor,
-                                                        FontWeight.normal,
-                                                        'FontRegular'),
-                                          ),
-                                          const SizedBox(
-                                            width: 3.0,
-                                          ),
-                                          const Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            size: 12.0,
-                                            color: AppColors.backgroundColor,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    child: TextFormField(
-                                      controller: mobile,
-                                      focusNode: mobileFocus,
-                                      maxLines: 1,
-                                      enabled: mobileVerify,
-                                      textInputAction: TextInputAction.next,
-                                      keyboardType: TextInputType.number,
-                                      style: CustomWidget(context: context)
-                                          .CustomTextStyle(
-                                              Theme.of(context).splashColor,
-                                              FontWeight.w400,
-                                              'FontRegular'),
-                                      decoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.only(
-                                            left: 12,
-                                            right: 0,
-                                            top: 2,
-                                            bottom: 2),
-                                        filled: true,
-                                        fillColor:   Theme.of(context)
-                                            .backgroundColor
-                                            .withOpacity(0.5),
-                                        hintText: "Please enter Mobile",
-                                        suffixIcon: Container(
-                                          width: 0.0,
-                                        ),
-                                        hintStyle:
-                                            CustomWidget(context: context)
-                                                .CustomTextStyle(
-                                                    Theme.of(context)
-                                                        .splashColor.withOpacity(0.5),
-                                                    FontWeight.w300,
-                                                    'FontRegular'),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.zero,
-                                          borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .splashColor,
-                                          ),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.zero,
-                                          borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .backgroundColor
-                                                .withOpacity(0.5),
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.zero,
-                                          borderSide: BorderSide(
-                                            color: Theme.of(context)
-                                                .backgroundColor
-                                                .withOpacity(0.5),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    flex: 1,
-                                  )
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-
-                            const SizedBox(
-                              height: 15.0,
-                            ),
+                            // Container(
+                            //   decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(5.0),
+                            //     border: Border.all(
+                            //         color: CustomTheme.of(context)
+                            //             .splashColor.withOpacity(0.5),
+                            //         width: 1),
+                            //     color: CustomTheme.of(context)
+                            //         .backgroundColor
+                            //         .withOpacity(0.5),
+                            //   ),
+                            //   child: Row(
+                            //     children: [
+                            //       Container(
+                            //         padding: const EdgeInsets.only(
+                            //             left: 10.0,
+                            //             right: 10.0,
+                            //             top: 14.0,
+                            //             bottom: 14.0),
+                            //         color: CustomTheme.of(context)
+                            //             .backgroundColor
+                            //             .withOpacity(0.5),
+                            //         child: InkWell(
+                            //           onTap: _onPressedShowBottomSheet,
+                            //           child: Row(
+                            //             children: [
+                            //               Text(
+                            //                 countryB
+                            //                     ? _selectedCountry!.callingCode
+                            //                         .toString()
+                            //                     : "+1",
+                            //                 style:
+                            //                     CustomWidget(context: context)
+                            //                         .CustomTextStyle(
+                            //                             Theme.of(context)
+                            //                                 .splashColor,
+                            //                             FontWeight.normal,
+                            //                             'FontRegular'),
+                            //               ),
+                            //               const SizedBox(
+                            //                 width: 3.0,
+                            //               ),
+                            //               const Icon(
+                            //                 Icons.arrow_forward_ios_rounded,
+                            //                 size: 12.0,
+                            //                 color: AppColors.backgroundColor,
+                            //               )
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Flexible(
+                            //         child: TextFormField(
+                            //           controller: mobile,
+                            //           focusNode: mobileFocus,
+                            //           maxLines: 1,
+                            //           enabled: mobileVerify,
+                            //           textInputAction: TextInputAction.next,
+                            //           keyboardType: TextInputType.number,
+                            //           style: CustomWidget(context: context)
+                            //               .CustomTextStyle(
+                            //                   Theme.of(context).splashColor,
+                            //                   FontWeight.w400,
+                            //                   'FontRegular'),
+                            //           decoration: InputDecoration(
+                            //             contentPadding: const EdgeInsets.only(
+                            //                 left: 12,
+                            //                 right: 0,
+                            //                 top: 2,
+                            //                 bottom: 2),
+                            //             filled: true,
+                            //             fillColor:   Theme.of(context)
+                            //                 .backgroundColor
+                            //                 .withOpacity(0.5),
+                            //             hintText: "Please enter Mobile",
+                            //             suffixIcon: Container(
+                            //               width: 0.0,
+                            //             ),
+                            //             hintStyle:
+                            //                 CustomWidget(context: context)
+                            //                     .CustomTextStyle(
+                            //                         Theme.of(context)
+                            //                             .splashColor.withOpacity(0.5),
+                            //                         FontWeight.w300,
+                            //                         'FontRegular'),
+                            //             border: OutlineInputBorder(
+                            //               borderRadius: BorderRadius.zero,
+                            //               borderSide: BorderSide(
+                            //                 color: Theme.of(context)
+                            //                     .splashColor,
+                            //               ),
+                            //             ),
+                            //             enabledBorder: OutlineInputBorder(
+                            //               borderRadius: BorderRadius.zero,
+                            //               borderSide: BorderSide(
+                            //                 color: Theme.of(context)
+                            //                     .backgroundColor
+                            //                     .withOpacity(0.5),
+                            //               ),
+                            //             ),
+                            //             focusedBorder: OutlineInputBorder(
+                            //               borderRadius: BorderRadius.zero,
+                            //               borderSide: BorderSide(
+                            //                 color: Theme.of(context)
+                            //                     .backgroundColor
+                            //                     .withOpacity(0.5),
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //         flex: 1,
+                            //       )
+                            //     ],
+                            //   ),
+                            // ),
+                            // const SizedBox(
+                            //   height: 10.0,
+                            // ),
+                            //
+                            // const SizedBox(
+                            //   height: 15.0,
+                            // ),
 
                             Row(
                               children: [
@@ -306,7 +306,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                                         mobileVerifyFocus.unfocus();
                                       },
                                       radius: 5.0,
-                                      error: "Enter Valid Email",
+                                      error: "Enter Valid Verification code",
                                       textColor: AppColors.appColor,
                                       borderColor: CustomTheme.of(context)
                                           .splashColor.withOpacity(0.5),
@@ -360,23 +360,8 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                                   onTap: () {
                                     setState(() {
                                       FocusScope.of(context).unfocus();
-
-
-                                      if(mobile.text.isEmpty)
-                                      {
-                                        CustomWidget(context: context).  custombar("verify Mobile", "Enter Mobile Number", false);
-
-
-                                      }
-                                      else{
-
-                                          setState(() {
-                                            loading = true;
-                                            sentOtp();
-                                          });
-
-                                      }
-
+                                        loading = true;
+                                        sentOtp();
 
                                     });
                                   },
@@ -532,9 +517,9 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                             //     ),
                             //   ],
                             // ),
-                            const SizedBox(
-                              height: 15.0,
-                            ),
+                            // const SizedBox(
+                            //   height: 15.0,
+                            // ),
                             ButtonCustom(
                                 text: AppLocalizations.instance
                                     .text("loc_confirm"),
@@ -600,7 +585,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
   }
 
   sentOtp() {
-    apiUtils.sendMobileOtp("sms").then((CommonModel loginData) {
+    apiUtils.emailSendOTP("sms").then((CommonModel loginData) {
       if (loginData.status!) {
         setState(() {
           loading = false;
@@ -621,14 +606,12 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
   }
 
   verifyEmail() {
-    apiUtils.updateEmailDetails(mobile_verify.text.toString(),true,false).then((CommonModel loginData) {
+    apiUtils.updateEmailDetails("sms", mobile_verify.text.toString()).then((CommonModel loginData) {
       if (loginData.status!) {
         setState(() {
           loading = false;
           CustomWidget(context: context).  custombar("Link Mobile Number",loginData.message.toString(), true);
-
           Navigator.pop(context,true);
-
 
         });
       } else {

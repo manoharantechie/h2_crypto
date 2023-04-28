@@ -22,15 +22,15 @@ class LinkEmailAddress extends StatefulWidget {
 
 class _ChangeEmailAddressState extends State<LinkEmailAddress> {
   bool isEmail = true;
-  bool mobileCodeVerify = false;
+  bool emailCodeVerify = false;
   bool loading = false;
   final emailformKey = GlobalKey<FormState>();
 
   FocusNode emailFocus = FocusNode();
   FocusNode emailPassFocus = FocusNode();
-  FocusNode mobileVerifyFocus = FocusNode();
+  FocusNode emailVerifyFocus = FocusNode();
   TextEditingController email = TextEditingController();
-  TextEditingController mobile_verify = TextEditingController();
+  TextEditingController emailVerify = TextEditingController();
   ScrollController controller = ScrollController();
   APIUtils apiUtils = APIUtils();
 
@@ -139,78 +139,78 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                           padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                           child: Column(
                             children: [
-                              TextFormFieldCustom(
-                                onEditComplete: () {
-                                  emailFocus.unfocus();
-                                  FocusScope.of(context)
-                                      .requestFocus(emailPassFocus);
-                                },
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9@._]')),
-                                ],
-                                radius: 5.0,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                error: "Enter Valid Email",
-                                textColor: CustomTheme.of(context).splashColor,
-                                borderColor: CustomTheme.of(context)
-                                    .splashColor.withOpacity(0.5),
-                                fillColor: CustomTheme.of(context)
-                                    .backgroundColor
-                                    .withOpacity(0.5),
-                                textInputAction: TextInputAction.next,
-                                focusNode: emailFocus,
-                                maxlines: 1,
-                                text: '',
-                                hintText:
-                                    AppLocalizations.instance.text("loc_email"),
-                                obscureText: false,
-                                suffix: Container(
-                                  width: 0.0,
-                                ),
-                                textChanged: (value) {},
-                                onChanged: () {},
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please enter email";
-                                  } else if (!RegExp(
-                                          r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                      .hasMatch(value)) {
-                                    return "Please enter valid email";
-                                  }
-
-                                  return null;
-                                },
-                                enabled: true,
-                                textInputType: TextInputType.emailAddress,
-                                controller: email,
-                                hintStyle: CustomWidget(context: context)
-                                    .CustomTextStyle(
-                                        Theme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
-                                        FontWeight.w300,
-                                        'FontRegular'),
-                                textStyle: CustomWidget(context: context)
-                                    .CustomTextStyle(
-                                        Theme.of(context).splashColor,
-                                        FontWeight.w400,
-                                        'FontRegular'),
-                              ),
-                              const SizedBox(
-                                height: 20.0,
-                              ),
+                              // TextFormFieldCustom(
+                              //   onEditComplete: () {
+                              //     emailFocus.unfocus();
+                              //     FocusScope.of(context)
+                              //         .requestFocus(emailPassFocus);
+                              //   },
+                              //   inputFormatters: [
+                              //     FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9@._]')),
+                              //   ],
+                              //   radius: 5.0,
+                              //   autovalidateMode:
+                              //       AutovalidateMode.onUserInteraction,
+                              //   error: "Enter Valid Email",
+                              //   textColor: CustomTheme.of(context).splashColor,
+                              //   borderColor: CustomTheme.of(context)
+                              //       .splashColor.withOpacity(0.5),
+                              //   fillColor: CustomTheme.of(context)
+                              //       .backgroundColor
+                              //       .withOpacity(0.5),
+                              //   textInputAction: TextInputAction.next,
+                              //   focusNode: emailFocus,
+                              //   maxlines: 1,
+                              //   text: '',
+                              //   hintText:
+                              //       AppLocalizations.instance.text("loc_email"),
+                              //   obscureText: false,
+                              //   suffix: Container(
+                              //     width: 0.0,
+                              //   ),
+                              //   textChanged: (value) {},
+                              //   onChanged: () {},
+                              //   validator: (value) {
+                              //     if (value!.isEmpty) {
+                              //       return "Please enter email";
+                              //     } else if (!RegExp(
+                              //             r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              //         .hasMatch(value)) {
+                              //       return "Please enter valid email";
+                              //     }
+                              //
+                              //     return null;
+                              //   },
+                              //   enabled: true,
+                              //   textInputType: TextInputType.emailAddress,
+                              //   controller: email,
+                              //   hintStyle: CustomWidget(context: context)
+                              //       .CustomTextStyle(
+                              //           Theme.of(context)
+                              //               .splashColor
+                              //               .withOpacity(0.5),
+                              //           FontWeight.w300,
+                              //           'FontRegular'),
+                              //   textStyle: CustomWidget(context: context)
+                              //       .CustomTextStyle(
+                              //           Theme.of(context).splashColor,
+                              //           FontWeight.w400,
+                              //           'FontRegular'),
+                              // ),
+                              // const SizedBox(
+                              //   height: 20.0,
+                              // ),
                               Row(
                                 children: [
                                   Flexible(
                                     child: TextFormCustom(
                                         onEditComplete: () {
-                                          mobileVerifyFocus.unfocus();
+                                          emailVerifyFocus.unfocus();
                                         },
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,
                                         radius: 5.0,
-                                        error: "Enter Valid Email",
+                                        error: "Enter Valid Email Code",
                                         textColor: AppColors.appColor,
                                         borderColor: CustomTheme.of(context)
                                             .splashColor.withOpacity(0.5),
@@ -218,7 +218,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                             .backgroundColor
                                             .withOpacity(0.5),
                                         textInputAction: TextInputAction.next,
-                                        focusNode: mobileVerifyFocus,
+                                        focusNode: emailVerifyFocus,
                                         maxlines: 1,
                                         text: '',
                                         hintText: "Email Verification Code",
@@ -231,9 +231,9 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                         validator: (value) {
                                           return null;
                                         },
-                                        enabled: mobileCodeVerify,
+                                        enabled: emailCodeVerify,
                                         textInputType: TextInputType.number,
-                                        controller: mobile_verify,
+                                        controller: emailVerify,
                                         hintStyle:
                                             CustomWidget(context: context)
                                                 .CustomTextStyle(
@@ -266,18 +266,8 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        FocusScope.of(context).unfocus();
-
-                                        if (mobileCodeVerify) {
-                                        } else {
-                                          if (emailformKey.currentState!
-                                              .validate()) {
-                                            setState(() {
-                                              loading = true;
-                                              sentOtp();
-                                            });
-                                          }
-                                        }
+                                        loading = true;
+                                        sentOtp();
                                       });
                                     },
                                     child: Container(
@@ -395,7 +385,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
 
   verifyEmail() {
     apiUtils
-        .updateEmailDetails(mobile_verify.text.toString(), true, false)
+        .updateEmailDetails("email", emailVerify.text.toString())
         .then((CommonModel loginData) {
       if (loginData.status!) {
         setState(() {

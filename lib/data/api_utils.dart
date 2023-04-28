@@ -41,6 +41,7 @@ import 'package:h2_crypto/data/model/wallet_list_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
+import 'model/country_code.dart';
 import 'model/get_payment_details_model.dart';
 import 'model/kyc_verify.dart';
 import 'model/payment_model.dart';
@@ -110,6 +111,9 @@ class APIUtils {
 
   static const String KycVerifyUrl = '/api/add-kyc';
   static const String emailSendOTPUrl = '/api/send-otp';
+  static const String verifyOTPUrl = '/api/verify-otp';
+  static const String logoutUrl = '/api/logout';
+  static const String countryCodesUrl = '/api/country';
 
 
 
@@ -169,6 +173,29 @@ class APIUtils {
         body: isMail ? emailbodyData : mobilebodyData);
 
     return SentOtpModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> logOut() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final response = await http.get(
+        Uri.parse(
+          crypto_baseURL + logoutUrl,
+        ),
+        headers: {"authorization": preferences.getString("token").toString()});
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CountryCodeModelDetails> countryCodeDetils() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final response = await http.get(
+        Uri.parse(
+          crypto_baseURL + countryCodesUrl,
+        ),
+        // headers: {"authorization": preferences.getString("token").toString()}
+    );
+
+    print(response.body);
+    return CountryCodeModelDetails.fromJson(json.decode(response.body));
   }
 
   Future<WalletListModel> getWalletList() async {
@@ -390,7 +417,7 @@ class APIUtils {
       'pan_img': panImg,
       'status': "1",
     };
-    final response = await http.post(Uri.parse(baseURL + KycVerifyUrl),
+    final response = await http.post(Uri.parse(crypto_baseURL + KycVerifyUrl),
         body: bodyData,
         headers: {"authorization": preferences.getString("token").toString()});
 
@@ -403,27 +430,13 @@ class APIUtils {
       'type': email,
     };
 
-    final response = await http.post(Uri.parse(baseURL + emailSendOTPUrl),
+    final response = await http.post(Uri.parse(crypto_baseURL + emailSendOTPUrl),
         body: tradeBody,
         headers: {"authorization": preferences.getString("token").toString()});
 
     return CommonModel.fromJson(json.decode(response.body));
   }
 
-  Future<CommonModel> sendMobileOtp(
-      String mobile ) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    var mobData = {
-      'type': mobile,
-    };
-
-    final response = await http.post(Uri.parse(baseURL + emailSendOTPUrl),
-        body: mobData,
-        headers: {"authorization": preferences.getString("token").toString()});
-
-    return CommonModel.fromJson(json.decode(response.body));
-  }
 
   Future<CommonModel> changePasswordRequest(
     String oldPass,
@@ -538,28 +551,16 @@ class APIUtils {
   }
 
   Future<CommonModel> updateEmailDetails(
-      String data, bool verify, bool email) async {
+      String email, String code) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    var mobData = {
-      'type': "0",
-      "phoneNo": data,
-    };
     var emailData = {
-      'type': "0",
-      "email": data,
-    };
-    var verifyData = {
-      'type': "1",
-      "verificationCode": data,
+      'type': email,
+      "OTP": code,
     };
 
-    final response = await http.post(Uri.parse(baseURL + updateEmailUrl),
-        body: verify
-            ? verifyData
-            : email
-                ? emailData
-                : mobData,
+    final response = await http.post(Uri.parse(crypto_baseURL + verifyOTPUrl),
+        body: emailData,
         headers: {"authorization": preferences.getString("token").toString()});
 
     return CommonModel.fromJson(json.decode(response.body));
