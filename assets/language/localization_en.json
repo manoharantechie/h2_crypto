@@ -44,6 +44,7 @@
   "loc_enjoy_more": "Enjoy more privileges",
   "loc_margin_trade": "Margin \nTrading",
   "loc_future_trade": "Futures Trading",
+  "loc_quick_buy_sell": "Quick Buy/Sell",
   "loc_spot_trade": "Spot\n Trading",
   "loc_alpha_exchange": "H2Crypto",
   "loc_yield": "Yield\n Farming",
@@ -154,5 +155,6 @@
   "loc_new_pass": "Confirm Password",
   "loc_email_address": "Verify Email Address",
   "loc_phone_no": "Link Phone Number",
-  "loc_nick_setting": "Nickname Settings"
+  "loc_nick_setting": "Nickname Settings",
+  "loc_quick_sell": "Quick \nBuy/Sell"
 }

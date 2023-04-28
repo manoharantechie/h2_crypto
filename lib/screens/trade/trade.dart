@@ -765,7 +765,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                   top: 7.0, bottom: 7.0),
                                           child: Text(
                                             AppLocalizations.instance
-                                                .text("loc_sell_trade_txt2"),
+                                                .text("loc_quick_buy_sell"),
                                             style: CustomWidget(
                                                     context: context)
                                                 .CustomSizedTextStyle(
@@ -786,76 +786,76 @@ class _SellTradeScreenState extends State<TradeScreen>
                                     ),
                                     flex: 1,
                                   ),
-                                  Flexible(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          buySell = true;
-                                          selectPair = tradePair[0];
-                                          _currentSliderValue = 0;
-                                          tleverageVal = "1";
-                                          spotOption = false;
-                                          marginOption = false;
-                                          selectedMarginTradeType =
-                                              transferFutureType.first;
-                                          marginVisibleOption = false;
-                                          loanVisibleOption = true;
-                                          enableStopLimit = false;
-                                          priceController.clear();
-                                          amountController.clear();
-                                          FutureopenOrders = [];
-                                          Futureposition = [];
-                                          futureOption = true;
-                                          marginBuyData = [];
-                                          marginSellData = [];
-                                          getCoinList();
-
-                                          enableTrade = false;
-                                          selectedTime = chartTime.first;
-                                          totalAmount = "0.0";
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: futureOption
-                                                    ? CustomTheme.of(context)
-                                                        .buttonColor
-                                                    : CustomTheme.of(context)
-                                                        .splashColor
-                                                        .withOpacity(0.5),
-                                                width:
-                                                    futureOption ? 1.5 : 0.5)),
-                                        child: Center(
-                                            child: Padding(
-                                          padding: futureOption
-                                              ? EdgeInsets.only(
-                                                  top: 6.0, bottom: 6.0)
-                                              : EdgeInsets.only(
-                                                  top: 7.0, bottom: 7.0),
-                                          child: Text(
-                                            AppLocalizations.instance
-                                                .text("loc_sell_trade_txt3"),
-                                            style: CustomWidget(
-                                                    context: context)
-                                                .CustomSizedTextStyle(
-                                                    13.0,
-                                                    futureOption
-                                                        ? CustomTheme.of(
-                                                                context)
-                                                            .splashColor
-                                                        : CustomTheme.of(
-                                                                context)
-                                                            .hintColor
-                                                            .withOpacity(0.5),
-                                                    FontWeight.w500,
-                                                    'FontRegular'),
-                                          ),
-                                        )),
-                                      ),
-                                    ),
-                                    flex: 1,
-                                  ),
+                                  // Flexible(
+                                  //   child: GestureDetector(
+                                  //     onTap: () {
+                                  //       setState(() {
+                                  //         buySell = true;
+                                  //         selectPair = tradePair[0];
+                                  //         _currentSliderValue = 0;
+                                  //         tleverageVal = "1";
+                                  //         spotOption = false;
+                                  //         marginOption = false;
+                                  //         selectedMarginTradeType =
+                                  //             transferFutureType.first;
+                                  //         marginVisibleOption = false;
+                                  //         loanVisibleOption = true;
+                                  //         enableStopLimit = false;
+                                  //         priceController.clear();
+                                  //         amountController.clear();
+                                  //         FutureopenOrders = [];
+                                  //         Futureposition = [];
+                                  //         futureOption = true;
+                                  //         marginBuyData = [];
+                                  //         marginSellData = [];
+                                  //         getCoinList();
+                                  //
+                                  //         enableTrade = false;
+                                  //         selectedTime = chartTime.first;
+                                  //         totalAmount = "0.0";
+                                  //       });
+                                  //     },
+                                  //     child: Container(
+                                  //       decoration: BoxDecoration(
+                                  //           border: Border.all(
+                                  //               color: futureOption
+                                  //                   ? CustomTheme.of(context)
+                                  //                       .buttonColor
+                                  //                   : CustomTheme.of(context)
+                                  //                       .splashColor
+                                  //                       .withOpacity(0.5),
+                                  //               width:
+                                  //                   futureOption ? 1.5 : 0.5)),
+                                  //       child: Center(
+                                  //           child: Padding(
+                                  //         padding: futureOption
+                                  //             ? EdgeInsets.only(
+                                  //                 top: 6.0, bottom: 6.0)
+                                  //             : EdgeInsets.only(
+                                  //                 top: 7.0, bottom: 7.0),
+                                  //         child: Text(
+                                  //           AppLocalizations.instance
+                                  //               .text("loc_sell_trade_txt3"),
+                                  //           style: CustomWidget(
+                                  //                   context: context)
+                                  //               .CustomSizedTextStyle(
+                                  //                   13.0,
+                                  //                   futureOption
+                                  //                       ? CustomTheme.of(
+                                  //                               context)
+                                  //                           .splashColor
+                                  //                       : CustomTheme.of(
+                                  //                               context)
+                                  //                           .hintColor
+                                  //                           .withOpacity(0.5),
+                                  //                   FontWeight.w500,
+                                  //                   'FontRegular'),
+                                  //         ),
+                                  //       )),
+                                  //     ),
+                                  //   ),
+                                  //   flex: 1,
+                                  // ),
                                 ]),
                           ),
 
@@ -865,8 +865,6 @@ class _SellTradeScreenState extends State<TradeScreen>
                           spotOption
                               ? spotUI()
                               : marginOption
-                                  ? spotUI()
-                                  : futureOption
                                       ? spotUI()
                                       : comingsoon(),
 

@@ -802,7 +802,7 @@ class _HomeState extends State<Home>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset(
-                                    'assets/side/h2_crypto.svg',
+                                    'assets/side/nft.svg',
                                     height: 30.0,
                                   ),
                                   const SizedBox(
@@ -810,7 +810,7 @@ class _HomeState extends State<Home>
                                   ),
                                   Text(
                                     AppLocalizations.instance.text(
-                                      "loc_h2_crypto",
+                                      "loc_quick_sell",
                                     ),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
