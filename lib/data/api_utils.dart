@@ -42,8 +42,10 @@ import 'package:h2_crypto/data/model/wallet_list_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
+import 'model/assets_list_model.dart';
 import 'model/country_code.dart';
 import 'model/get_payment_details_model.dart';
+import 'model/individual_user_details.dart';
 import 'model/kyc_verify.dart';
 import 'model/payment_model.dart';
 
@@ -209,20 +211,20 @@ class APIUtils {
     return CommonModel.fromJson(json.decode(response.body));
   }
 
-  Future<CommonModel> userDetailsInfo() async {
+  Future<IndividualUserDetailsModel> userDetailsInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final response = await http.post(Uri.parse(crypto_baseURL + userDetailsURL),
         headers: {"authorization": preferences.getString("token").toString()});
 
-    return CommonModel.fromJson(json.decode(response.body));
+    return IndividualUserDetailsModel.fromJson(json.decode(response.body));
   }
 
-  Future<CommonModel> assetsListInfo() async {
+  Future<AssetsListModel> assetsListInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final response = await http.post(Uri.parse(crypto_baseURL + assetsListURL),
         headers: {"authorization": preferences.getString("token").toString()});
 
-    return CommonModel.fromJson(json.decode(response.body));
+    return AssetsListModel.fromJson(json.decode(response.body));
   }
 
 

@@ -1,23 +1,24 @@
+
 import 'dart:convert';
 
-UserDetails userDetailsFromJson(String str) => UserDetails.fromJson(json.decode(str));
+IndividualUserDetailsModel individualUserDetailsModelFromJson(String str) => IndividualUserDetailsModel.fromJson(json.decode(str));
 
-String userDetailsToJson(UserDetails data) => json.encode(data.toJson());
+String individualUserDetailsModelToJson(IndividualUserDetailsModel data) => json.encode(data.toJson());
 
-class UserDetails {
+class IndividualUserDetailsModel {
   bool? success;
-  UserDetailsResult? result;
+  IndividualUserResult? result;
   String? message;
 
-  UserDetails({
+  IndividualUserDetailsModel({
     this.success,
     this.result,
     this.message,
   });
 
-  factory UserDetails.fromJson(Map<String, dynamic> json) => UserDetails(
+  factory IndividualUserDetailsModel.fromJson(Map<String, dynamic> json) => IndividualUserDetailsModel(
     success: json["success"],
-    result: UserDetailsResult.fromJson(json["result"]),
+    result: IndividualUserResult.fromJson(json["result"]),
     message: json["message"],
   );
 
@@ -28,7 +29,7 @@ class UserDetails {
   };
 }
 
-class UserDetailsResult {
+class IndividualUserResult {
   dynamic id;
   String? role;
   String? clientAccount;
@@ -78,7 +79,7 @@ class UserDetailsResult {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  UserDetailsResult({
+  IndividualUserResult({
     this.id,
     this.role,
     this.clientAccount,
@@ -129,7 +130,7 @@ class UserDetailsResult {
     this.updatedAt,
   });
 
-  factory UserDetailsResult.fromJson(Map<String, dynamic> json) => UserDetailsResult(
+  factory IndividualUserResult.fromJson(Map<String, dynamic> json) => IndividualUserResult(
     id: json["id"],
     role: json["role"],
     clientAccount: json["client_account"],
