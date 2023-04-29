@@ -116,6 +116,11 @@ class APIUtils {
   static const String logoutUrl = 'api/logout';
   static const String countryCodesUrl = 'api/country';
   static const String tradePairURL = 'api/trade-pairs';
+  static const String forgotPasswordURL = 'api/resetpassword';
+  static const String forgotPasswordVerifyURL = 'api/changeresetpassword';
+  static const String userDetailsURL = 'api/userdetails';
+  static const String assetsListURL = 'api/assets-list';
+
 
 
 
@@ -176,6 +181,50 @@ class APIUtils {
 
     return SentOtpModel.fromJson(json.decode(response.body));
   }
+
+  Future<CommonModel> forgotPassword(
+      String email) async {
+    var emailbodyData = {
+      'email': email,
+    };
+
+    final response = await http.post(Uri.parse(crypto_baseURL + forgotPasswordURL),
+        body: emailbodyData );
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> doVerifyOTP(
+      String email, String otp, String password, String confPass) async {
+    var emailbodyData = {
+      'email': email,
+      "otp": otp,
+      "password": password,
+      "confirmpassword": confPass
+    };
+
+    final response = await http.post(Uri.parse(crypto_baseURL + forgotPasswordVerifyURL),
+        body: emailbodyData );
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> userDetailsInfo() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final response = await http.post(Uri.parse(crypto_baseURL + userDetailsURL),
+        headers: {"authorization": preferences.getString("token").toString()});
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> assetsListInfo() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final response = await http.post(Uri.parse(crypto_baseURL + assetsListURL),
+        headers: {"authorization": preferences.getString("token").toString()});
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
 
   Future<CommonModel> logOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

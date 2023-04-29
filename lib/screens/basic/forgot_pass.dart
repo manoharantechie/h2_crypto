@@ -816,18 +816,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   sendCodeMail() {
     apiUtils
-        .getforgotPassword(APIUtils.forgotMobURL, email.text.toString(), true)
-        .then((SentOtpModel loginData) {
-      if (loginData.statusCode.toString() == "200") {
+        .forgotPassword(email.text.toString())
+        .then((CommonModel loginData) {
+      if (loginData.status!) {
         setState(() {
           loading = false;
           getCode = false;
           isDisplay=false;
-          token = loginData.data!.accessToken!.token.toString();
         });
         custombar("Forgot Password", loginData.message.toString(), true);
       } else {
         setState(() {
+          print("jeeva");
           loading = false;
           custombar("Forgot Password", loginData.message.toString(), false);
         });
@@ -899,40 +899,37 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     });
   }
 
-// verifyMail() {
-//   apiUtils
-//       .doVerifyOTP(APIUtils.verifyEmailOtpURL, email.text.toString(),
-//       mobile_verify.text.toString(), true)
-//       .then((SentOtpModel loginData) {
-//     if (loginData.status.toString() == "Success") {
-//       setState(() {
-//         loading = false;
-//         emailVerify = true;
-//         emailCodeVerify = false;
-//         emailPassVerify = false;
-//         emailReferVerify = false;
-//         email.clear();
-//         email_password.clear();
-//         email_verify.clear();
-//         email_refer.clear();
-//
-//         mobileCodeVerify = true;
-//       });
-//       custombar("Register", loginData.message.toString(), true);
-//
-//     } else {
-//       setState(() {
-//         loading = false;
-//         custombar("Register", loginData.message.toString(), false);
-//       });
-//     }
-//   }).catchError((Object error) {
-//     setState(() {
-//       loading = false;
-//     });
-//   });
-// }
-//
+  verifyMail() {
+    apiUtils
+        .doVerifyOTP(email.text.toString(),mobile_verify.text.toString(),email_password.text.toString(),email_confirm_password.text.toString())
+        .then((CommonModel loginData) {
+      if (loginData.status!) {
+        setState(() {
+          loading = false;
+          emailVerify = true;
+
+          email.clear();
+          mobile_verify.clear();
+          email_verify.clear();
+          email_confirm_password.clear();
+
+          mobileCodeVerify = true;
+        });
+        custombar("Register", loginData.message.toString(), true);
+
+      } else {
+        setState(() {
+          loading = false;
+          custombar("Register", loginData.message.toString(), false);
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
 // verifyMobile() {
 //   print(mobile_verify.text);
 //   apiUtils
