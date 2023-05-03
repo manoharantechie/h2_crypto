@@ -129,6 +129,7 @@ class APIUtils {
   static const String assetDetailsURL = 'api/asset-details';
   static const String withdrawAssetURL = 'api/withdraw-asset';
   static const String checkQuotesURL = 'api/check-quote';
+  static const String postTradeURL = 'api/post-trade';
 
 
 
@@ -152,9 +153,6 @@ class APIUtils {
 
     return CommonModel.fromJson(json.decode(response.body));
   }
-
-
-
 
 
   Future<LoginDetailsModel> doLoginEmail(String email, String pass) async {
@@ -213,6 +211,23 @@ class APIUtils {
     };
 
     final response = await http.post(Uri.parse(crypto_baseURL + forgotPasswordVerifyURL),
+        body: emailbodyData );
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> postTrade(
+      String pair, String side, String password, String type, String quantity, String price, String quote_id) async {
+    var emailbodyData = {
+      'pair': pair,
+      "side": side,
+      "type": type,
+      "quantity": quantity,
+      "price": price,
+      "quote_id": quote_id
+    };
+
+    final response = await http.post(Uri.parse(crypto_baseURL + postTradeURL),
         body: emailbodyData );
 
     return CommonModel.fromJson(json.decode(response.body));
