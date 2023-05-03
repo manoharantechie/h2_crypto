@@ -42,12 +42,14 @@ import 'package:h2_crypto/data/model/wallet_list_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
+import 'model/asset_details_model.dart';
 import 'model/assets_list_model.dart';
 import 'model/country_code.dart';
 import 'model/get_payment_details_model.dart';
 import 'model/individual_user_details.dart';
 import 'model/kyc_verify.dart';
 import 'model/payment_model.dart';
+import 'model/user_wallet_balance_model.dart';
 
 class APIUtils {
   /*static const baseURL = 'http://43.205.10.212';*/
@@ -122,6 +124,9 @@ class APIUtils {
   static const String forgotPasswordVerifyURL = 'api/changeresetpassword';
   static const String userDetailsURL = 'api/userdetails';
   static const String assetsListURL = 'api/assets-list';
+  static const String userWalletBalanceURL = 'api/user-balance';
+  static const String assetDetailsURL = 'api/asset-details';
+  static const String withdrawAssetURL = 'api/withdraw-asset';
 
 
 
@@ -227,6 +232,38 @@ class APIUtils {
     return AssetsListModel.fromJson(json.decode(response.body));
   }
 
+  Future<UserWalletBalanceModel> walletBalanceInfo() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final response = await http.post(Uri.parse(crypto_baseURL + userWalletBalanceURL),
+        headers: {"authorization": preferences.getString("token").toString()});
+
+    return UserWalletBalanceModel.fromJson(json.decode(response.body));
+  }
+
+
+  Future<AssetDetailsModel> assetDetails(String assetname) async {
+    var bodyData = {
+      'asset': assetname
+    };
+
+    final response = await http.post(Uri.parse(crypto_baseURL + assetDetailsURL),
+        body: bodyData );
+
+    return AssetDetailsModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> withdrawAssetDetails(String assetname, String address, String amount) async {
+    var bodyData = {
+      'asset': assetname,
+      'address': address,
+      'amount': amount
+    };
+
+    final response = await http.post(Uri.parse(crypto_baseURL + withdrawAssetURL),
+        body: bodyData );
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
 
   Future<CommonModel> logOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -246,10 +283,16 @@ class APIUtils {
         ),
         // headers: {"authorization": preferences.getString("token").toString()}
     );
-
     print(response.body);
     return CountryCodeModelDetails.fromJson(json.decode(response.body));
   }
+
+
+
+
+
+
+
 
   Future<WalletListModel> getWalletList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

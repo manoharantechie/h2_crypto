@@ -109,6 +109,7 @@
   "loc_pay_collet": "Pay/Collect setting",
   "loc_with_address": "Withdrawal address",
   "loc_total": "Total value",
+  "loc_tot": "Total",
   "loc_confirm": "Confirm",
   "loc_trade_curr": "Current",
   "loc_loan_his": "Loan History",
@@ -138,7 +139,7 @@
   "loc_sell_trade_price": "Price",
   "loc_sell_trade_Qty": "Quantity",
   "loc_sell_trade_amt": "Amount(USDT)",
-  "loc_fee_head" : "Fee Setting",
+  "loc_fee" : "Fee",
   "loc_amount" : "Amount",
   "loc_fee_content": "Use MX to deduct trading fee with up to 20% discount",
   "loc_fee_content2": "Spot trading fee rate",
@@ -156,5 +157,7 @@
   "loc_email_address": "Verify Email Address",
   "loc_phone_no": "Link Phone Number",
   "loc_nick_setting": "Nickname Settings",
-  "loc_quick_sell": "Quick \nBuy/Sell"
+  "loc_quick_sell": "Quick \nBuy/Sell",
+  "loc_max_buy": "Max Buy",
+  "loc_max_sell": "Max Sell"
 }

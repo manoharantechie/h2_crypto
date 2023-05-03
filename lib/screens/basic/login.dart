@@ -131,12 +131,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if(loginData.result!.userDetails!.kycVerify!.toString()=="0")
           {
-
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => KYCPage(
-
-                ),
+                builder: (context) => KYCPage(),
               ),
             );
           }
@@ -365,8 +362,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             buttonColor: CustomTheme.of(context).buttonColor,
                             splashColor: CustomTheme.of(context).buttonColor,
                             onPressed: () {
-
-
                                 setState(() {
                                   FocusScope.of(context).unfocus();
                                   if (email.text.isEmpty ||
