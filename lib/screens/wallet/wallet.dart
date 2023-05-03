@@ -6,6 +6,8 @@ import 'package:h2_crypto/common/custom_widget.dart';
 import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
+import 'package:h2_crypto/data/model/assets_list_model.dart';
+import 'package:h2_crypto/data/model/user_wallet_balance_model.dart';
 import 'package:h2_crypto/data/model/wallet_list_model.dart';
 import 'package:h2_crypto/screens/wallet/deposit.dart';
 import 'package:h2_crypto/screens/wallet/transfer.dart';
@@ -23,8 +25,8 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> {
   APIUtils apiUtils = APIUtils();
   bool loading = false;
-  List<WalletList> coinList = [];
-  List<WalletList> searchPair = [];
+  List<UserWalletResult> coinList = [];
+  List<UserWalletResult> searchPair = [];
   ScrollController controller = ScrollController();
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
@@ -195,7 +197,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             coinList = [];
                             for(int m=0;m<searchPair.length;m++)
                             {
-                              if(searchPair[m].asset!.symbol.toString().toLowerCase().contains(value.toLowerCase())|| searchPair[m].asset!.assetname.toString().toLowerCase().contains(value.toLowerCase()))
+                              if(searchPair[m].symbol.toString().toLowerCase().contains(value.toLowerCase())|| searchPair[m].symbol.toString().toLowerCase().contains(value.toLowerCase()))
                               {
                                 coinList.add(searchPair[m]);
                               }
@@ -316,16 +318,19 @@ class _WalletScreenState extends State<WalletScreen> {
                                             CrossAxisAlignment.center,
                                             children: [
                                               Container(
-                                                height: 25.0,
-                                                width: 25.0,
+                                                height: 40.0,
+                                                width: 40.0,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(5.0),
+                                                  color:  CustomTheme.of(context).cardColor,
+                                                ),
+                                                padding: EdgeInsets.all(5.0),
+
                                                 child: SvgPicture.network(
-                                                  "https://cifdaq.in/api/color/" +
-                                                      coinList[index]
-                                                          .asset!
-                                                          .symbol
-                                                          .toString()
-                                                          .toLowerCase() +
-                                                      ".svg",
+                                                  coinList[index]
+
+                                                      .image
+                                                      .toString(),
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -337,9 +342,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                                 CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    coinList[index]
-                                                        .asset!
-                                                        .assetname
+                                                    coinList[index].name
                                                         .toString(),
                                                     style: CustomWidget(
                                                         context: context)
@@ -358,9 +361,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                                   Text(
                                                     "( " +
                                                         coinList[index]
-                                                            .asset!
                                                             .symbol
-                                                            .toString() +
+                                                            .toString().toUpperCase() +
                                                         " )",
                                                     style: CustomWidget(
                                                         context: context)
@@ -406,7 +408,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                                 ),
                                                 Text(
                                                   coinList[index]
-                                                      .marginBalance
+                                                      .escrow
                                                       .toString(),
                                                   style: CustomWidget(
                                                       context: context)
@@ -424,7 +426,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                             Column(
                                               children: [
                                                 Text(
-                                                  "Future Balance",
+                                                  "Total Balance",
                                                   style: CustomWidget(
                                                       context: context)
                                                       .CustomTextStyle(
@@ -437,7 +439,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                                 ),
                                                 Text(
                                                   coinList[index]
-                                                      .future_balance
+                                                      .total
                                                       .toString(),
                                                   style: CustomWidget(
                                                       context: context)
@@ -526,7 +528,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                                                   DepositScreen(
                                                                       id: coinList[
                                                                       index]
-                                                                          .id
+                                                                          .symbol
                                                                           .toString()),
                                                             ));
                                                       },
@@ -601,7 +603,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   Container(
                                     height: 1.0,
                                     width: MediaQuery.of(context).size.width,
-                                    color: CustomTheme.of(context).backgroundColor,
+                                    color: CustomTheme.of(context).cardColor,
                                   )
                                 ],
                               );
@@ -631,13 +633,13 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   getCoinList() {
-    apiUtils.getWalletList().then((WalletListModel loginData) {
-      print(loginData.statusCode);
-      if (loginData.statusCode == 200) {
+    apiUtils.walletBalanceInfo().then((UserWalletBalanceModel loginData) {
+
+      if (loginData.success!) {
         setState(() {
           loading = false;
-          coinList = loginData.data!;
-          searchPair = loginData.data!;
+          coinList = loginData.result!;
+          searchPair = loginData.result!;
         });
       } else {
         setState(() {

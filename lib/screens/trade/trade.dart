@@ -7212,6 +7212,8 @@ class _SellTradeScreenState extends State<TradeScreen>
           selectPair = tradePair.first;
           searchPair = loginData.result!;
           String pair = selectPair!.symbol.toString();
+          firstCoin=selectPair!.baseAsset.toString();
+          secondCoin=selectPair!.marketAsset.toString();
 
           var messageJSON = {
             "type": "subscribe",

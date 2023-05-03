@@ -236,7 +236,7 @@ class APIUtils {
   Future<IndividualUserDetailsModel> userDetailsInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final response = await http.post(Uri.parse(crypto_baseURL + userDetailsURL),
-        headers: {"authorization": preferences.getString("token").toString()});
+        headers: {"authorization": "Bearer "+preferences.getString("token").toString()});
 
     return IndividualUserDetailsModel.fromJson(json.decode(response.body));
   }
@@ -244,7 +244,7 @@ class APIUtils {
   Future<AssetsListModel> assetsListInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final response = await http.post(Uri.parse(crypto_baseURL + assetsListURL),
-        headers: {"authorization": preferences.getString("token").toString()});
+        headers: {"authorization": "Bearer "+preferences.getString("token").toString()});
 
     return AssetsListModel.fromJson(json.decode(response.body));
   }
@@ -252,8 +252,9 @@ class APIUtils {
   Future<UserWalletBalanceModel> walletBalanceInfo() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final response = await http.post(Uri.parse(crypto_baseURL + userWalletBalanceURL),
-        headers: {"authorization": preferences.getString("token").toString()});
+        headers: {"authorization": "Bearer "+preferences.getString("token").toString()});
 
+    print(response.body);
     return UserWalletBalanceModel.fromJson(json.decode(response.body));
   }
 
