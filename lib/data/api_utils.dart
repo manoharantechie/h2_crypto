@@ -44,6 +44,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 import 'model/asset_details_model.dart';
 import 'model/assets_list_model.dart';
+import 'model/check_quote_model.dart';
 import 'model/country_code.dart';
 import 'model/get_payment_details_model.dart';
 import 'model/individual_user_details.dart';
@@ -127,6 +128,7 @@ class APIUtils {
   static const String userWalletBalanceURL = 'api/user-balance';
   static const String assetDetailsURL = 'api/asset-details';
   static const String withdrawAssetURL = 'api/withdraw-asset';
+  static const String checkQuotesURL = 'api/check-quote';
 
 
 
@@ -263,6 +265,19 @@ class APIUtils {
         body: bodyData );
 
     return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CheckQuoteModel> checkQuotesDetails(String pair, String side, String quantity) async {
+    var bodyData = {
+      'pair': pair,
+      'side': side,
+      'quantity': quantity
+    };
+
+    final response = await http.post(Uri.parse(crypto_baseURL + checkQuotesURL),
+        body: bodyData );
+
+    return CheckQuoteModel.fromJson(json.decode(response.body));
   }
 
   Future<CommonModel> logOut() async {
