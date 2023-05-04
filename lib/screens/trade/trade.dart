@@ -1180,7 +1180,7 @@ class _SellTradeScreenState extends State<TradeScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Flexible(
-                  child: OrderWidget(),
+                  child: loanVisibleOption? QuickBuy() : OrderWidget(),
                   flex: 1,
                 ),
                 const SizedBox(
@@ -4654,6 +4654,1684 @@ class _SellTradeScreenState extends State<TradeScreen>
                       'FontRegular'),
                 ),
               )),
+        ),
+        SizedBox(
+          height: 5.0,
+        ),
+      ],
+    );
+  }
+
+  Widget QuickBuy(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          color: CustomTheme.of(context).primaryColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppLocalizations.instance.text("loc_max_buy"),
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              10.0,
+                              CustomTheme.of(context).indicatorColor,
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                        const SizedBox(width: 4.0,),
+                        Text(
+                          "BTC",
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              12.0,
+                              CustomTheme.of(context).indicatorColor,
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5.0,),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppLocalizations.instance.text("loc_max_sell"),
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              10.0,
+                              CustomTheme.of(context).scaffoldBackgroundColor,
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                        const SizedBox(width: 4.0,),
+                        Text(
+                          "BTC",
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              12.0,
+                              CustomTheme.of(context).scaffoldBackgroundColor,
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.currency_bitcoin,
+                          color: CustomTheme.of(context).splashColor,
+                          size: 13.0,
+                        ),
+                        const SizedBox(width: 4.0,),
+                        Text(
+                          "0.00002585",
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              10.0,
+                              CustomTheme.of(context).indicatorColor,
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5.0,),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.currency_bitcoin,
+                          color: CustomTheme.of(context).splashColor,
+                          size: 13.0,
+                        ),
+                        const SizedBox(width: 4.0,),
+                        Text(
+                          "0.00002585",
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              10.0,
+                              CustomTheme.of(context).scaffoldBackgroundColor,
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 15.0,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: CustomTheme.of(context).splashColor.withOpacity(0.3),
+                width: 1.0),
+            borderRadius: BorderRadius.circular(5.0),
+            color: Colors.transparent,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      buySell = true;
+                      amountController.clear();
+                      priceController.clear();
+                      stopPriceController.clear();
+                      totalAmount = "0.0";
+                      _currentSliderValue = 0;
+                      tleverageVal = "1";
+
+                      coinName = selectPair!.baseAsset.toString();
+                      coinTwoName = selectPair!.marketAsset.toString();
+                    });
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            topRight: Radius.circular(0),
+                            bottomLeft: Radius.circular(5),
+                            bottomRight: Radius.circular(0),
+                          ),
+                          color: buySell
+                              ? CustomTheme.of(context).indicatorColor
+                              : Colors.transparent),
+                      child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                            child: Text(
+                              AppLocalizations.instance.text("loc_sell_trade_txt5")+" BTC",
+                              style: CustomWidget(context: context)
+                                  .CustomSizedTextStyle(
+                                  13.0,
+                                  buySell
+                                      ? CustomTheme.of(context).splashColor
+                                      : CustomTheme.of(context)
+                                      .hintColor
+                                      .withOpacity(0.5),
+                                  FontWeight.w500,
+                                  'FontRegular'),
+                            ),
+                          ))),
+                ),
+              ),
+              Flexible(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        buySell = false;
+                        amountController.clear();
+                        priceController.clear();
+                        stopPriceController.clear();
+                        totalAmount = "0.0";
+                        _currentSliderValue = 0;
+                        tleverageVal = "1";
+
+                        coinName = selectPair!.baseAsset.toString();
+                        coinTwoName = selectPair!.marketAsset.toString();
+                      });
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(0),
+                              topRight: Radius.circular(5),
+                              bottomLeft: Radius.circular(0),
+                              bottomRight: Radius.circular(5),
+                            ),
+                            color: !buySell
+                                ? CustomTheme.of(context).scaffoldBackgroundColor
+                                : Colors.transparent),
+                        child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                              child: Text(
+                                AppLocalizations.instance.text("loc_sell_trade_txt6")+" BTC",
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    13.0,
+                                    !buySell
+                                        ? CustomTheme.of(context).splashColor
+                                        : CustomTheme.of(context)
+                                        .hintColor
+                                        .withOpacity(0.5),
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                              ),
+                            ))),
+                  ))
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 15.0,
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: CustomTheme.of(context).hintColor.withOpacity(0.5),
+                width: 1.0),
+            borderRadius: BorderRadius.circular(5.0),
+            color: Colors.transparent,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                  child: Container(
+                    height: 40.0,
+                    child: TextField(
+                      controller: amountController,
+                      keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                      style: CustomWidget(context: context).CustomSizedTextStyle(
+                          13.0,
+                          Theme.of(context).splashColor,
+                          FontWeight.w500,
+                          'FontRegular'),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          price = "0.0";
+                          // price = value.toString();
+                          totalAmount = "0.00";
+
+                          if (enableTrade) {
+                            if (amountController.text.isNotEmpty) {
+                              totalAmount =
+                                  (double.parse(amountController.text.toString()) *
+                                      double.parse(livePrice))
+                                      .toStringAsFixed(4);
+                            }
+                          } else {
+                            if (amountController.text.isNotEmpty) {
+                              double amount = double.parse(amountController.text);
+                              if (amount >= 0) {
+                                tradeAmount = amountController.text;
+                                if (enableStopLimit) {
+                                  if (stopPriceController.text.isNotEmpty &&
+                                      priceController.text.isNotEmpty) {
+                                    if ((double.parse(
+                                        priceController.text.toString()) >
+                                        double.parse(
+                                            stopPriceController.text.toString()))) {
+                                      takerFee =
+                                          ((double.parse(priceController.text
+                                              .toString()) *
+                                              double.parse(amountController
+                                                  .text
+                                                  .toString()) *
+                                              double.parse(takerFeeValue
+                                                  .toString())) /
+                                              100)
+                                              .toStringAsFixed(4);
+
+                                      totalAmount = (double.parse(amountController
+                                          .text
+                                          .toString()) *
+                                          double.parse(
+                                              priceController.text.toString()))
+                                          .toStringAsFixed(4);
+                                      /*  totalAmount = ((double.parse(
+                                priceController.text
+                                    .toString()) *
+                                double.parse(amountController
+                                    .text
+                                    .toString())) -
+                                double.parse(takerFee))
+                                .toStringAsFixed(4);*/
+                                    } else {
+                                      takerFee = ((double.parse(stopPriceController
+                                          .text
+                                          .toString()) *
+                                          double.parse(amountController.text
+                                              .toString()) *
+                                          double.parse(
+                                              takerFeeValue.toString())) /
+                                          100)
+                                          .toStringAsFixed(4);
+
+                                      totalAmount = (double.parse(amountController
+                                          .text
+                                          .toString()) *
+                                          double.parse(livePrice))
+                                          .toStringAsFixed(4);
+
+                                      /*totalAmount = ((double.parse(
+                                stopPriceController.text
+                                    .toString()) *
+                                double.parse(amountController
+                                    .text
+                                    .toString())) -
+                                double.parse(takerFee))
+                                .toStringAsFixed(4);*/
+                                    }
+                                  }
+                                } else {
+                                  if (priceController.text.isNotEmpty) {
+                                    if (!buySell) {
+                                      takerFee = ((amount *
+                                          double.parse(priceController.text
+                                              .toString()) *
+                                          double.parse(
+                                              takerFeeValue.toString())) /
+                                          100)
+                                          .toStringAsFixed(4);
+
+                                      totalAmount = (double.parse(amountController
+                                          .text
+                                          .toString()) *
+                                          double.parse(
+                                              priceController.text.toString()))
+                                          .toStringAsFixed(4);
+                                    } else {
+                                      totalAmount = (double.parse(amountController
+                                          .text
+                                          .toString()) *
+                                          double.parse(
+                                              priceController.text.toString()))
+                                          .toStringAsFixed(4);
+                                    }
+                                  }
+                                }
+                              }
+                            } else {
+                              tradeAmount = amountController.text;
+                              totalAmount = "0.000";
+                            }
+                          }
+                        });
+                      },
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(bottom: 8.0),
+                          hintText: "Quantity",
+                          hintStyle: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              12.0,
+                              Theme.of(context).splashColor.withOpacity(0.5),
+                              FontWeight.w500,
+                              'FontRegular'),
+                          border: InputBorder.none),
+                      textAlign: TextAlign.start,
+                    ),
+                  )),
+              Container(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "0.001",
+                      style: CustomWidget(context: context)
+                          .CustomSizedTextStyle(
+                          10.0,
+                          Theme.of(context).splashColor,
+                          FontWeight.w500,
+                          'FontRegular'),
+                    ),
+                    const SizedBox(width: 5.0,),
+                    Container(
+                      padding: EdgeInsets.all(3.0),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).selectedRowColor,
+                      ),
+                      child: Icon(
+                        Icons.currency_bitcoin,
+                        color: Theme.of(context).primaryColor,
+                        size: 10.0,
+                      ),
+                    ),
+                    const SizedBox(width: 5.0,),
+                    Text(
+                      "BTC",
+                      style: CustomWidget(context: context)
+                          .CustomSizedTextStyle(
+                          10.0,
+                          Theme.of(context).splashColor,
+                          FontWeight.w500,
+                          'FontRegular'),
+                    ),
+                    const SizedBox(width: 5.0,),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        // Container(
+        //   width: MediaQuery.of(context).size.width,
+        //   height: 35.0,
+        //   padding: EdgeInsets.fromLTRB(5, 0.0, 5, 0.0),
+        //   decoration: BoxDecoration(
+        //     border: Border.all(
+        //         color: CustomTheme.of(context).hintColor.withOpacity(0.5),
+        //         width: 1.0),
+        //     borderRadius: BorderRadius.circular(5.0),
+        //     color: Colors.transparent,
+        //   ),
+        //   child: Theme(
+        //     data: Theme.of(context).copyWith(
+        //       canvasColor: CustomTheme.of(context).backgroundColor,
+        //     ),
+        //     child: DropdownButtonHideUnderline(
+        //       child: DropdownButton(
+        //         menuMaxHeight: MediaQuery.of(context).size.height * 0.7,
+        //         items: !futureOption
+        //             ? chartTime
+        //                 .map((value) => DropdownMenuItem(
+        //                       child: Text(
+        //                         value.toString(),
+        //                         style: CustomWidget(context: context)
+        //                             .CustomSizedTextStyle(
+        //                                 10.0,
+        //                                 Theme.of(context).errorColor,
+        //                                 FontWeight.w500,
+        //                                 'FontRegular'),
+        //                       ),
+        //                       value: value,
+        //                     ))
+        //                 .toList()
+        //             : chartTimeFuture
+        //                 .map((value) => DropdownMenuItem(
+        //                       child: Text(
+        //                         value.toString(),
+        //                         style: CustomWidget(context: context)
+        //                             .CustomSizedTextStyle(
+        //                                 10.0,
+        //                                 Theme.of(context).errorColor,
+        //                                 FontWeight.w500,
+        //                                 'FontRegular'),
+        //                       ),
+        //                       value: value,
+        //                     ))
+        //                 .toList(),
+        //         onChanged: (value) async {
+        //           setState(() {
+        //             selectedTime = value.toString();
+        //             if (selectedTime == "Limit Order") {
+        //               enableTrade = false;
+        //               _currentSliderValue = 0;
+        //               tleverageVal = "1";
+        //               enableStopLimit = false;
+        //               priceController.clear();
+        //               amountController.clear();
+        //               totalAmount = "0.00";
+        //             } else if (selectedTime == "Market Order") {
+        //               priceController.clear();
+        //               _currentSliderValue = 0;
+        //               tleverageVal = "1";
+        //               amountController.clear();
+        //               enableStopLimit = false;
+        //               totalAmount = "0.00";
+        //               enableTrade = true;
+        //             } else {
+        //               enableStopLimit = true;
+        //               _currentSliderValue = 0;
+        //               tleverageVal = "1";
+        //               priceController.clear();
+        //               amountController.clear();
+        //               stopPriceController.clear();
+        //               totalAmount = "0.00";
+        //               enableTrade = false;
+        //             }
+        //           });
+        //         },
+        //         hint: Text(
+        //           "Select Category",
+        //           style: CustomWidget(context: context).CustomSizedTextStyle(
+        //               12.0,
+        //               Theme.of(context).errorColor,
+        //               FontWeight.w500,
+        //               'FontRegular'),
+        //         ),
+        //         isExpanded: true,
+        //         value: selectedTime,
+        //         icon: const Icon(
+        //           Icons.arrow_drop_down,
+        //           // color: AppColors.otherTextColor,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(
+        //   height: 20.0,
+        // ),
+        // Container(
+        //   padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+        //   decoration: BoxDecoration(
+        //     border: Border.all(
+        //         color: enableTrade
+        //             ? Theme.of(context).hintColor.withOpacity(0.1)
+        //             : CustomTheme.of(context).hintColor.withOpacity(0.5),
+        //         width: 1.0),
+        //     borderRadius: BorderRadius.circular(5.0),
+        //     color: Colors.transparent,
+        //   ),
+        //   child: Row(
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Flexible(
+        //           child: Container(
+        //         height: 40.0,
+        //         child: TextField(
+        //           enabled: !enableTrade,
+        //           controller: priceController,
+        //           keyboardType:
+        //               const TextInputType.numberWithOptions(decimal: true),
+        //           style: CustomWidget(context: context).CustomSizedTextStyle(
+        //               13.0,
+        //               Theme.of(context).splashColor,
+        //               FontWeight.w500,
+        //               'FontRegular'),
+        //           inputFormatters: [
+        //             FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+        //           ],
+        //           onChanged: (value) {
+        //             setState(() {
+        //               price = "0.0";
+        //               // price = value.toString();
+        //               tradeAmount = "0.00";
+        //
+        //               if (priceController.text.isNotEmpty) {
+        //                 double amount = double.parse(priceController.text);
+        //                 price = priceController.text;
+        //                 if (enableStopLimit) {
+        //                   if (priceController.text.isNotEmpty &&
+        //                       stopPriceController.text.isNotEmpty) {
+        //                     if ((double.parse(priceController.text.toString()) >
+        //                         double.parse(
+        //                             stopPriceController.text.toString()))) {
+        //                       takerFee = ((double.parse(
+        //                                       priceController.text.toString()) *
+        //                                   double.parse(amountController.text
+        //                                       .toString()) *
+        //                                   double.parse(
+        //                                       takerFeeValue.toString())) /
+        //                               100)
+        //                           .toStringAsFixed(4);
+        //
+        //                       totalAmount = (double.parse(
+        //                                   amountController.text.toString()) *
+        //                               double.parse(
+        //                                   priceController.text.toString()))
+        //                           .toStringAsFixed(4);
+        //                       /*  totalAmount = ((double.parse(
+        //                             priceController.text
+        //                                 .toString()) *
+        //                             double.parse(amountController
+        //                                 .text
+        //                                 .toString())) -
+        //                             double.parse(takerFee))
+        //                             .toStringAsFixed(4);*/
+        //                     } else {
+        //                       takerFee = ((double.parse(stopPriceController.text
+        //                                       .toString()) *
+        //                                   double.parse(amountController.text
+        //                                       .toString()) *
+        //                                   double.parse(
+        //                                       takerFeeValue.toString())) /
+        //                               100)
+        //                           .toStringAsFixed(4);
+        //
+        //                       totalAmount = (double.parse(
+        //                                   amountController.text.toString()) *
+        //                               double.parse(
+        //                                   stopPriceController.text.toString()))
+        //                           .toStringAsFixed(4);
+        //
+        //                       /*totalAmount = ((double.parse(
+        //                             stopPriceController.text
+        //                                 .toString()) *
+        //                             double.parse(amountController
+        //                                 .text
+        //                                 .toString())) -
+        //                             double.parse(takerFee))
+        //                             .toStringAsFixed(4);*/
+        //                     }
+        //                   }
+        //                 } else {
+        //                   if (priceController.text.isNotEmpty) {
+        //                     if (!buySell) {
+        //                       takerFee = ((amount *
+        //                                   double.parse(
+        //                                       priceController.text.toString()) *
+        //                                   double.parse(
+        //                                       takerFeeValue.toString())) /
+        //                               100)
+        //                           .toStringAsFixed(4);
+        //
+        //                       totalAmount = (double.parse(
+        //                                   amountController.text.toString()) *
+        //                               double.parse(
+        //                                   priceController.text.toString()))
+        //                           .toStringAsFixed(4);
+        //                     } else {
+        //                       totalAmount = (double.parse(
+        //                                   amountController.text.toString()) *
+        //                               double.parse(
+        //                                   priceController.text.toString()))
+        //                           .toStringAsFixed(4);
+        //                     }
+        //                   }
+        //                 }
+        //                 /* if (!buySell) {
+        //                       takerFee = ((amount *
+        //                           double.parse(amountController.text
+        //                               .toString()) *
+        //                           double.parse(
+        //                               takerFeeValue.toString())) /
+        //                           100)
+        //                           .toStringAsFixed(4);
+        //
+        //                       totalAmount = ((double.parse(amountController.text
+        //                           .toString()) *
+        //                           double.parse(priceController.text
+        //                               .toString())) -
+        //                           double.parse(takerFee))
+        //                           .toStringAsFixed(4);
+        //                     } else {*/
+        //                 /* totalAmount = (double.parse(
+        //                           amountController.text.toString()) *
+        //                           double.parse(
+        //                               priceController.text.toString()))
+        //                           .toStringAsFixed(4);*/
+        //                 // }
+        //               } else {
+        //                 tradeAmount = "0.00";
+        //                 totalAmount = "0.00";
+        //               }
+        //             });
+        //           },
+        //           decoration: InputDecoration(
+        //               contentPadding: EdgeInsets.only(bottom: 8.0),
+        //               hintText: "Price",
+        //               hintStyle: CustomWidget(context: context)
+        //                   .CustomSizedTextStyle(
+        //                       12.0,
+        //                       Theme.of(context).splashColor.withOpacity(0.5),
+        //                       FontWeight.w500,
+        //                       'FontRegular'),
+        //               border: InputBorder.none),
+        //           textAlign: TextAlign.start,
+        //         ),
+        //       )),
+        //       InkWell(
+        //         onTap: () {
+        //           if (enableTrade) {
+        //           } else {
+        //             setState(() {
+        //               if (priceController.text.isNotEmpty) {
+        //                 double amount = double.parse(priceController.text);
+        //                 if (amount > 0) {
+        //                   amount = amount - 0.01;
+        //                   priceController.text = amount.toStringAsFixed(2);
+        //                   tradeAmount = priceController.text;
+        //                   if (enableStopLimit) {
+        //                     if (stopPriceController.text.isNotEmpty &&
+        //                         priceController.text.isNotEmpty) {
+        //                       if ((double.parse(
+        //                               priceController.text.toString()) >
+        //                           double.parse(
+        //                               stopPriceController.text.toString()))) {
+        //                         takerFee =
+        //                             ((double.parse(priceController.text
+        //                                             .toString()) *
+        //                                         double.parse(amountController
+        //                                             .text
+        //                                             .toString()) *
+        //                                         double.parse(
+        //                                             takerFeeValue.toString())) /
+        //                                     100)
+        //                                 .toStringAsFixed(4);
+        //
+        //                         totalAmount = (double.parse(
+        //                                     amountController.text.toString()) *
+        //                                 double.parse(
+        //                                     priceController.text.toString()))
+        //                             .toStringAsFixed(4);
+        //                         /*  totalAmount = ((double.parse(
+        //                             priceController.text
+        //                                 .toString()) *
+        //                             double.parse(amountController
+        //                                 .text
+        //                                 .toString())) -
+        //                             double.parse(takerFee))
+        //                             .toStringAsFixed(4);*/
+        //                       } else {
+        //                         takerFee = ((double.parse(stopPriceController
+        //                                         .text
+        //                                         .toString()) *
+        //                                     double.parse(amountController.text
+        //                                         .toString()) *
+        //                                     double.parse(
+        //                                         takerFeeValue.toString())) /
+        //                                 100)
+        //                             .toStringAsFixed(4);
+        //
+        //                         totalAmount = (double.parse(
+        //                                     amountController.text.toString()) *
+        //                                 double.parse(livePrice))
+        //                             .toStringAsFixed(4);
+        //
+        //                         /*totalAmount = ((double.parse(
+        //                             stopPriceController.text
+        //                                 .toString()) *
+        //                             double.parse(amountController
+        //                                 .text
+        //                                 .toString())) -
+        //                             double.parse(takerFee))
+        //                             .toStringAsFixed(4);*/
+        //                       }
+        //                     }
+        //                   } else {
+        //                     if (priceController.text.isNotEmpty) {
+        //                       if (!buySell) {
+        //                         takerFee = ((amount *
+        //                                     double.parse(priceController.text
+        //                                         .toString()) *
+        //                                     double.parse(
+        //                                         takerFeeValue.toString())) /
+        //                                 100)
+        //                             .toStringAsFixed(4);
+        //
+        //                         totalAmount = (double.parse(
+        //                                     amountController.text.toString()) *
+        //                                 double.parse(
+        //                                     priceController.text.toString()))
+        //                             .toStringAsFixed(4);
+        //                       } else {
+        //                         totalAmount = (double.parse(
+        //                                     amountController.text.toString()) *
+        //                                 double.parse(
+        //                                     priceController.text.toString()))
+        //                             .toStringAsFixed(4);
+        //                       }
+        //                     }
+        //                   }
+        //                 }
+        //               } else {
+        //                 priceController.text = "0.01";
+        //                 tradeAmount = amountController.text;
+        //                 totalAmount = "0.000";
+        //               }
+        //             });
+        //           }
+        //         },
+        //         child: Container(
+        //             height: 40.0,
+        //             width: 35.0,
+        //             padding: const EdgeInsets.only(
+        //               left: 10.0,
+        //               right: 10.0,
+        //             ),
+        //             decoration: BoxDecoration(
+        //               color: enableTrade
+        //                   ? Theme.of(context).cardColor.withOpacity(0.2)
+        //                   : CustomTheme.of(context).cardColor,
+        //               borderRadius: BorderRadius.circular(2),
+        //             ),
+        //             child: Center(
+        //               child: Text(
+        //                 "-",
+        //                 style: CustomWidget(context: context)
+        //                     .CustomSizedTextStyle(
+        //                         20.0,
+        //                         enableTrade
+        //                             ? Theme.of(context)
+        //                                 .cardColor
+        //                                 .withOpacity(0.5)
+        //                             : Theme.of(context).splashColor,
+        //                         FontWeight.w500,
+        //                         'FontRegular'),
+        //               ),
+        //             )),
+        //       ),
+        //       const SizedBox(
+        //         width: 2.0,
+        //       ),
+        //       InkWell(
+        //         onTap: () {
+        //           if (enableTrade) {
+        //           } else {
+        //             setState(() {
+        //               if (priceController.text.isNotEmpty) {
+        //                 double amount = double.parse(priceController.text);
+        //                 if (amount >= 0) {
+        //                   amount = amount + 0.01;
+        //                   priceController.text = amount.toStringAsFixed(2);
+        //                   tradeAmount = priceController.text;
+        //                   if (enableStopLimit) {
+        //                     if (stopPriceController.text.isNotEmpty &&
+        //                         priceController.text.isNotEmpty) {
+        //                       if ((double.parse(
+        //                               priceController.text.toString()) >
+        //                           double.parse(
+        //                               stopPriceController.text.toString()))) {
+        //                         takerFee =
+        //                             ((double.parse(priceController.text
+        //                                             .toString()) *
+        //                                         double.parse(amountController
+        //                                             .text
+        //                                             .toString()) *
+        //                                         double.parse(
+        //                                             takerFeeValue.toString())) /
+        //                                     100)
+        //                                 .toStringAsFixed(4);
+        //
+        //                         totalAmount = (double.parse(
+        //                                     amountController.text.toString()) *
+        //                                 double.parse(
+        //                                     priceController.text.toString()))
+        //                             .toStringAsFixed(4);
+        //                         /*  totalAmount = ((double.parse(
+        //                             priceController.text
+        //                                 .toString()) *
+        //                             double.parse(amountController
+        //                                 .text
+        //                                 .toString())) -
+        //                             double.parse(takerFee))
+        //                             .toStringAsFixed(4);*/
+        //                       } else {
+        //                         takerFee = ((double.parse(stopPriceController
+        //                                         .text
+        //                                         .toString()) *
+        //                                     double.parse(amountController.text
+        //                                         .toString()) *
+        //                                     double.parse(
+        //                                         takerFeeValue.toString())) /
+        //                                 100)
+        //                             .toStringAsFixed(4);
+        //
+        //                         totalAmount = (double.parse(
+        //                                     amountController.text.toString()) *
+        //                                 double.parse(livePrice))
+        //                             .toStringAsFixed(4);
+        //
+        //                         /*totalAmount = ((double.parse(
+        //                             stopPriceController.text
+        //                                 .toString()) *
+        //                             double.parse(amountController
+        //                                 .text
+        //                                 .toString())) -
+        //                             double.parse(takerFee))
+        //                             .toStringAsFixed(4);*/
+        //                       }
+        //                     }
+        //                   } else {
+        //                     if (priceController.text.isNotEmpty) {
+        //                       if (!buySell) {
+        //                         takerFee = ((amount *
+        //                                     double.parse(priceController.text
+        //                                         .toString()) *
+        //                                     double.parse(
+        //                                         takerFeeValue.toString())) /
+        //                                 100)
+        //                             .toStringAsFixed(4);
+        //
+        //                         totalAmount = (double.parse(
+        //                                     amountController.text.toString()) *
+        //                                 double.parse(
+        //                                     priceController.text.toString()))
+        //                             .toStringAsFixed(4);
+        //                       } else {
+        //                         totalAmount = (double.parse(
+        //                                     amountController.text.toString()) *
+        //                                 double.parse(
+        //                                     priceController.text.toString()))
+        //                             .toStringAsFixed(4);
+        //                       }
+        //                     }
+        //                   }
+        //                 }
+        //               } else {
+        //                 priceController.text = "0.01";
+        //                 tradeAmount = amountController.text;
+        //                 totalAmount = "0.000";
+        //               }
+        //             });
+        //           }
+        //         },
+        //         child: Container(
+        //             height: 40.0,
+        //             width: 35.0,
+        //             padding: const EdgeInsets.only(
+        //               left: 10.0,
+        //               right: 10.0,
+        //             ),
+        //             decoration: BoxDecoration(
+        //               color: enableTrade
+        //                   ? Theme.of(context).cardColor.withOpacity(0.2)
+        //                   : CustomTheme.of(context).cardColor,
+        //               borderRadius: BorderRadius.circular(2),
+        //             ),
+        //             child: Center(
+        //               child: Text(
+        //                 "+",
+        //                 style: CustomWidget(context: context)
+        //                     .CustomSizedTextStyle(
+        //                         20.0,
+        //                         enableTrade
+        //                             ? Theme.of(context)
+        //                                 .cardColor
+        //                                 .withOpacity(0.2)
+        //                             : Theme.of(context).splashColor,
+        //                         FontWeight.w500,
+        //                         'FontRegular'),
+        //               ),
+        //             )),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        const SizedBox(
+          height: 15.0,
+        ),
+        Container(
+          child: Row(
+            children: [
+              Flexible(child: InkWell(
+                onTap: () {
+                  setState(() {
+
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.0),
+                    color: Theme.of(context)
+                        .bottomAppBarColor
+                        .withOpacity(0.5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "10%",
+                      style: CustomWidget(context: context)
+                          .CustomSizedTextStyle(
+                          10.0,
+                          Theme.of(context).splashColor,
+                          FontWeight.w500,
+                          'FontRegular'),
+                    ),
+                  ),
+                ),
+              ),flex: 1,),
+              const SizedBox(width: 5.0,),
+              Flexible(child: InkWell(
+                onTap: () {
+                  setState(() {
+
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.0),
+                    color: Theme.of(context)
+                        .bottomAppBarColor
+                        .withOpacity(0.5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "25%",
+                      style: CustomWidget(context: context)
+                          .CustomSizedTextStyle(
+                          10.0,
+                          Theme.of(context).splashColor,
+                          FontWeight.w500,
+                          'FontRegular'),
+                    ),
+                  ),
+                ),
+              ),flex: 1,),
+              const SizedBox(width: 5.0,),
+              Flexible(child: InkWell(
+                onTap: () {
+                  setState(() {
+
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.0),
+                    color: Theme.of(context)
+                        .bottomAppBarColor
+                        .withOpacity(0.5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "50%",
+                      style: CustomWidget(context: context)
+                          .CustomSizedTextStyle(
+                          10.0,
+                          Theme.of(context).splashColor,
+                          FontWeight.w500,
+                          'FontRegular'),
+                    ),
+                  ),
+                ),
+              ),flex: 1,),
+              const SizedBox(width: 5.0,),
+              Flexible(child: InkWell(
+                onTap: () {
+                  setState(() {
+
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.0),
+                    color: Theme.of(context)
+                        .bottomAppBarColor
+                        .withOpacity(0.5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "75%",
+                      style: CustomWidget(context: context)
+                          .CustomSizedTextStyle(
+                          10.0,
+                          Theme.of(context).splashColor,
+                          FontWeight.w500,
+                          'FontRegular'),
+                    ),
+                  ),
+                ),
+              ),flex: 1,),
+              const SizedBox(width: 5.0,),
+              Flexible(child: InkWell(
+                onTap: () {
+                  setState(() {
+
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.0),
+                    color: Theme.of(context)
+                        .bottomAppBarColor
+                        .withOpacity(0.5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "100%",
+                      style: CustomWidget(context: context)
+                          .CustomSizedTextStyle(
+                          10.0,
+                          Theme.of(context).splashColor,
+                          FontWeight.w500,
+                          'FontRegular'),
+                    ),
+                  ),
+                ),
+              ),flex: 1,)
+            ],
+          ),
+        ),
+        enableTrade
+            ? Container()
+            : const SizedBox(
+          height: 5.0,
+        ),
+        SizedBox(
+          height: 15.0,
+        ),
+
+        // enableStopLimit
+        //     ? SizedBox(
+        //         height: 15.0,
+        //       )
+        //     : Container(),
+        // enableStopLimit
+        //     ? Container(
+        //         padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+        //         decoration: BoxDecoration(
+        //           border: Border.all(
+        //               color: enableTrade
+        //                   ? Theme.of(context).hintColor.withOpacity(0.1)
+        //                   : CustomTheme.of(context).hintColor.withOpacity(0.5),
+        //               width: 1.0),
+        //           borderRadius: BorderRadius.circular(5.0),
+        //           color: Colors.transparent,
+        //         ),
+        //         child: Row(
+        //           crossAxisAlignment: CrossAxisAlignment.center,
+        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //           children: [
+        //             Flexible(
+        //                 child: Container(
+        //               height: 40.0,
+        //               child: TextField(
+        //                 enabled: !enableTrade,
+        //                 controller: stopPriceController,
+        //                 keyboardType: const TextInputType.numberWithOptions(
+        //                     decimal: true),
+        //                 style: CustomWidget(context: context)
+        //                     .CustomSizedTextStyle(
+        //                         13.0,
+        //                         Theme.of(context).splashColor,
+        //                         FontWeight.w500,
+        //                         'FontRegular'),
+        //                 inputFormatters: [
+        //                   FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+        //                 ],
+        //                 onChanged: (value) {
+        //                   setState(() {
+        //                     stopPrice = "0.0";
+        //                     // price = value.toString();
+        //                     tradeAmount = "0.00";
+        //
+        //                     if (stopPriceController.text.isNotEmpty) {
+        //                       stopPrice = stopPriceController.text;
+        //                       tradeAmount = stopPriceController.text.toString();
+        //                       if (amountController.text.isNotEmpty &&
+        //                           priceController.text.isNotEmpty) {
+        //                         if (!buySell) {
+        //                           if ((double.parse(
+        //                                   priceController.text.toString()) >
+        //                               double.parse(stopPriceController.text
+        //                                   .toString()))) {
+        //                             takerFee =
+        //                                 ((double.parse(priceController.text
+        //                                                 .toString()) *
+        //                                             double.parse(
+        //                                                 amountController.text
+        //                                                     .toString()) *
+        //                                             double.parse(takerFeeValue
+        //                                                 .toString())) /
+        //                                         100)
+        //                                     .toStringAsFixed(4);
+        //
+        //                             totalAmount = (double.parse(priceController
+        //                                         .text
+        //                                         .toString()) *
+        //                                     double.parse(amountController.text
+        //                                         .toString()))
+        //                                 .toStringAsFixed(4);
+        //                           } else {
+        //                             takerFee = ((double.parse(
+        //                                             stopPriceController.text
+        //                                                 .toString()) *
+        //                                         double.parse(amountController
+        //                                             .text
+        //                                             .toString()) *
+        //                                         double.parse(
+        //                                             takerFeeValue.toString())) /
+        //                                     100)
+        //                                 .toStringAsFixed(4);
+        //
+        //                             totalAmount = (double.parse(
+        //                                         stopPriceController.text
+        //                                             .toString()) *
+        //                                     double.parse(amountController.text
+        //                                         .toString()))
+        //                                 .toStringAsFixed(4);
+        //                           }
+        //                         } else {
+        //                           if ((double.parse(
+        //                                   priceController.text.toString()) >
+        //                               double.parse(stopPriceController.text
+        //                                   .toString()))) {
+        //                             takerFee =
+        //                                 ((double.parse(priceController.text
+        //                                                 .toString()) *
+        //                                             double.parse(
+        //                                                 amountController.text
+        //                                                     .toString()) *
+        //                                             double.parse(takerFeeValue
+        //                                                 .toString())) /
+        //                                         100)
+        //                                     .toStringAsFixed(4);
+        //
+        //                             totalAmount = (double.parse(priceController
+        //                                         .text
+        //                                         .toString()) *
+        //                                     double.parse(amountController.text
+        //                                         .toString()))
+        //                                 .toStringAsFixed(4);
+        //                             ;
+        //                           } else {
+        //                             takerFee = ((double.parse(amountController
+        //                                             .text
+        //                                             .toString()) *
+        //                                         double.parse(stopPriceController
+        //                                             .text
+        //                                             .toString()) *
+        //                                         double.parse(
+        //                                             takerFeeValue.toString())) /
+        //                                     100)
+        //                                 .toStringAsFixed(4);
+        //
+        //                             totalAmount = (double.parse(
+        //                                         stopPriceController.text
+        //                                             .toString()) *
+        //                                     double.parse(amountController.text
+        //                                         .toString()))
+        //                                 .toStringAsFixed(4);
+        //                           }
+        //                         }
+        //                       }
+        //                     } else {
+        //                       tradeAmount = "0.00";
+        //                       totalAmount = "0.00";
+        //                     }
+        //                   });
+        //                 },
+        //                 decoration: InputDecoration(
+        //                     contentPadding: EdgeInsets.only(bottom: 8.0),
+        //                     hintText: "Stop-Price",
+        //                     hintStyle: CustomWidget(context: context)
+        //                         .CustomSizedTextStyle(
+        //                             12.0,
+        //                             Theme.of(context)
+        //                                 .splashColor
+        //                                 .withOpacity(0.5),
+        //                             FontWeight.w500,
+        //                             'FontRegular'),
+        //                     border: InputBorder.none),
+        //                 textAlign: TextAlign.start,
+        //               ),
+        //             )),
+        //             InkWell(
+        //               onTap: () {
+        //                 if (enableTrade) {
+        //                 } else {
+        //                   setState(() {
+        //                     tradeAmount = "0.00";
+        //                     if (stopPriceController.text.isNotEmpty) {
+        //                       double amount =
+        //                           double.parse(stopPriceController.text);
+        //
+        //                       if (amount > 0) {
+        //                         amount = amount - 0.01;
+        //                         stopPriceController.text =
+        //                             amount.toStringAsFixed(2);
+        //                         stopPrice = stopPriceController.text;
+        //
+        //                         if (amountController.text.isNotEmpty) {
+        //                           tradeAmount =
+        //                               amountController.text.toString();
+        //                           takerFee = ((amount *
+        //                                       double.parse(amountController.text
+        //                                           .toString()) *
+        //                                       double.parse(
+        //                                           takerFeeValue.toString())) /
+        //                                   100)
+        //                               .toStringAsFixed(4);
+        //
+        //                           totalAmount = (double.parse(
+        //                                       stopPriceController.text
+        //                                           .toString()) *
+        //                                   double.parse(
+        //                                       amountController.text.toString()))
+        //                               .toStringAsFixed(4);
+        //                         } else {
+        //                           totalAmount = "0.00";
+        //                         }
+        //                       } else {
+        //                         stopPriceController.text = tradeAmount;
+        //                         totalAmount = "0.00";
+        //                       }
+        //                     } else {
+        //                       stopPriceController.text = "0.01";
+        //                     }
+        //                   });
+        //                 }
+        //               },
+        //               child: Container(
+        //                   height: 40.0,
+        //                   width: 35.0,
+        //                   padding: const EdgeInsets.only(
+        //                     left: 10.0,
+        //                     right: 10.0,
+        //                   ),
+        //                   decoration: BoxDecoration(
+        //                     color: enableTrade
+        //                         ? Theme.of(context).cardColor.withOpacity(0.2)
+        //                         : CustomTheme.of(context).cardColor,
+        //                     borderRadius: BorderRadius.circular(2),
+        //                   ),
+        //                   child: Center(
+        //                     child: Text(
+        //                       "-",
+        //                       style: CustomWidget(context: context)
+        //                           .CustomSizedTextStyle(
+        //                               20.0,
+        //                               enableTrade
+        //                                   ? Theme.of(context)
+        //                                       .cardColor
+        //                                       .withOpacity(0.5)
+        //                                   : Theme.of(context).splashColor,
+        //                               FontWeight.w500,
+        //                               'FontRegular'),
+        //                     ),
+        //                   )),
+        //             ),
+        //             const SizedBox(
+        //               width: 2.0,
+        //             ),
+        //             InkWell(
+        //               onTap: () {
+        //                 if (enableTrade) {
+        //                 } else {
+        //                   setState(() {
+        //                     if (stopPriceController.text.isNotEmpty) {
+        //                       double amount =
+        //                           double.parse(stopPriceController.text);
+        //                       if (amount >= 0) {
+        //                         amount = amount + 0.01;
+        //                         stopPriceController.text =
+        //                             amount.toStringAsFixed(2);
+        //                         stopPrice = stopPriceController.text;
+        //                         if (amountController.text.isNotEmpty) {
+        //                           takerFee = ((double.parse(amountController
+        //                                           .text
+        //                                           .toString()) *
+        //                                       double.parse(stopPriceController
+        //                                           .text
+        //                                           .toString()) *
+        //                                       double.parse(
+        //                                           takerFeeValue.toString())) /
+        //                                   100)
+        //                               .toStringAsFixed(4);
+        //
+        //                           totalAmount = (double.parse(
+        //                                       stopPriceController.text
+        //                                           .toString()) *
+        //                                   double.parse(
+        //                                       amountController.text.toString()))
+        //                               .toStringAsFixed(4);
+        //                         } else {
+        //                           // priceController.text = "0.01";
+        //                           tradeAmount = "0.00";
+        //                         }
+        //                       }
+        //                     } else {
+        //                       stopPriceController.text = "0.01";
+        //                       tradeAmount = "0.00";
+        //                     }
+        //                   });
+        //                 }
+        //               },
+        //               child: Container(
+        //                   height: 40.0,
+        //                   width: 35.0,
+        //                   padding: const EdgeInsets.only(
+        //                     left: 10.0,
+        //                     right: 10.0,
+        //                   ),
+        //                   decoration: BoxDecoration(
+        //                     color: enableTrade
+        //                         ? Theme.of(context).cardColor.withOpacity(0.2)
+        //                         : CustomTheme.of(context).cardColor,
+        //                     borderRadius: BorderRadius.circular(2),
+        //                   ),
+        //                   child: Center(
+        //                     child: Text(
+        //                       "+",
+        //                       style: CustomWidget(context: context)
+        //                           .CustomSizedTextStyle(
+        //                               20.0,
+        //                               enableTrade
+        //                                   ? Theme.of(context)
+        //                                       .cardColor
+        //                                       .withOpacity(0.2)
+        //                                   : Theme.of(context).splashColor,
+        //                               FontWeight.w500,
+        //                               'FontRegular'),
+        //                     ),
+        //                   )),
+        //             ),
+        //           ],
+        //         ),
+        //       )
+        //     : SizedBox(),
+        // Container(
+        //   child: SliderTheme(
+        //     data: SliderThemeData(
+        //       valueIndicatorColor: CustomTheme.of(context).indicatorColor,
+        //       trackHeight: 10.0,
+        //       activeTickMarkColor: CustomTheme.of(context).splashColor,
+        //       inactiveTickMarkColor:
+        //           CustomTheme.of(context).splashColor.withOpacity(0.5),
+        //       tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 5.0),
+        //       trackShape: CustomTrackShape(),
+        //       thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
+        //       overlayShape: RoundSliderOverlayShape(overlayRadius: 28.0),
+        //     ),
+        //     child: spotOption
+        //         ? Slider(
+        //             value: _currentSliderValue,
+        //             max: 100,
+        //             divisions: 4,
+        //             label: _currentSliderValue.round().toString(),
+        //             inactiveColor:
+        //                 CustomTheme.of(context).splashColor.withOpacity(0.5),
+        //             activeColor: buySell
+        //                 ? CustomTheme.of(context).indicatorColor
+        //                 : CustomTheme.of(context).scaffoldBackgroundColor,
+        //             onChanged: (double value) {
+        //               setState(() {
+        //                 _currentSliderValue = value;
+        //                 if (_currentSliderValue > 0) {
+        //                   _tLevSliderValue = _currentSliderValue.toInt();
+        //                   // print(_currentSliderValue.round().toString());
+        //                   int val = _currentSliderValue.toInt();
+        //                   setState(() {
+        //                     if (spotOption) {
+        //                       priceController.clear();
+        //                       amountController.clear();
+        //                     }
+        //                     if (spotOption) {
+        //                       if (!enableTrade) {
+        //                         priceController.text = livePrice;
+        //                       }
+        //                       if (double.parse(livePrice) > 0) {
+        //                         if (buySell) {
+        //                           double perce =
+        //                               ((double.parse(balance) * val) /
+        //                                       double.parse(livePrice)) /
+        //                                   100;
+        //
+        //                           amountController.text =
+        //                               double.parse(perce.toString())
+        //                                   .toStringAsFixed(4);
+        //                           double a = double.parse(perce
+        //                               .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+        //                           double b = double.parse(livePrice);
+        //                           totalAmount = double.parse((a * b).toString())
+        //                               .toStringAsFixed(4);
+        //                         } else {
+        //                           double perce =
+        //                               (double.parse(balance) * val) / 100;
+        //
+        //                           amountController.text =
+        //                               double.parse(perce.toString())
+        //                                   .toStringAsFixed(4);
+        //                           double a = double.parse(perce
+        //                               .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+        //                           double b = double.parse(livePrice);
+        //                           totalAmount = double.parse((a * b).toString())
+        //                               .toStringAsFixed(4);
+        //                         }
+        //                       }
+        //                     }
+        //                   });
+        //                 } else {
+        //                   if (spotOption) {
+        //                     amountController.text = "0.00";
+        //                     if (!enableTrade) {
+        //                       priceController.text = "0.00";
+        //                     }
+        //                     totalAmount = "0.00";
+        //                   }
+        //                   tleverageVal = "0";
+        //                 }
+        //               });
+        //             },
+        //           )
+        //         : Slider(
+        //             value: _currentSliderValue,
+        //             max: 100,
+        //             divisions: 4,
+        //             label: tleverageVal,
+        //             inactiveColor:
+        //                 CustomTheme.of(context).splashColor.withOpacity(0.5),
+        //             activeColor: buySell
+        //                 ? CustomTheme.of(context).indicatorColor
+        //                 : CustomTheme.of(context).scaffoldBackgroundColor,
+        //             onChanged: (double value) {
+        //               setState(() {
+        //                 _currentSliderValue = value;
+        //                 if (_currentSliderValue > 0) {
+        //                   _tLevSliderValue = _currentSliderValue.toInt();
+        //                   // print(_currentSliderValue.round().toString());
+        //                   setState(() {
+        //                     if (_currentSliderValue.round().toString() ==
+        //                         "25") {
+        //                       tleverageVal = "1";
+        //                     } else if (_currentSliderValue.round().toString() ==
+        //                         "50") {
+        //                       tleverageVal = "10";
+        //                     } else if (_currentSliderValue.round().toString() ==
+        //                         "75") {
+        //                       tleverageVal = "50";
+        //                     } else if (_currentSliderValue.round().toString() ==
+        //                         "100") {
+        //                       tleverageVal = "75";
+        //                     }
+        //                   });
+        //                   int val = _currentSliderValue.toInt();
+        //                   setState(() {
+        //                     if (spotOption) {
+        //                       priceController.clear();
+        //                       amountController.clear();
+        //                     }
+        //                     if (spotOption) {
+        //                       if (!enableTrade) {
+        //                         priceController.text = livePrice;
+        //                       }
+        //                       if (double.parse(livePrice) > 0) {
+        //                         if (buySell) {
+        //                           double perce =
+        //                               ((double.parse(balance) * val) /
+        //                                       double.parse(livePrice)) /
+        //                                   100;
+        //
+        //                           amountController.text =
+        //                               double.parse(perce.toString())
+        //                                   .toStringAsFixed(4);
+        //                           double a = double.parse(perce
+        //                               .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+        //                           double b = double.parse(livePrice);
+        //                           totalAmount = double.parse((a * b).toString())
+        //                               .toStringAsFixed(4);
+        //                         } else {
+        //                           double perce =
+        //                               (double.parse(balance) * val) / 100;
+        //
+        //                           amountController.text =
+        //                               double.parse(perce.toString())
+        //                                   .toStringAsFixed(4);
+        //                           double a = double.parse(perce
+        //                               .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+        //                           double b = double.parse(livePrice);
+        //                           totalAmount = double.parse((a * b).toString())
+        //                               .toStringAsFixed(4);
+        //                         }
+        //                       }
+        //                     }
+        //                   });
+        //                 } else {
+        //                   if (spotOption) {
+        //                     amountController.text = "0.00";
+        //                     if (!enableTrade) {
+        //                       priceController.text = "0.00";
+        //                     }
+        //                     totalAmount = "0.00";
+        //                   }
+        //                   tleverageVal = "0";
+        //                 }
+        //               });
+        //             },
+        //           ),
+        //   ),
+        // ),
+        // Container(
+        //   padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+        //   decoration: BoxDecoration(
+        //     border: Border.all(
+        //         color: CustomTheme.of(context).hintColor.withOpacity(0.5),
+        //         width: 1.0),
+        //     borderRadius: BorderRadius.circular(5.0),
+        //     color: Colors.transparent,
+        //   ),
+        //   child: Center(
+        //     child: Padding(
+        //       padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+        //       child: Text(
+        //         totalAmount +
+        //             " " +
+        //             (futureOption
+        //                 ? coinTwoName
+        //                 : (buySell ? coinTwoName : coinName)),
+        //         style: CustomWidget(context: context).CustomSizedTextStyle(
+        //             13.0,
+        //             Theme.of(context).splashColor,
+        //             FontWeight.w500,
+        //             'FontRegular'),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(
+        //   height: 15.0,
+        // ),
+        InkWell(
+          onTap: () {
+            setState(() {});
+          },
+          child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+                color: buySell
+                    ? CustomTheme.of(context).indicatorColor
+                    : CustomTheme.of(context).scaffoldBackgroundColor,
+              ),
+              child: Center(
+                child: Text(
+                  buySell
+                      ? AppLocalizations.instance.text("loc_sell_trade_txt5")+" Now"+" 0.001"+ " BTC"
+                      : AppLocalizations.instance.text("loc_sell_trade_txt6")+" Now"+" 0.001"+ " BTC",
+                  style: CustomWidget(context: context).CustomSizedTextStyle(
+                      14.0,
+                      Theme.of(context).splashColor,
+                      FontWeight.w500,
+                      'FontRegular'),
+                ),
+              )),
+        ),
+        SizedBox(
+          height: 15.0,
+        ),
+        Center(
+          child: Text(
+            AppLocalizations.instance.text("loc_buy") +" Quote Expire In"+" 8"+" Seconds",
+            style: CustomWidget(context: context)
+                .CustomSizedTextStyle(
+                10.0,
+                Theme.of(context).splashColor,
+                FontWeight.w500,
+                'FontRegular'),
+          ),
         ),
         SizedBox(
           height: 5.0,
