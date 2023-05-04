@@ -114,10 +114,12 @@ class _MarketSceen1State extends State<MarketSceen>
           "type": "subscribe",
           "feeds": arrData,
         };
+
         channelOpenOrder = IOWebSocketChannel.connect(
             Uri.parse("wss://ws.sfox.com/ws"),
             pingInterval: Duration(seconds: 30));
 
+        channelOpenOrder!.sink.add(json.encode(messageJSON));
         channelOpenOrder!.sink.add(json.encode(messageJSON));
         socketData();
       },

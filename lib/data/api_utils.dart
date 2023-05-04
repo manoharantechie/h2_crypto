@@ -619,24 +619,6 @@ class APIUtils {
     return GoogleEnabletfaModel.fromJson(json.decode(response.body));
   }
 
-  Future<OpenOrderListModel> openOrderList(String id) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    final response = await http.post(
-        Uri.parse(baseURL + openOrderUrl + "?id=$id"),
-        headers: {"authorization": preferences.getString("token").toString()});
-    return OpenOrderListModel.fromJson(json.decode(response.body));
-  }
-
-  Future<OpenOrderListModel> AllopenOrderList(bool open) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String url =
-        open ? baseURL + openOrderUrl + "?all=true" : baseURL + openOrderUrl;
-    final response = await http.post(Uri.parse(url),
-        headers: {"authorization": preferences.getString("token").toString()});
-    return OpenOrderListModel.fromJson(json.decode(response.body));
-  }
-
   Future<AllOpenOrderModel> AllopenOrderHistory(String mode) async {
     var bodyData = {
       'mode': mode,

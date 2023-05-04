@@ -30,8 +30,9 @@ class _WalletScreenState extends State<WalletScreen> {
   ScrollController controller = ScrollController();
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
-  String btcBalance="0.00";
-  String usdBalance="0.00";
+  String btcBalance = "0.00";
+  String usdBalance = "0.00";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -143,7 +144,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "~ "+double.parse(usdBalance).toStringAsFixed(2),
+                        "~ " + double.parse(usdBalance).toStringAsFixed(2),
                         style: CustomWidget(context: context)
                             .CustomSizedTextStyle(
                                 14.0,
@@ -176,11 +177,10 @@ class _WalletScreenState extends State<WalletScreen> {
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
-               Container(
-
+                  Container(
                     height: 45.0,
-                    padding: EdgeInsets.only(left: 10.0,right: 10.0),
-                    width: MediaQuery.of(context).size.width ,
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    width: MediaQuery.of(context).size.width,
                     child: TextField(
                       controller: searchController,
                       focusNode: searchFocus,
@@ -188,21 +188,27 @@ class _WalletScreenState extends State<WalletScreen> {
                       onEditingComplete: () {
                         setState(() {
                           searchFocus.unfocus();
-                          coinList=searchPair;
+                          coinList = searchPair;
                         });
                       },
                       onChanged: (value) {
                         setState(() {
                           setState(() {
                             coinList = [];
-                            for(int m=0;m<searchPair.length;m++)
-                            {
-                              if(searchPair[m].symbol.toString().toLowerCase().contains(value.toLowerCase())|| searchPair[m].symbol.toString().toLowerCase().contains(value.toLowerCase()))
-                              {
+                            for (int m = 0; m < searchPair.length; m++) {
+                              if (searchPair[m]
+                                      .symbol
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()) ||
+                                  searchPair[m]
+                                      .symbol
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase())) {
                                 coinList.add(searchPair[m]);
                               }
                             }
-
                           });
                         });
                       },
@@ -220,8 +226,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             .backgroundColor
                             .withOpacity(0.5),
                         border: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(5.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
                           borderSide: BorderSide(
                               color: CustomTheme.of(context)
                                   .splashColor
@@ -229,8 +234,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               width: 1.0),
                         ),
                         disabledBorder: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(5.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
                           borderSide: BorderSide(
                               color: CustomTheme.of(context)
                                   .splashColor
@@ -238,8 +242,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               width: 1.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(5.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
                           borderSide: BorderSide(
                               color: CustomTheme.of(context)
                                   .splashColor
@@ -247,8 +250,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               width: 1.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(5.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
                           borderSide: BorderSide(
                               color: CustomTheme.of(context)
                                   .splashColor
@@ -256,19 +258,23 @@ class _WalletScreenState extends State<WalletScreen> {
                               width: 1.0),
                         ),
                         errorBorder: const OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(5)),
-                          borderSide:
-                          BorderSide(color: Colors.red, width: 0.0),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          borderSide: BorderSide(color: Colors.red, width: 0.0),
                         ),
                       ),
                     ),
                   ),
-                  coinList.length > 0?const SizedBox(height: 10.0,):Container(),
+                  coinList.length > 0
+                      ? const SizedBox(
+                          height: 10.0,
+                        )
+                      : Container(),
                 ],
               ),
             ),
-            SizedBox(height: 10.0,),
+            SizedBox(
+              height: 10.0,
+            ),
             coinList.length > 0
                 ? Container(
                     decoration: BoxDecoration(
@@ -290,329 +296,357 @@ class _WalletScreenState extends State<WalletScreen> {
                       top: MediaQuery.of(context).size.height * 0.35,
                     ),
                     child: SingleChildScrollView(
-                      controller: controller,
-                      child: Column(
-                        children: [
-
-                        SingleChildScrollView(
-                          child:   ListView.builder(
-                            itemCount: coinList.length,
-                            shrinkWrap: true,
-                            controller: controller,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Column(
-                                children: [
-                                  Theme(
-                                    data: Theme.of(context)
-                                        .copyWith(dividerColor: Colors.transparent),
-                                    child: ExpansionTile(
-                                      key: PageStorageKey(index.toString()),
-                                      title: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
+                        controller: controller,
+                        child: Column(
+                          children: [
+                            SingleChildScrollView(
+                              child: ListView.builder(
+                                itemCount: coinList.length,
+                                shrinkWrap: true,
+                                controller: controller,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Column(
+                                    children: [
+                                      Theme(
+                                        data: Theme.of(context).copyWith(
+                                            dividerColor: Colors.transparent),
+                                        child: ExpansionTile(
+                                          key: PageStorageKey(index.toString()),
+                                          title: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Container(
-                                                height: 40.0,
-                                                width: 40.0,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(5.0),
-                                                  color:  CustomTheme.of(context).cardColor,
-                                                ),
-                                                padding: EdgeInsets.all(5.0),
-
-                                                child: SvgPicture.network(
-                                                  coinList[index]
-
-                                                      .image
-                                                      .toString(),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 15.0,
-                                              ),
-                                              Column(
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.center,
                                                 children: [
-                                                  Text(
-                                                    coinList[index].name
-                                                        .toString(),
-                                                    style: CustomWidget(
+                                                  Container(
+                                                    height: 40.0,
+                                                    width: 40.0,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5.0),
+                                                      color: CustomTheme.of(
+                                                              context)
+                                                          .cardColor,
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.all(5.0),
+                                                    child: SvgPicture.network(
+                                                      coinList[index]
+                                                          .image
+                                                          .toString(),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 15.0,
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        coinList[index]
+                                                            .name
+                                                            .toString(),
+                                                        style: CustomWidget(
+                                                                context:
+                                                                    context)
+                                                            .CustomTextStyle(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .splashColor,
+                                                                FontWeight.w400,
+                                                                'FontRegular'),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10.0,
+                                                      ),
+                                                      Text(
+                                                        "( " +
+                                                            coinList[index]
+                                                                .symbol
+                                                                .toString()
+                                                                .toUpperCase() +
+                                                            " )",
+                                                        style: CustomWidget(
+                                                                context:
+                                                                    context)
+                                                            .CustomTextStyle(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .splashColor,
+                                                                FontWeight
+                                                                    .normal,
+                                                                'FontRegular'),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Text(
+                                                coinList[index]
+                                                    .balance
+                                                    .toString(),
+                                                style: CustomWidget(
                                                         context: context)
-                                                        .CustomTextStyle(
+                                                    .CustomTextStyle(
                                                         Theme.of(context)
                                                             .splashColor,
                                                         FontWeight.w400,
                                                         'FontRegular'),
-                                                    softWrap: true,
-                                                    overflow: TextOverflow.ellipsis,
-
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 10.0,
-                                                  ),
-                                                  Text(
-                                                    "( " +
-                                                        coinList[index]
-                                                            .symbol
-                                                            .toString().toUpperCase() +
-                                                        " )",
-                                                    style: CustomWidget(
-                                                        context: context)
-                                                        .CustomTextStyle(
-                                                        Theme.of(context)
-                                                            .splashColor,
-                                                        FontWeight.normal,
-                                                        'FontRegular'),
-                                                  ),
-                                                ],
-                                              )
+                                              ),
                                             ],
                                           ),
-                                          Text(
-                                            double.parse(coinList[index]
-                                                .balance
-                                                .toString())
-                                                .toStringAsFixed(2),
-                                            style: CustomWidget(context: context)
-                                                .CustomTextStyle(
-                                                Theme.of(context).splashColor,
-                                                FontWeight.w400,
-                                                'FontRegular'),
-                                          ),
-                                        ],
-                                      ),
-                                      children: [
-                                        Row(
                                           children: [
-                                            Column(
+                                            Row(
                                               children: [
-                                                Text(
-                                                 "Margin Balance",
-                                                  style: CustomWidget(
-                                                      context: context)
-                                                      .CustomTextStyle(
-                                                      Theme.of(context)
-                                                          .splashColor,
-                                                      FontWeight.w400,
-                                                      'FontRegular'),
-                                                  softWrap: true,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                Text(
-                                                  coinList[index]
-                                                      .escrow
-                                                      .toString(),
-                                                  style: CustomWidget(
-                                                      context: context)
-                                                      .CustomTextStyle(
-                                                      Theme.of(context)
-                                                          .splashColor,
-                                                      FontWeight.w400,
-                                                      'FontRegular'),
-                                                  softWrap: true,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                            ),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  "Total Balance",
-                                                  style: CustomWidget(
-                                                      context: context)
-                                                      .CustomTextStyle(
-                                                      Theme.of(context)
-                                                          .splashColor,
-                                                      FontWeight.w400,
-                                                      'FontRegular'),
-                                                  softWrap: true,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                Text(
-                                                  coinList[index]
-                                                      .total
-                                                      .toString(),
-                                                  style: CustomWidget(
-                                                      context: context)
-                                                      .CustomTextStyle(
-                                                      Theme.of(context)
-                                                          .splashColor,
-                                                      FontWeight.w400,
-                                                      'FontRegular'),
-                                                  softWrap: true,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                            ),
-                                          ],
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                        ),
-                                        SizedBox(height: 10.0,),
-
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 10.0,left: 10.0, right: 10.0),
-                                          child: Column(
-                                            children: [
-                                              const SizedBox(
-                                                height: 10.0,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 10.0, right: 10.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                                Column(
                                                   children: [
-                                                    InkWell(
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            color: CustomTheme.of(
-                                                                context)
-                                                                .cardColor,
-                                                            borderRadius:
-                                                            const BorderRadius
-                                                                .all(
-                                                                Radius
-                                                                    .circular(
-                                                                    5.0)),
-                                                            border: Border.all(
-                                                                color:
-                                                                CustomTheme.of(
-                                                                    context)
-                                                                    .cardColor,
-                                                                width: 0.5)),
-                                                        padding:
-                                                        const EdgeInsets.only(
-                                                            top: 8.0,
-                                                            bottom: 8.0,
-                                                            left: 25.0,
-                                                            right: 25.0),
-                                                        child: Center(
-                                                          child: Text(
-                                                            AppLocalizations
-                                                                .instance
-                                                                .text(
-                                                                "loc_deposit"),
-                                                            style: CustomWidget(
-                                                                context:
-                                                                context)
-                                                                .CustomTextStyle(
-                                                                Theme.of(
-                                                                    context)
-                                                                    .splashColor,
-                                                                FontWeight.w500,
-                                                                'FontRegular'),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  DepositScreen(
-                                                                      id: coinList[
-                                                                      index]
-                                                                          .symbol
-                                                                          .toString()),
-                                                            ));
-                                                      },
+                                                    Text(
+                                                      "Margin Balance",
+                                                      style: CustomWidget(
+                                                              context: context)
+                                                          .CustomTextStyle(
+                                                              Theme.of(context)
+                                                                  .splashColor,
+                                                              FontWeight.w400,
+                                                              'FontRegular'),
+                                                      softWrap: true,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                              const WithDraw(),
-                                                            ));
-                                                      },
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                            const BorderRadius
-                                                                .all(
-                                                                Radius
-                                                                    .circular(
-                                                                    5.0)),
-                                                            color: CustomTheme.of(
-                                                                context)
-                                                                .cardColor,
-                                                            border: Border.all(
-                                                                color:
-                                                                CustomTheme.of(
-                                                                    context)
-                                                                    .cardColor,
-                                                                width: 0.5)),
-                                                        padding:
-                                                        const EdgeInsets.only(
-                                                            top: 8.0,
-                                                            bottom: 8.0,
-                                                            left: 25.0,
-                                                            right: 25.0),
-                                                        child: Center(
-                                                          child: Text(
-                                                            AppLocalizations
-                                                                .instance
-                                                                .text(
-                                                                "loc_withdraw"),
-                                                            style: CustomWidget(
-                                                                context:
-                                                                context)
-                                                                .CustomTextStyle(
-                                                                Theme.of(
-                                                                    context)
-                                                                    .splashColor,
-                                                                FontWeight.w500,
-                                                                'FontRegular'),
-                                                          ),
-                                                        ),
-                                                      ),
+                                                    Text(
+                                                      coinList[index]
+                                                          .escrow
+                                                          .toString(),
+                                                      style: CustomWidget(
+                                                              context: context)
+                                                          .CustomTextStyle(
+                                                              Theme.of(context)
+                                                                  .splashColor,
+                                                              FontWeight.w400,
+                                                              'FontRegular'),
+                                                      softWrap: true,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ],
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                 ),
+                                                Column(
+                                                  children: [
+                                                    Text(
+                                                      "Total Balance",
+                                                      style: CustomWidget(
+                                                              context: context)
+                                                          .CustomTextStyle(
+                                                              Theme.of(context)
+                                                                  .splashColor,
+                                                              FontWeight.w400,
+                                                              'FontRegular'),
+                                                      softWrap: true,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      coinList[index]
+                                                          .total
+                                                          .toString(),
+                                                      style: CustomWidget(
+                                                              context: context)
+                                                          .CustomTextStyle(
+                                                              Theme.of(context)
+                                                                  .splashColor,
+                                                              FontWeight.w400,
+                                                              'FontRegular'),
+                                                      softWrap: true,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                ),
+                                              ],
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                            ),
+                                            SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0,
+                                                  left: 10.0,
+                                                  right: 10.0),
+                                              child: Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 10.0,
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 10.0,
+                                                        right: 10.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        InkWell(
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                                color: CustomTheme.of(
+                                                                        context)
+                                                                    .cardColor,
+                                                                borderRadius:
+                                                                    const BorderRadius
+                                                                            .all(
+                                                                        Radius.circular(
+                                                                            5.0)),
+                                                                border: Border.all(
+                                                                    color: CustomTheme.of(
+                                                                            context)
+                                                                        .cardColor,
+                                                                    width:
+                                                                        0.5)),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 8.0,
+                                                                    bottom: 8.0,
+                                                                    left: 25.0,
+                                                                    right:
+                                                                        25.0),
+                                                            child: Center(
+                                                              child: Text(
+                                                                AppLocalizations
+                                                                    .instance
+                                                                    .text(
+                                                                        "loc_deposit"),
+                                                                style: CustomWidget(
+                                                                        context:
+                                                                            context)
+                                                                    .CustomTextStyle(
+                                                                        Theme.of(context)
+                                                                            .splashColor,
+                                                                        FontWeight
+                                                                            .w500,
+                                                                        'FontRegular'),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => DepositScreen(
+                                                                      id: coinList[
+                                                                              index]
+                                                                          .symbol
+                                                                          .toString()),
+                                                                ));
+                                                          },
+                                                        ),
+                                                        InkWell(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          const WithDraw(),
+                                                                ));
+                                                          },
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    const BorderRadius
+                                                                            .all(
+                                                                        Radius.circular(
+                                                                            5.0)),
+                                                                color: CustomTheme.of(
+                                                                        context)
+                                                                    .cardColor,
+                                                                border: Border.all(
+                                                                    color: CustomTheme.of(
+                                                                            context)
+                                                                        .cardColor,
+                                                                    width:
+                                                                        0.5)),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 8.0,
+                                                                    bottom: 8.0,
+                                                                    left: 25.0,
+                                                                    right:
+                                                                        25.0),
+                                                            child: Center(
+                                                              child: Text(
+                                                                AppLocalizations
+                                                                    .instance
+                                                                    .text(
+                                                                        "loc_withdraw"),
+                                                                style: CustomWidget(
+                                                                        context:
+                                                                            context)
+                                                                    .CustomTextStyle(
+                                                                        Theme.of(context)
+                                                                            .splashColor,
+                                                                        FontWeight
+                                                                            .w500,
+                                                                        'FontRegular'),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            )
+                                          ],
+                                          trailing: Container(
+                                            width: 1.0,
+                                            height: 10.0,
                                           ),
-                                        )
-                                      ],
-                                      trailing: Container(
-                                        width: 1.0,
-                                        height: 10.0,
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  Container(
-                                    height: 1.0,
-                                    width: MediaQuery.of(context).size.width,
-                                    color: CustomTheme.of(context).cardColor,
-                                  )
-                                ],
-                              );
-                            },
-                          ),
-                        )
-                        ],
-                      )
-                    ))
+                                      const SizedBox(
+                                        height: 5.0,
+                                      ),
+                                      Container(
+                                        height: 1.0,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        color:
+                                            CustomTheme.of(context).cardColor,
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        )))
                 : Container(
                     margin: EdgeInsets.only(
                         top: MediaQuery.of(context).size.height * 0.38),
@@ -634,12 +668,13 @@ class _WalletScreenState extends State<WalletScreen> {
 
   getCoinList() {
     apiUtils.walletBalanceInfo().then((UserWalletBalanceModel loginData) {
-
       if (loginData.success!) {
         setState(() {
           loading = false;
           coinList = loginData.result!;
           searchPair = loginData.result!;
+
+          coinList..sort((a, b) => b.balance!.compareTo(a.balance!));
         });
       } else {
         setState(() {
@@ -653,7 +688,7 @@ class _WalletScreenState extends State<WalletScreen> {
     });
   }
 
-  getBalanceList(){
+  getBalanceList() {
     apiUtils.getWalletBalance().then((WalletBalModel loginData) {
       print(loginData.statusCode);
       if (loginData.statusCode == 200) {
@@ -674,5 +709,3 @@ class _WalletScreenState extends State<WalletScreen> {
     });
   }
 }
-
-
