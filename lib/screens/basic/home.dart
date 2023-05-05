@@ -21,6 +21,8 @@ import 'package:h2_crypto/screens/wallet/wallet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
+import '../../data/model/user_wallet_balance_model.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -54,6 +56,7 @@ class _HomeState extends State<Home>
   bool dashView = false;
   int slideIndex = 0;
   List<BottomNavItem>? _bottomItems;
+  List<UserWalletResult> coinList = [];
 
   List grid_name = [
     "Withdraw",
@@ -106,6 +109,7 @@ class _HomeState extends State<Home>
 
     loading = true;
     getDetails();
+    getCoinList();
 
 
     _tabController = TabController(vsync: this, length: 3);
@@ -837,71 +841,243 @@ class _HomeState extends State<Home>
                     const SizedBox(
                       height: 20.0,
                     ),
-                    Container(
-                      child: GridView.builder(
-                        padding: EdgeInsets.zero,
-                        controller: _scrollController,
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 20,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Top Cryptocurency",
+                          style: CustomWidget(context: context).CustomSizedTextStyle(
+                              15.0,
+                              Theme.of(context).splashColor,
+                              FontWeight.w500,
+                              'FontRegular'),
+                          textAlign: TextAlign.center,
                         ),
-                        // physics: ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: grid_name.length,
-                        itemBuilder: (BuildContext context, index) {
-                          return InkWell(
-                            onTap: () {
+                        Column(
+                          children: [
+                            Text(
+                              "See All",
+                              style: CustomWidget(context: context)
+                                  .CustomSizedTextStyle(
+                                  12.0,
+                                  Theme.of(context).buttonColor,
+                                  FontWeight.w500,
+                                  'FontRegular'),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(
+                              height: 3.0,
+                            ),
+                            Container(
+                              width: 50,
+                              height: 1.0,
+                              decoration:
+                              BoxDecoration(color: Theme.of(context).primaryColor),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
 
-                            },
-                            child: Container(
-                              // padding: EdgeInsets.only(
-                              //     top: 5.0,
-                              //     bottom: 5.0,
-                              //     right: 12.0,
-                              //     left: 12.0),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).focusColor,
-                                  border: Border.all(
-                                      width: 1.0,
-                                      color: Theme.of(context).splashColor.withOpacity(0.5)),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                alignment: Alignment.center,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      grid_img[index].toString(),
-                                      height: 25.0,
-                                      color: Theme.of(context).buttonColor,
-                                    ),
-                                    SizedBox(
-                                      height: 10.0,
-                                    ),
-                                    Text(
-                                      // AppLocalizations.instance.text("loc_widthdraw"),
-                                      grid_name[index].toString(),
-                                      style: CustomWidget(context: context)
-                                          .CustomSizedTextStyle(
-                                          12.0,
-                                          Theme.of(context).splashColor,
-                                          FontWeight.w500,
-                                          'FontRegular'),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                )),
-                          );
-                        },
+                    coinList.length > 0
+                        ? Container(
+                      padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 5.0, top: 15.0),
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1.0,color: CustomTheme.of(context).splashColor.withOpacity(0.5),),
+                            borderRadius: BorderRadius.circular(15.0)
+                        ),
+                        // decoration: BoxDecoration(
+                        //     gradient: LinearGradient(
+                        //         begin: Alignment.topRight,
+                        //         end: Alignment.bottomCenter,
+                        //         stops: [
+                        //           0.1,
+                        //           0.5,
+                        //           0.8,
+                        //         ],
+                        //         colors: [
+                        //           CustomTheme.of(context).primaryColor,
+                        //           CustomTheme.of(context).backgroundColor,
+                        //           CustomTheme.of(context).accentColor,
+                        //         ])),
+                        width: MediaQuery.of(context).size.width,
+                        // margin: EdgeInsets.only(
+                        //   top: MediaQuery.of(context).size.height * 0.35,
+                        // ),
+                        child: SingleChildScrollView(
+                            controller: controller,
+                            child: Column(
+                              children: [
+                                SingleChildScrollView(
+                                  child: ListView.builder(
+                                    itemCount: 5,
+                                    shrinkWrap: true,
+                                    controller: controller,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceEvenly,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    height: 40.0,
+                                                    width: 40.0,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          5.0),
+                                                      color: CustomTheme.of(
+                                                          context)
+                                                          .cardColor,
+                                                    ),
+                                                    padding:
+                                                    EdgeInsets.all(5.0),
+                                                    child: SvgPicture.network(
+                                                      coinList[index]
+                                                          .image
+                                                          .toString(),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 15.0,
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      Text(
+                                                        coinList[index]
+                                                            .name
+                                                            .toString(),
+                                                        style: CustomWidget(
+                                                            context:
+                                                            context)
+                                                            .CustomTextStyle(
+                                                            Theme.of(
+                                                                context)
+                                                                .splashColor,
+                                                            FontWeight.w400,
+                                                            'FontRegular'),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10.0,
+                                                      ),
+                                                      Text(
+                                                        "( " +
+                                                            coinList[index]
+                                                                .symbol
+                                                                .toString()
+                                                                .toUpperCase() +
+                                                            " )",
+                                                        style: CustomWidget(
+                                                            context:
+                                                            context)
+                                                            .CustomTextStyle(
+                                                            Theme.of(
+                                                                context)
+                                                                .splashColor,
+                                                            FontWeight
+                                                                .normal,
+                                                            'FontRegular'),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Text(
+                                                coinList[index]
+                                                    .balance
+                                                    .toString(),
+                                                style: CustomWidget(
+                                                    context: context)
+                                                    .CustomTextStyle(
+                                                    Theme.of(context)
+                                                        .splashColor,
+                                                    FontWeight.w400,
+                                                    'FontRegular'),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 10.0,
+                                          ),
+                                          Container(
+                                            height: 1.0,
+                                            width:
+                                            MediaQuery.of(context).size.width,
+                                            color:
+                                            CustomTheme.of(context).cardColor,
+                                          ),
+                                          const SizedBox(
+                                            height: 10.0,
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                )
+                              ],
+                            )))
+                        : Container(
+                      margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.38),
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      color: CustomTheme.of(context).primaryColor,
+                      child: Center(
+                        child: Text(
+                          "No Records Found..!",
+                          style: CustomWidget(context: context).CustomTextStyle(
+                              Theme.of(context).splashColor,
+                              FontWeight.w400,
+                              'FontRegular'),
+                        ),
                       ),
+                    ),
+
+                    SizedBox(
+                      height: 20.0,
                     ),
 
                   ],
                 ),
         ));
+  }
+
+  getCoinList() {
+    apiUtils.walletBalanceInfo().then((UserWalletBalanceModel loginData) {
+      if (loginData.success!) {
+        setState(() {
+          loading = false;
+          coinList = loginData.result!;
+
+          coinList..sort((a, b) => b.balance!.compareTo(a.balance!));
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
+    });
   }
 
   getBannerList() {
