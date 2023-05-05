@@ -813,9 +813,11 @@ class _HomeState extends State<Home>
                         )
                       ],
                     ),
+
                     SizedBox(
                       height: 20.0,
                     ),
+
                     coinList.length > 0
                         ? Container(
                         width: MediaQuery.of(context).size.width,
