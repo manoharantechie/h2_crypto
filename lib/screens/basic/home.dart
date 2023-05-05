@@ -707,79 +707,16 @@ class _HomeState extends State<Home>
                     const SizedBox(
                       height: 20.0,
                     ),
-                    // GridView.builder(
-                    //   itemCount: grid_name.length,
-                    //   shrinkWrap: true,
-                    //   gridDelegate:
-                    //   SliverGridDelegateWithFixedCrossAxisCount(
-                    //     childAspectRatio: 2.0,
-                    //     crossAxisCount: 2,
-                    //     crossAxisSpacing: 20.0,
-                    //     mainAxisSpacing: 20.0,
-                    //   ),
-                    //   itemBuilder: (BuildContext context, int index) {
-                    //     return Row(
-                    //       crossAxisAlignment: CrossAxisAlignment.center,
-                    //       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //       children: [
-                    //         InkWell(
-                    //           onTap: () {
-                    //
-                    //           },
-                    //           child: Container(
-                    //             padding: EdgeInsets.only(
-                    //                 top: 5.0,
-                    //                 bottom: 5.0,
-                    //                 right: 12.0,
-                    //                 left: 12.0),
-                    //               decoration: BoxDecoration(
-                    //                 color: Theme.of(context).focusColor,
-                    //                 border: Border.all(
-                    //                     width: 1.0,
-                    //                     color: Theme.of(context).splashColor.withOpacity(0.5)),
-                    //                 borderRadius: BorderRadius.circular(10.0),
-                    //               ),
-                    //               alignment: Alignment.center,
-                    //               child: Column(
-                    //                 crossAxisAlignment: CrossAxisAlignment.center,
-                    //                 mainAxisAlignment: MainAxisAlignment.center,
-                    //                 children: [
-                    //                   SvgPicture.asset(
-                    //                     grid_img[index].toString(),
-                    //                     height: 25.0,
-                    //                     color: Theme.of(context).buttonColor,
-                    //                   ),
-                    //                   SizedBox(
-                    //                     height: 10.0,
-                    //                   ),
-                    //                   Text(
-                    //                     // AppLocalizations.instance.text("loc_widthdraw"),
-                    //                     grid_name[index].toString(),
-                    //                     style: CustomWidget(context: context)
-                    //                         .CustomSizedTextStyle(
-                    //                         12.0,
-                    //                         Theme.of(context).splashColor,
-                    //                         FontWeight.w500,
-                    //                         'FontRegular'),
-                    //                     textAlign: TextAlign.center,
-                    //                   ),
-                    //                 ],
-                    //               )),
-                    //         ),
-                    //         const SizedBox(
-                    //           width: 0.0,
-                    //         )
-                    //       ],
-                    //     );
-                    //   },
-                    // ),
+
+
                     Container(
                       child: GridView.builder(
                         padding: EdgeInsets.zero,
                         controller: _scrollController,
                         gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
+                          crossAxisCount:4,
+
                           crossAxisSpacing: 20,
                           mainAxisSpacing: 20,
                         ),
@@ -792,75 +729,7 @@ class _HomeState extends State<Home>
 
                             },
                             child: Container(
-                                // padding: EdgeInsets.only(
-                                //     top: 5.0,
-                                //     bottom: 5.0,
-                                //     right: 12.0,
-                                //     left: 12.0),
-                                decoration: BoxDecoration(
-                                  // color: Theme.of(context).focusColor,
-                                  border: Border.all(
-                                      width: 1.0,
-                                      color: Theme.of(context).splashColor.withOpacity(0.5)),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                alignment: Alignment.center,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      grid_img[index].toString(),
-                                      height: 25.0,
-                                      color: Theme.of(context).buttonColor,
-                                    ),
-                                    SizedBox(
-                                      height: 10.0,
-                                    ),
-                                    Text(
-                                      // AppLocalizations.instance.text("loc_widthdraw"),
-                                      grid_name[index].toString(),
-                                      style: CustomWidget(context: context)
-                                          .CustomSizedTextStyle(
-                                          12.0,
-                                          Theme.of(context).splashColor,
-                                          FontWeight.w500,
-                                          'FontRegular'),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                )),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    Container(
-                      child: GridView.builder(
-                        padding: EdgeInsets.zero,
-                        controller: _scrollController,
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 20,
-                        ),
-                        // physics: ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: grid_name.length,
-                        itemBuilder: (BuildContext context, index) {
-                          return InkWell(
-                            onTap: () {
 
-                            },
-                            child: Container(
-                              // padding: EdgeInsets.only(
-                              //     top: 5.0,
-                              //     bottom: 5.0,
-                              //     right: 12.0,
-                              //     left: 12.0),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).focusColor,
                                   border: Border.all(

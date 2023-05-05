@@ -76,10 +76,7 @@ class _MarketSceen1State extends State<MarketSceen>
         if (data != null || data != "null") {
 
 
-          setState(() {
-            loading=false;
 
-          });
 
           var decode = jsonDecode(data);
           NewSocketData ss=NewSocketData.fromJson(decode);

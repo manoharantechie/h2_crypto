@@ -44,7 +44,10 @@ class TradeScreen extends StatefulWidget {
 class _SellTradeScreenState extends State<TradeScreen>
     with TickerProviderStateMixin {
   List<String> marginType = ["Loan", " Repay", "Transfer"];
-  List<String> chartTime = ["Limit Order", "Market Order",];
+  List<String> chartTime = [
+    "Limit Order",
+    "Market Order",
+  ];
   List<String> chartTimeFuture = ["Limit Order", "Market Order"];
   List<String> transferType = ["Spot-Margin", "Margin-Spot"];
   List<String> tradeType = ["Spot", "Margin", "Future"];
@@ -84,7 +87,11 @@ class _SellTradeScreenState extends State<TradeScreen>
   APIUtils apiUtils = APIUtils();
   bool buyOption = true;
   bool sellOption = true;
-  final List<String> _decimal = ["0.01","0.0001","0.00000001", ];
+  final List<String> _decimal = [
+    "0.01",
+    "0.0001",
+    "0.00000001",
+  ];
   int decimalIndex = 8;
   bool cancelOrder = false;
   ScrollController controller = ScrollController();
@@ -102,8 +109,7 @@ class _SellTradeScreenState extends State<TradeScreen>
   String balance = "0.00";
   String escrow = "0.00";
   String totalBalance = "0.00";
-  String coinName = "";
-  String coinTwoName = "";
+
   String selectPairSymbol = "";
   String assetName = "";
   String totalAmount = "0.00";
@@ -144,6 +150,8 @@ class _SellTradeScreenState extends State<TradeScreen>
   String marginTradeAmount = "0.00";
 
   String token = "";
+
+  List<BalanceData> availableBalance = [];
 
   @override
   void initState() {
@@ -195,15 +203,44 @@ class _SellTradeScreenState extends State<TradeScreen>
               loading = false;
               String val = decode["recipient"];
 
-
-              print("Mano");
-              print(val);
-
               if (val.toLowerCase() ==
                   "ticker.sfox." + selectPair!.symbol!.toLowerCase()) {
                 var m = decode["payload"]["last"];
                 livePrice = m.toString();
               } else if (val == "private.user.balances") {
+
+
+
+                availableBalance.clear();
+                availableBalance = [];
+                var list1 = List<dynamic>.from(decode['payload']);
+                for (int m = 0; m < list1.length; m++) {
+                  availableBalance.add(BalanceData(
+                      list1[m]["currency"].toString(),
+                      list1[m]["balance"].toString()=="null"?"0.00": list1[m]["balance"].toString(),
+                    list1[m]["available"].toString()=="null"?"0.00": list1[m]["available"].toString(),
+                    list1[m]["trading_wallet"].toString()=="null"?"0.00": list1[m]["trading_wallet"].toString(),
+                  )
+                  );
+                }
+                for (int m = 0; m < availableBalance.length; m++) {
+                  if (buySell) {
+                    if (secondCoin.toLowerCase() ==
+                        availableBalance[m].currency.toLowerCase()) {
+                      balance = availableBalance[m].balance;
+                      escrow = availableBalance[m].available;
+                      totalBalance = availableBalance[m].trading;
+                    }
+                  }
+
+                  else {
+                    if (firstCoin.toLowerCase() ==
+                        availableBalance[m].currency.toLowerCase())
+                      balance = availableBalance[m].balance;
+                    escrow = availableBalance[m].available;
+                    totalBalance = availableBalance[m].trading;
+                  }
+                }
               } else if (val == "private.user.open-orders") {
                 openOrders = [];
                 openOrders.clear();
@@ -220,7 +257,8 @@ class _SellTradeScreenState extends State<TradeScreen>
                   volume: decode["payload"]["quantity"],
                   status: decode["payload"]["status"],
                 ));
-              } else if(val== "orderbook.net." + selectPair!.symbol!.toLowerCase()) {
+              } else if (val ==
+                  "orderbook.net." + selectPair!.symbol!.toLowerCase()) {
                 buyData.clear();
                 sellData.clear();
                 buyData = [];
@@ -249,12 +287,12 @@ class _SellTradeScreenState extends State<TradeScreen>
         String pair = selectPair!.symbol.toString();
 
         var ofeed = "orderbook.net.$pair";
-        var tfeed = "private.user.balances";
+         var tfeed = "private.user.balances";
         var tickerfeed = "ticker.sfox.$pair";
         var orderfeed = "private.user.open-orders";
         var messageJSON = {
           "type": "subscribe",
-          "feeds": [ofeed, tfeed, tickerfeed, orderfeed],
+          "feeds": [ofeed, tickerfeed, orderfeed,tfeed],
         };
         var authMessage = {
           "type": "authenticate",
@@ -282,13 +320,14 @@ class _SellTradeScreenState extends State<TradeScreen>
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return
-        /* Container(
-      height: MediaQuery.of(context).size.height,
+    return MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: Scaffold(
+          backgroundColor: CustomTheme.of(context).primaryColor,
+          body: Container(
+            height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(10.0),
             decoration: BoxDecoration(
@@ -296,588 +335,187 @@ class _SellTradeScreenState extends State<TradeScreen>
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: [
-                      0.1,
-                      0.5,
-                      0.9,
-                    ],
+                  0.1,
+                  0.5,
+                  0.9,
+                ],
                     colors: [
-                      CustomTheme.of(context).primaryColor,
-                      CustomTheme.of(context).backgroundColor,
-                      CustomTheme.of(context).accentColor,
-                    ])),
-      child: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          backgroundColor: CustomTheme.of(context).primaryColor,
-          appBar: AppBar(
-            toolbarHeight: 60.0,
-            elevation: 0,
-            backgroundColor:Colors.transparent,
-           title: TabBar(
-             padding: EdgeInsets.zero,
-             indicatorPadding: EdgeInsets.zero,
-             labelPadding: EdgeInsets.zero,
-             isScrollable: false,
-             labelColor: CustomTheme.of(context).buttonColor,
-             // labelPadding: EdgeInsets.only(right: 15.0,left: 15.0),
-             //<-- selected text color
-             unselectedLabelColor: CustomTheme.of(context)
-                 .splashColor
-                 .withOpacity(0.5),
-             // isScrollable: true,
-             onTap: (value) {
-               setState(() {
-                 if(value.toString() == "0"){
-                   spotOption=true;
-                   marginOption=false;
-                   futureOption=false;
-                 }if(value.toString()== "1"){
-                   spotOption=false;
-                   marginOption=true;
-                   futureOption=false;
-                 }else if(value.toString()=="2"){
-                   spotOption=false;
-                   marginOption=false;
-                   futureOption=true;
-                 }
-                 print(value.toString());
-               });
-             },
-             indicator:BoxDecoration(),
-             */ /*BoxDecoration(
-               border: Border.all(
-                 color: CustomTheme.of(context)
-                     .buttonColor,
-                 width: 0.5,
-               ),
-             ),*/ /*
-             indicatorColor: Colors.transparent,
-             tabs: <Tab>[
-               Tab(
-                 child: Container(
-                   decoration: BoxDecoration(
-                       border: Border.all(
-                           color: spotOption
-                               ? CustomTheme.of(context)
-                               .buttonColor
-                               : CustomTheme.of(context)
-                               .splashColor
-                               .withOpacity(0.5),
-                           width: spotOption ? 1.5 : 0.5)),
-                   child: Center(
-                       child: Padding(
-                         padding: spotOption
-                             ? EdgeInsets.only(
-                             top: 6.0, bottom: 6.0)
-                             : EdgeInsets.only(
-                             top: 7.0, bottom: 7.0),
-                         child: Text(
-                           AppLocalizations.instance
-                               .text("loc_sell_trade_txt1"),
-                           style: CustomWidget(context: context)
-                               .CustomSizedTextStyle(
-                               13.0,
-                               spotOption
-                                   ? CustomTheme.of(context)
-                                   .splashColor
-                                   : CustomTheme.of(context)
-                                   .hintColor
-                                   .withOpacity(0.5),
-                               FontWeight.w500,
-                               'FontRegular'),
-                         ),
-                       )),
-                 ),
-               ),
-               Tab(
-                 child: Container(
-                   decoration: BoxDecoration(
-                       border: Border.all(
-                           color: marginOption
-                               ? CustomTheme.of(context)
-                               .buttonColor
-                               : CustomTheme.of(context)
-                               .splashColor
-                               .withOpacity(0.5),
-                           width: marginOption ? 1.5 : 0.5)),
-                   child: Center(
-                       child: Padding(
-                         padding: marginOption
-                             ? EdgeInsets.only(
-                             top: 6.0, bottom: 6.0)
-                             : EdgeInsets.only(
-                             top: 7.0, bottom: 7.0),
-                         child: Text(
-                           AppLocalizations.instance
-                               .text("loc_sell_trade_txt2"),
-                           style: CustomWidget(context: context)
-                               .CustomSizedTextStyle(
-                               13.0,
-                               marginOption
-                                   ? CustomTheme.of(context)
-                                   .splashColor
-                                   : CustomTheme.of(context)
-                                   .hintColor
-                                   .withOpacity(0.5),
-                               FontWeight.w500,
-                               'FontRegular'),
-                         ),
-                       )),
-                 ),
-               ),
-               Tab(
-                 child: Container(
-                   decoration: BoxDecoration(
-                       border: Border.all(
-                           color: futureOption
-                               ? CustomTheme.of(context)
-                               .buttonColor
-                               : CustomTheme.of(context)
-                               .splashColor
-                               .withOpacity(0.5),
-                           width: futureOption ? 1.5 : 0.5)),
-                   child: Center(
-                       child: Padding(
-                         padding: futureOption
-                             ? EdgeInsets.only(
-                             top: 6.0, bottom: 6.0)
-                             : EdgeInsets.only(
-                             top: 7.0, bottom: 7.0),
-                         child: Text(
-                           AppLocalizations.instance
-                               .text("loc_sell_trade_txt3"),
-                           style: CustomWidget(context: context)
-                               .CustomSizedTextStyle(
-                               13.0,
-                               futureOption
-                                   ? CustomTheme.of(context)
-                                   .splashColor
-                                   : CustomTheme.of(context)
-                                   .hintColor
-                                   .withOpacity(0.5),
-                               FontWeight.w500,
-                               'FontRegular'),
-                         ),
-                       )),
-                 ),
-               ),
+                  CustomTheme.of(context).primaryColor,
+                  CustomTheme.of(context).backgroundColor,
+                  CustomTheme.of(context).accentColor,
+                ])),
+            child: Stack(
+              children: [
+                Container(
+                    child: SingleChildScrollView(
+                  controller: controller,
+                  child: Column(
+                    children: [
 
-             ],
-             controller: tradeTabController,
-           ),
-          ),
-          body: TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              spotUI(),
-              MarginTrade(),
-              comingsoon(),
-            ],
-            controller: tradeTabController,
-          ),
-        ),
-      ),
-    );*/
-
-        MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: Scaffold(
-              backgroundColor: CustomTheme.of(context).primaryColor,
-              body: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [
-                      0.1,
-                      0.5,
-                      0.9,
-                    ],
-                        colors: [
-                      CustomTheme.of(context).primaryColor,
-                      CustomTheme.of(context).backgroundColor,
-                      CustomTheme.of(context).accentColor,
-                    ])),
-                child: Stack(
-                  children: [
-                    Container(
-                        child: SingleChildScrollView(
-                      controller: controller,
-                      child: Column(
-                        children: [
-                          /* TabBar(
-                            isScrollable: false,
-                            labelColor: CustomTheme.of(context).splashColor,
-                            //<-- selected text color
-                            unselectedLabelColor: CustomTheme.of(context)
-                                .splashColor
-                                .withOpacity(0.5),
-                            // isScrollable: true,
-                            indicatorPadding:
-                            EdgeInsets.only(left: 10.0, right: 10.0),
-                            indicatorColor: CustomTheme.of(context).cardColor,
-                            tabs: <Tab>[
-                              Tab(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: spotOption
-                                              ? CustomTheme.of(context)
-                                              .buttonColor
-                                              : CustomTheme.of(context)
-                                              .splashColor
-                                              .withOpacity(0.5),
-                                          width: spotOption ? 1.5 : 0.5)),
-                                  child: Center(
-                                      child: Padding(
-                                        padding: spotOption
-                                            ? EdgeInsets.only(
-                                            top: 6.0, bottom: 6.0)
-                                            : EdgeInsets.only(
-                                            top: 7.0, bottom: 7.0),
-                                        child: Text(
-                                          AppLocalizations.instance
-                                              .text("loc_sell_trade_txt1"),
-                                          style: CustomWidget(context: context)
-                                              .CustomSizedTextStyle(
-                                              13.0,
-                                              spotOption
-                                                  ? CustomTheme.of(context)
-                                                  .splashColor
-                                                  : CustomTheme.of(context)
-                                                  .hintColor
-                                                  .withOpacity(0.5),
-                                              FontWeight.w500,
-                                              'FontRegular'),
-                                        ),
-                                      )),
-                                ),
-                              ),
-                              Tab(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: marginOption
-                                              ? CustomTheme.of(context)
-                                              .buttonColor
-                                              : CustomTheme.of(context)
-                                              .splashColor
-                                              .withOpacity(0.5),
-                                          width: marginOption ? 1.5 : 0.5)),
-                                  child: Center(
-                                      child: Padding(
-                                        padding: marginOption
-                                            ? EdgeInsets.only(
-                                            top: 6.0, bottom: 6.0)
-                                            : EdgeInsets.only(
-                                            top: 7.0, bottom: 7.0),
-                                        child: Text(
-                                          AppLocalizations.instance
-                                              .text("loc_sell_trade_txt2"),
-                                          style: CustomWidget(context: context)
-                                              .CustomSizedTextStyle(
-                                              13.0,
-                                              marginOption
-                                                  ? CustomTheme.of(context)
-                                                  .splashColor
-                                                  : CustomTheme.of(context)
-                                                  .hintColor
-                                                  .withOpacity(0.5),
-                                              FontWeight.w500,
-                                              'FontRegular'),
-                                        ),
-                                      )),
-                                ),
-                              ),
-                              Tab(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: futureOption
-                                              ? CustomTheme.of(context)
-                                              .buttonColor
-                                              : CustomTheme.of(context)
-                                              .splashColor
-                                              .withOpacity(0.5),
-                                          width: futureOption ? 1.5 : 0.5)),
-                                  child: Center(
-                                      child: Padding(
-                                        padding: futureOption
-                                            ? EdgeInsets.only(
-                                            top: 6.0, bottom: 6.0)
-                                            : EdgeInsets.only(
-                                            top: 7.0, bottom: 7.0),
-                                        child: Text(
-                                          AppLocalizations.instance
-                                              .text("loc_sell_trade_txt3"),
-                                          style: CustomWidget(context: context)
-                                              .CustomSizedTextStyle(
-                                              13.0,
-                                              futureOption
-                                                  ? CustomTheme.of(context)
-                                                  .splashColor
-                                                  : CustomTheme.of(context)
-                                                  .hintColor
-                                                  .withOpacity(0.5),
-                                              FontWeight.w500,
-                                              'FontRegular'),
-                                        ),
-                                      )),
-                                ),
-                              ),
-                            ],
-                            controller: tradeTabController,
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              children: <Widget>[spotUI(), MarginTrade(),comingsoon()],
-                              controller: tradeTabController,
-                            ),
-                          ),*/
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: CustomTheme.of(context)
-                                        .splashColor
-                                        .withOpacity(0.5),
-                                    width: 0.5)),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          buySell = true;
-                                          selectPair = tradePair[0];
-                                          _currentSliderValue = 0;
-                                          totalAmount = "0.0";
-                                          openOrders = [];
-                                          marginBuyData = [];
-                                          marginSellData = [];
-                                          spotOption = true;
-                                          marginOption = false;
-                                          enableStopLimit = false;
-                                          priceController.clear();
-                                          amountController.clear();
-                                          stopPriceController.clear();
-                                          getCoinList();
-                                          loanVisibleOption = false;
-                                          marginVisibleOption = false;
-                                          futureOption = false;
-                                          enableTrade = false;
-                                          selectedTime = chartTime.first;
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: spotOption
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: CustomTheme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5),
+                                width: 0.5)),
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      buySell = true;
+                                      selectPair = tradePair[0];
+                                      _currentSliderValue = 0;
+                                      totalAmount = "0.0";
+                                      openOrders = [];
+                                      marginBuyData = [];
+                                      marginSellData = [];
+                                      spotOption = true;
+                                      marginOption = false;
+                                      enableStopLimit = false;
+                                      priceController.clear();
+                                      amountController.clear();
+                                      stopPriceController.clear();
+                                      getCoinList();
+                                      loanVisibleOption = false;
+                                      marginVisibleOption = false;
+                                      futureOption = false;
+                                      enableTrade = false;
+                                      selectedTime = chartTime.first;
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: spotOption
+                                                ? CustomTheme.of(context)
+                                                    .buttonColor
+                                                : CustomTheme.of(context)
+                                                    .splashColor
+                                                    .withOpacity(0.5),
+                                            width: spotOption ? 1.5 : 0.5)),
+                                    child: Center(
+                                        child: Padding(
+                                      padding: spotOption
+                                          ? EdgeInsets.only(
+                                              top: 6.0, bottom: 6.0)
+                                          : EdgeInsets.only(
+                                              top: 7.0, bottom: 7.0),
+                                      child: Text(
+                                        AppLocalizations.instance
+                                            .text("loc_sell_trade_txt1"),
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                                13.0,
+                                                spotOption
                                                     ? CustomTheme.of(context)
-                                                        .buttonColor
-                                                    : CustomTheme.of(context)
                                                         .splashColor
+                                                    : CustomTheme.of(context)
+                                                        .hintColor
                                                         .withOpacity(0.5),
-                                                width: spotOption ? 1.5 : 0.5)),
-                                        child: Center(
-                                            child: Padding(
-                                          padding: spotOption
-                                              ? EdgeInsets.only(
-                                                  top: 6.0, bottom: 6.0)
-                                              : EdgeInsets.only(
-                                                  top: 7.0, bottom: 7.0),
-                                          child: Text(
-                                            AppLocalizations.instance
-                                                .text("loc_sell_trade_txt1"),
-                                            style: CustomWidget(
-                                                    context: context)
-                                                .CustomSizedTextStyle(
-                                                    13.0,
-                                                    spotOption
-                                                        ? CustomTheme.of(
-                                                                context)
-                                                            .splashColor
-                                                        : CustomTheme.of(
-                                                                context)
-                                                            .hintColor
-                                                            .withOpacity(0.5),
-                                                    FontWeight.w500,
-                                                    'FontRegular'),
-                                          ),
-                                        )),
+                                                FontWeight.w500,
+                                                'FontRegular'),
                                       ),
-                                    ),
-                                    flex: 1,
+                                    )),
                                   ),
-                                  Flexible(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          buySell = true;
-                                          selectPair = tradePair[0];
-                                          openOrders = [];
-                                          _currentSliderValue = 0;
-                                          tleverageVal = "1";
-                                          totalAmount = "0.0";
-                                          spotOption = false;
-                                          marginOption = true;
-                                          enableStopLimit = false;
-                                          marginVisibleOption = true;
-                                          selectedMarginTradeType =
-                                              transferType.first;
-                                          loanVisibleOption = true;
-                                          futureOption = false;
-                                          priceController.clear();
-                                          amountController.clear();
-                                          stopPriceController.clear();
-                                          marginBuyData = [];
-                                          marginSellData = [];
-                                          getCoinList();
-                                          // coinController.clear();
-                                          enableTrade = false;
-                                          selectedTime = chartTime.first;
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: marginOption
+                                ),
+                                flex: 1,
+                              ),
+                              Flexible(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      buySell = true;
+                                      selectPair = tradePair[0];
+                                      openOrders = [];
+                                      _currentSliderValue = 0;
+                                      tleverageVal = "1";
+                                      totalAmount = "0.0";
+                                      spotOption = false;
+                                      marginOption = true;
+                                      enableStopLimit = false;
+                                      marginVisibleOption = true;
+                                      selectedMarginTradeType =
+                                          transferType.first;
+                                      loanVisibleOption = true;
+                                      futureOption = false;
+                                      priceController.clear();
+                                      amountController.clear();
+                                      stopPriceController.clear();
+                                      marginBuyData = [];
+                                      marginSellData = [];
+                                      getCoinList();
+                                      // coinController.clear();
+                                      enableTrade = false;
+                                      selectedTime = chartTime.first;
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: marginOption
+                                                ? CustomTheme.of(context)
+                                                    .buttonColor
+                                                : CustomTheme.of(context)
+                                                    .splashColor
+                                                    .withOpacity(0.5),
+                                            width: marginOption ? 1.5 : 0.5)),
+                                    child: Center(
+                                        child: Padding(
+                                      padding: marginOption
+                                          ? EdgeInsets.only(
+                                              top: 6.0, bottom: 6.0)
+                                          : EdgeInsets.only(
+                                              top: 7.0, bottom: 7.0),
+                                      child: Text(
+                                        AppLocalizations.instance
+                                            .text("loc_quick_buy_sell"),
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                                13.0,
+                                                marginOption
                                                     ? CustomTheme.of(context)
-                                                        .buttonColor
-                                                    : CustomTheme.of(context)
                                                         .splashColor
+                                                    : CustomTheme.of(context)
+                                                        .hintColor
                                                         .withOpacity(0.5),
-                                                width:
-                                                    marginOption ? 1.5 : 0.5)),
-                                        child: Center(
-                                            child: Padding(
-                                          padding: marginOption
-                                              ? EdgeInsets.only(
-                                                  top: 6.0, bottom: 6.0)
-                                              : EdgeInsets.only(
-                                                  top: 7.0, bottom: 7.0),
-                                          child: Text(
-                                            AppLocalizations.instance
-                                                .text("loc_quick_buy_sell"),
-                                            style: CustomWidget(
-                                                    context: context)
-                                                .CustomSizedTextStyle(
-                                                    13.0,
-                                                    marginOption
-                                                        ? CustomTheme.of(
-                                                                context)
-                                                            .splashColor
-                                                        : CustomTheme.of(
-                                                                context)
-                                                            .hintColor
-                                                            .withOpacity(0.5),
-                                                    FontWeight.w500,
-                                                    'FontRegular'),
-                                          ),
-                                        )),
+                                                FontWeight.w500,
+                                                'FontRegular'),
                                       ),
-                                    ),
-                                    flex: 1,
+                                    )),
                                   ),
-                                  // Flexible(
-                                  //   child: GestureDetector(
-                                  //     onTap: () {
-                                  //       setState(() {
-                                  //         buySell = true;
-                                  //         selectPair = tradePair[0];
-                                  //         _currentSliderValue = 0;
-                                  //         tleverageVal = "1";
-                                  //         spotOption = false;
-                                  //         marginOption = false;
-                                  //         selectedMarginTradeType =
-                                  //             transferFutureType.first;
-                                  //         marginVisibleOption = false;
-                                  //         loanVisibleOption = true;
-                                  //         enableStopLimit = false;
-                                  //         priceController.clear();
-                                  //         amountController.clear();
-                                  //         FutureopenOrders = [];
-                                  //         Futureposition = [];
-                                  //         futureOption = true;
-                                  //         marginBuyData = [];
-                                  //         marginSellData = [];
-                                  //         getCoinList();
-                                  //
-                                  //         enableTrade = false;
-                                  //         selectedTime = chartTime.first;
-                                  //         totalAmount = "0.0";
-                                  //       });
-                                  //     },
-                                  //     child: Container(
-                                  //       decoration: BoxDecoration(
-                                  //           border: Border.all(
-                                  //               color: futureOption
-                                  //                   ? CustomTheme.of(context)
-                                  //                       .buttonColor
-                                  //                   : CustomTheme.of(context)
-                                  //                       .splashColor
-                                  //                       .withOpacity(0.5),
-                                  //               width:
-                                  //                   futureOption ? 1.5 : 0.5)),
-                                  //       child: Center(
-                                  //           child: Padding(
-                                  //         padding: futureOption
-                                  //             ? EdgeInsets.only(
-                                  //                 top: 6.0, bottom: 6.0)
-                                  //             : EdgeInsets.only(
-                                  //                 top: 7.0, bottom: 7.0),
-                                  //         child: Text(
-                                  //           AppLocalizations.instance
-                                  //               .text("loc_sell_trade_txt3"),
-                                  //           style: CustomWidget(
-                                  //                   context: context)
-                                  //               .CustomSizedTextStyle(
-                                  //                   13.0,
-                                  //                   futureOption
-                                  //                       ? CustomTheme.of(
-                                  //                               context)
-                                  //                           .splashColor
-                                  //                       : CustomTheme.of(
-                                  //                               context)
-                                  //                           .hintColor
-                                  //                           .withOpacity(0.5),
-                                  //                   FontWeight.w500,
-                                  //                   'FontRegular'),
-                                  //         ),
-                                  //       )),
-                                  //     ),
-                                  //   ),
-                                  //   flex: 1,
-                                  // ),
-                                ]),
-                          ),
+                                ),
+                                flex: 1,
+                              ),
 
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          spotOption
-                              ? spotUI()
-                              : marginOption
-                                  ? spotUI()
-                                  : comingsoon(),
-
-                          //orderWidget()
-                        ],
+                            ]),
                       ),
-                    )),
-                    loading
-                        ? CustomWidget(context: context)
-                            .loadingIndicator(AppColors.whiteColor)
-                        : Container()
-                  ],
-                ),
-              ),
-            ));
+
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      spotOption
+                          ? spotUI()
+                          : marginOption
+                              ? spotUI()
+                              : comingsoon(),
+
+                      //orderWidget()
+                    ],
+                  ),
+                )),
+                loading
+                    ? CustomWidget(context: context)
+                        .loadingIndicator(AppColors.whiteColor)
+                    : Container()
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget spotUI() {
@@ -920,255 +558,11 @@ class _SellTradeScreenState extends State<TradeScreen>
                                       'FontRegular'),
                             )
                           : Container(),
-                      // Container(
-                      //   height: 45.0,
-                      //   padding: const EdgeInsets.only(
-                      //     top: 2.0,
-                      //     bottom: 2.0,
-                      //   ),
-                      //   child: Center(
-                      //     child: Theme(
-                      //       data: Theme.of(context).copyWith(
-                      //         canvasColor: CustomTheme.of(context).primaryColor,
-                      //       ),
-                      //       child: DropdownButtonHideUnderline(
-                      //         child: DropdownButton(
-                      //           items: tradePair
-                      //               .map((value) => DropdownMenuItem(
-                      //                     child: Text(
-                      //                       value.displayName.toString(),
-                      //                       style: CustomWidget(context: context)
-                      //                           .CustomSizedTextStyle(
-                      //                               16.0,
-                      //                               Theme.of(context).splashColor,
-                      //                               FontWeight.w500,
-                      //                               'FontRegular'),
-                      //                     ),
-                      //                     value: value,
-                      //                   ))
-                      //               .toList(),
-                      //           onChanged: (TradePairList? value) {
-                      //             setState(() {
-                      //               selectPair = value;
-                      //               selectedIndex = selectPair!.id.toString();
-                      //               priceController.clear();
-                      //               amountController.clear();
-                      //               totalAmount = "0.00";
-                      //               _currentSliderValue = 0;
-                      //               coinName = buySell
-                      //                   ? selectPair!.marketAsset!.symbol.toString()
-                      //                   : selectPair!.baseAsset!.symbol.toString();
-                      //               getBalance(buySell
-                      //                   ? selectPair!.marketWallet!.id.toString()
-                      //                   : selectPair!.baseWallet!.id.toString());
-                      //               loading = true;
-                      //               firstCoin =
-                      //                   selectPair!.baseAsset!.symbol.toString();
-                      //               secondCoin =
-                      //                   selectPair!.marketAsset!.symbol.toString();
-                      //
-                      //               livePriceData!.sink.close();
-                      //
-                      //               var messageJSON = {
-                      //                 "sub": "market." +
-                      //                     firstCoin.toLowerCase() +
-                      //                     secondCoin.toLowerCase() +
-                      //                     ".depth.step0",
-                      //                 "id": "id1"
-                      //               };
-                      //               var messageLiveJSON = {
-                      //                 "sub": "market." +
-                      //                     firstCoin.toLowerCase() +
-                      //                     secondCoin.toLowerCase() +
-                      //                     ".ticker",
-                      //               };
-                      //               channelOpenOrder!.sink
-                      //                   .add(json.encode(messageJSON));
-                      //               livePriceData = IOWebSocketChannel.connect(
-                      //                   Uri.parse("wss://api.huobi.pro/ws"),
-                      //                   pingInterval: Duration(seconds: 30));
-                      //               livePriceData!.sink
-                      //                   .add(json.encode(messageLiveJSON));
-                      //               socketLivepriceData();
-                      //               getAllOpenOrder();
-                      //               getOpenOrder();
-                      //               getAllHistory();
-                      //             });
-                      //           },
-                      //           isExpanded: false,
-                      //           value: selectPair,
-                      //           icon: Container(
-                      //             width: 1.0,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
+
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    Visibility(
-                      visible: loanVisibleOption,
-                      child: Row(
-                        children: [
-                          /* GestureDetector(
-                            onTap: () {
-                              enableLoan = false;
-                              leverageLoan = true;
-                              coinController.text=coinList[0].asset!.symbol.toString();
-                              _leverageSliderValue=0;
-                              loanErr = false;
-                              showLoanDialog();
-                              // coinController.clear();
-                              amtController.clear();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                color: CustomTheme.of(context).indicatorColor,
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Text(
-                                "Loan",
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    12.0,
-                                    AppColors.whiteColor,
-                                    FontWeight.w500,
-                                    'FontRegular'),
-                              ),
-                            ),
-                          ),*/
-                          SizedBox(
-                            width: 5.0,
-                          ),
-                          /* GestureDetector(
-                            onTap: () {
-                              enableLoan = false;
-                              disableLoan = false;
-                              coinController.text=coinList[0].asset!.symbol.toString();
-                              showLoanDialog();
-                              // coinController.clear();
-                              amtController.clear();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                color: CustomTheme.of(context).indicatorColor,
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Text(
-                                "Repay",
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    12.0,
-                                    AppColors.whiteColor,
-                                    FontWeight.w500,
-                                    'FontRegular'),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5.0,
-                          ),*/
-                          GestureDetector(
-                            onTap: () {
-                              enableLoan = true;
-                              leverageLoan = false;
-                              loanErr = false;
-                              coinController.text =
-                                  coinList[0].asset!.symbol.toString();
-                              transferType[1];
-                              showLoanDialog();
-                              // coinController.clear();
-                              amtController.clear();
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                color: CustomTheme.of(context).indicatorColor,
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Text(
-                                "Transfer",
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                        12.0,
-                                        AppColors.whiteColor,
-                                        FontWeight.w500,
-                                        'FontRegular'),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
 
-                    SizedBox(
-                      width: 8.0,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
-                      child: InkWell(
-                        onTap: () {
-                          /* Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ChartScreen(id: selectPair!.id.toString()),
-                              ));*/
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/filter.svg',
-                          height: 20.0,
-                          width: 20.0,
-                          allowDrawingOutsideViewBox: true,
-                          color: CustomTheme.of(context).splashColor,
-                        ),
-                      ),
-                    ),
-                    // cheerList.length>0? Container(
-                    //    padding:
-                    //    const EdgeInsets.fromLTRB(3, 0, 3, 0),
-                    //    child: InkWell(
-                    //      onTap: () {
-                    //
-                    //      },
-                    //      child: SvgPicture.asset(
-                    //        'assets/images/star.svg',
-                    //        height: 20.0,
-                    //        width: 20.0,
-                    //        allowDrawingOutsideViewBox: true,
-                    //        color:cheerList[]?
-                    //        CustomTheme.of(context).splashColor:Colors.yellow,
-                    //      ),
-                    //    ),
-                    //  )
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(3, 0, 3, 0),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (favValue) {
-                            } else {}
-                          });
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/star.svg',
-                          height: 20.0,
-                          width: 20.0,
-                          allowDrawingOutsideViewBox: true,
-                          color: favValue
-                              ? Colors.yellow
-                              : CustomTheme.of(context).splashColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ]),
           const SizedBox(
             height: 10.0,
@@ -1212,8 +606,8 @@ class _SellTradeScreenState extends State<TradeScreen>
                     livePrice +
                         " " +
                         (futureOption
-                            ? coinTwoName
-                            : (buySell ? coinTwoName : coinName)),
+                            ? secondCoin
+                            : (buySell ? secondCoin : firstCoin)),
                     style: CustomWidget(context: context).CustomSizedTextStyle(
                         11.5,
                         Theme.of(context).splashColor,
@@ -1241,8 +635,8 @@ class _SellTradeScreenState extends State<TradeScreen>
                     balance +
                         " " +
                         (futureOption
-                            ? coinTwoName
-                            : (buySell ? coinTwoName : coinName)),
+                            ? secondCoin
+                            : (buySell ? secondCoin : firstCoin)),
                     style: CustomWidget(context: context).CustomSizedTextStyle(
                         11.5,
                         Theme.of(context).splashColor,
@@ -1269,9 +663,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                   Text(
                     escrow +
                         " " +
-                        (futureOption
-                            ? coinTwoName
-                            : (buySell ? coinTwoName : coinName)),
+                        ((buySell ? secondCoin : firstCoin)),
                     style: CustomWidget(context: context).CustomSizedTextStyle(
                         11.5,
                         Theme.of(context).splashColor,
@@ -1298,9 +690,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                   Text(
                     totalBalance +
                         " " +
-                        (futureOption
-                            ? coinTwoName
-                            : (buySell ? coinTwoName : coinName)),
+                        ((buySell ? secondCoin : firstCoin)),
                     style: CustomWidget(context: context).CustomSizedTextStyle(
                         11.5,
                         Theme.of(context).splashColor,
@@ -2686,9 +2076,46 @@ class _SellTradeScreenState extends State<TradeScreen>
                       totalAmount = "0.0";
                       _currentSliderValue = 0;
                       tleverageVal = "1";
+                       balance = "0.00";
+                       escrow = "0.00";
+                       totalBalance = "0.00";
 
-                      coinName = selectPair!.baseAsset.toString();
-                      coinTwoName = selectPair!.marketAsset.toString();
+                      firstCoin = selectPair!.baseAsset.toString();
+                      secondCoin = selectPair!.marketAsset.toString();
+                      for (int m = 0; m < availableBalance.length; m++) {
+                        if (buySell) {
+                          if (secondCoin.toLowerCase() ==
+                              availableBalance[m].currency
+                                  .toLowerCase()) {
+                            balance =
+                                availableBalance[m].balance;
+                            escrow =
+                                availableBalance[m].available;
+                            totalBalance =
+                                availableBalance[m].trading;
+                          }
+
+                        }
+
+                        else {
+                          if (firstCoin.toLowerCase() ==
+                              availableBalance[m].currency
+                                  .toLowerCase()) {
+                            print(firstCoin.toLowerCase());
+                            print(availableBalance[m].currency
+                                .toLowerCase());
+                            print(availableBalance[m].trading);
+                            balance =
+                                availableBalance[m].balance;
+                            escrow =
+                                availableBalance[m].available;
+                            totalBalance =
+                                availableBalance[m].trading;
+                          }
+
+                        }
+                      }
+
                     });
                   },
                   child: Container(
@@ -2733,8 +2160,45 @@ class _SellTradeScreenState extends State<TradeScreen>
                     _currentSliderValue = 0;
                     tleverageVal = "1";
 
-                    coinName = selectPair!.baseAsset.toString();
-                    coinTwoName = selectPair!.marketAsset.toString();
+                    firstCoin = selectPair!.baseAsset.toString();
+                    secondCoin = selectPair!.marketAsset.toString();
+                    balance = "0.00";
+                    escrow = "0.00";
+                    totalBalance = "0.00";
+                    for (int m = 0; m < availableBalance.length; m++) {
+                      if (buySell) {
+                        if (secondCoin.toLowerCase() ==
+                            availableBalance[m].currency
+                                .toLowerCase()) {
+                          balance =
+                              availableBalance[m].balance;
+                          escrow =
+                              availableBalance[m].available;
+                          totalBalance =
+                              availableBalance[m].trading;
+                        }
+
+                      }
+
+                      else {
+                        if (firstCoin.toLowerCase() ==
+                            availableBalance[m].currency
+                                .toLowerCase()) {
+                          print(firstCoin.toLowerCase());
+                          print(availableBalance[m].currency
+                              .toLowerCase());
+                          print(availableBalance[m].trading);
+                          balance =
+                              availableBalance[m].balance;
+                          escrow =
+                              availableBalance[m].available;
+                          totalBalance =
+                              availableBalance[m].trading;
+                        }
+
+                      }
+                    }
+
                   });
                 },
                 child: Container(
@@ -4247,8 +3711,8 @@ class _SellTradeScreenState extends State<TradeScreen>
                 totalAmount +
                     " " +
                     (futureOption
-                        ? coinTwoName
-                        : (buySell ? coinTwoName : coinName)),
+                        ? secondCoin
+                        : (buySell ? secondCoin : firstCoin)),
                 style: CustomWidget(context: context).CustomSizedTextStyle(
                     13.0,
                     Theme.of(context).splashColor,
@@ -4459,8 +3923,8 @@ class _SellTradeScreenState extends State<TradeScreen>
                       _currentSliderValue = 0;
                       tleverageVal = "1";
 
-                      coinName = selectPair!.baseAsset.toString();
-                      coinTwoName = selectPair!.marketAsset.toString();
+                      firstCoin = selectPair!.baseAsset.toString();
+                      secondCoin = selectPair!.marketAsset.toString();
                     });
                   },
                   child: Container(
@@ -4507,8 +3971,8 @@ class _SellTradeScreenState extends State<TradeScreen>
                     _currentSliderValue = 0;
                     tleverageVal = "1";
 
-                    coinName = selectPair!.baseAsset.toString();
-                    coinTwoName = selectPair!.marketAsset.toString();
+                    firstCoin = selectPair!.baseAsset.toString();
+                    secondCoin = selectPair!.marketAsset.toString();
                   });
                 },
                 child: Container(
@@ -5943,8 +5407,8 @@ class _SellTradeScreenState extends State<TradeScreen>
         //         totalAmount +
         //             " " +
         //             (futureOption
-        //                 ? coinTwoName
-        //                 : (buySell ? coinTwoName : coinName)),
+        //                 ? secondCoin
+        //                 : (buySell ? secondCoin : firstCoin)),
         //         style: CustomWidget(context: context).CustomSizedTextStyle(
         //             13.0,
         //             Theme.of(context).splashColor,
@@ -8196,9 +7660,6 @@ class _SellTradeScreenState extends State<TradeScreen>
             "type": "authenticate",
             "apiKey": token,
           };
-          print("AuthData");
-
-          print(authMessage);
           channelOpenOrder!.sink.add(json.encode(authMessage));
           channelOpenOrder!.sink.add(json.encode(messageJSON));
 
@@ -8687,15 +8148,18 @@ class _SellTradeScreenState extends State<TradeScreen>
                                         String pair =
                                             selectPair!.symbol.toString();
 
-
-                                        firstCoin = selectPair!.baseAsset.toString();
-                                        secondCoin = selectPair!.marketAsset.toString();
+                                        firstCoin =
+                                            selectPair!.baseAsset.toString();
+                                        secondCoin =
+                                            selectPair!.marketAsset.toString();
                                         var ofeed = "orderbook.net.$pair";
-                                        print("ManoFeed");
-                                        print(ofeed);
-                                        var tfeed = "private.user.balances";
+                                        balance = "0.00";
+                                        escrow = "0.00";
+                                        totalBalance = "0.00";
+
                                         var tickerfeed = "ticker.sfox.$pair";
-                                        var orderfeed = "private.user.open-orders";
+                                        var orderfeed =
+                                            "private.user.open-orders";
 
                                         var authMessage = {
                                           "type": "authenticate",
@@ -8703,12 +8167,53 @@ class _SellTradeScreenState extends State<TradeScreen>
                                         };
                                         var messageJSON = {
                                           "type": "subscribe",
-                                          "feeds": [ofeed, tfeed, tickerfeed, orderfeed],
+                                          "feeds": [
+                                            ofeed,
+                                            tickerfeed,
+                                            orderfeed
+                                          ],
                                         };
-                                        channelOpenOrder!.sink.add(json.encode(authMessage));
-                                        channelOpenOrder!.sink.add(json.encode(messageJSON));
+                                        channelOpenOrder!.sink
+                                            .add(json.encode(authMessage));
+                                        channelOpenOrder!.sink
+                                            .add(json.encode(messageJSON));
 
-                                        socketData();
+
+
+                                        for (int m = 0; m < availableBalance.length; m++) {
+                                          if (buySell) {
+                                            if (secondCoin.toLowerCase() ==
+                                                availableBalance[m].currency
+                                                    .toLowerCase()) {
+                                              balance =
+                                                  availableBalance[m].balance;
+                                              escrow =
+                                                  availableBalance[m].available;
+                                              totalBalance =
+                                                  availableBalance[m].trading;
+                                            }
+
+                                          }
+
+                                          else {
+                                            if (firstCoin.toLowerCase() ==
+                                                availableBalance[m].currency
+                                                    .toLowerCase()) {
+                                              print(firstCoin.toLowerCase());
+                                              print(availableBalance[m].currency
+                                                  .toLowerCase());
+                                              print(availableBalance[m].trading);
+                                              balance =
+                                                  availableBalance[m].balance;
+                                              escrow =
+                                                  availableBalance[m].available;
+                                              totalBalance =
+                                                  availableBalance[m].trading;
+                                            }
+
+                                          }
+                                        }
+
                                       });
                                     },
                                     child: Row(
@@ -9045,4 +8550,13 @@ class LikeStatus {
   bool status;
 
   LikeStatus(this.id, this.status);
+}
+
+class BalanceData {
+  String currency;
+  String balance;
+  String available;
+  String trading;
+
+  BalanceData(this.currency, this.balance, this.available, this.trading);
 }

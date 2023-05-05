@@ -123,7 +123,7 @@ class FindData {
     this.source,
     this.type,
     this.withdrawType,
-    this.coinname,
+    this.firstCoin,
     this.decimalP,
     this.url,
     this.contractaddress,
@@ -137,7 +137,7 @@ class FindData {
   String? source;
   String? type;
   String? withdrawType;
-  String? coinname;
+  String? firstCoin;
   String? decimalP;
   String? url;
   String? contractaddress;
@@ -151,7 +151,7 @@ class FindData {
     source: json["source"],
     type: json["type"],
     withdrawType: json["withdraw_type"],
-    coinname: json["coinname"],
+    firstCoin: json["firstCoin"],
     decimalP: json["decimal_p"],
     url: json["url"],
     contractaddress: json["contractaddress"],
@@ -166,7 +166,7 @@ class FindData {
     "source": source,
     "type": type,
     "withdraw_type": withdrawType,
-    "coinname": coinname,
+    "firstCoin": firstCoin,
     "decimal_p": decimalP,
     "url": url,
     "contractaddress": contractaddress,
