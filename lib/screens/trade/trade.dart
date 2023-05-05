@@ -44,7 +44,7 @@ class TradeScreen extends StatefulWidget {
 class _SellTradeScreenState extends State<TradeScreen>
     with TickerProviderStateMixin {
   List<String> marginType = ["Loan", " Repay", "Transfer"];
-  List<String> chartTime = ["Limit Order", "Market Order", "Stop-Limit"];
+  List<String> chartTime = ["Limit Order", "Market Order",];
   List<String> chartTimeFuture = ["Limit Order", "Market Order"];
   List<String> transferType = ["Spot-Margin", "Margin-Spot"];
   List<String> tradeType = ["Spot", "Margin", "Future"];
@@ -84,7 +84,7 @@ class _SellTradeScreenState extends State<TradeScreen>
   APIUtils apiUtils = APIUtils();
   bool buyOption = true;
   bool sellOption = true;
-  final List<String> _decimal = ["0.01","0.0001","0.00000001",  ];
+  final List<String> _decimal = ["0.01","0.0001","0.00000001", ];
   int decimalIndex = 8;
   bool cancelOrder = false;
   ScrollController controller = ScrollController();
@@ -116,9 +116,7 @@ class _SellTradeScreenState extends State<TradeScreen>
   double _leverageSliderValue = 0;
   int _levSliderValue = 0;
   int _tLevSliderValue = 0;
-
   bool favValue = false;
-
   String selectedIndex = "";
   String selectedAssetIndex = "";
   String leverageVal = "1";
