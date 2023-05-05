@@ -46,6 +46,7 @@ import 'model/asset_details_model.dart';
 import 'model/assets_list_model.dart';
 import 'model/check_quote_model.dart';
 import 'model/country_code.dart';
+import 'model/get_done_order_model.dart';
 import 'model/get_payment_details_model.dart';
 import 'model/individual_user_details.dart';
 import 'model/kyc_verify.dart';
@@ -58,6 +59,7 @@ class APIUtils {
 
   static const baseURL = 'https://cifdaq.in';
   static const crypto_baseURL = 'http://h2crypto.exchange/';
+  static const crypto_baseURL_Sfox = 'https://api.sfox.com/';
 
   Socket? socketChat;
   static const String regURL = 'api/register';
@@ -130,6 +132,10 @@ class APIUtils {
   static const String withdrawAssetURL = 'api/withdraw-asset';
   static const String checkQuotesURL = 'api/check-quote';
   static const String postTradeURL = 'api/post-trade';
+
+  static const String doneOrdersURL = 'v1/orders/done';
+  static const String cancelOrdersURL = 'v1/orders/:order_id';
+  static const String getOpenOrdersURL = 'v1/orders';
 
 
 
@@ -303,6 +309,29 @@ class APIUtils {
           crypto_baseURL + logoutUrl,
         ),
         headers: {"authorization": preferences.getString("token").toString()});
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<OrderDoneOrdersModel> getDoneOrdersDetails() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final response = await http.get(Uri.parse(crypto_baseURL_Sfox + doneOrdersURL),
+      headers: {"authorization": "Bearer "+preferences.getString("token").toString()},
+        );
+
+    return OrderDoneOrdersModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> cancelOrdersDetails() async {
+    final response = await http.delete(Uri.parse(crypto_baseURL_Sfox + cancelOrdersURL),
+    );
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> getOpenOrdersDetails() async {
+    final response = await http.get(Uri.parse(crypto_baseURL_Sfox + getOpenOrdersURL),
+    );
+
     return CommonModel.fromJson(json.decode(response.body));
   }
 
