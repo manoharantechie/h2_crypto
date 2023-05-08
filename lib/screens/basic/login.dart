@@ -19,7 +19,6 @@ import 'package:h2_crypto/screens/basic/forgot_pass.dart';
 import 'package:h2_crypto/screens/basic/google_login.dart';
 import 'package:h2_crypto/screens/basic/home.dart';
 import 'package:h2_crypto/screens/basic/register.dart';
-import 'package:h2_crypto/screens/p2p/p2p_home.dart';
 
 import 'package:h2_crypto/screens/side_menu/security/kyc_info.dart';
 import 'package:h2_crypto/screens/side_menu/security/link_email_address.dart';
@@ -49,11 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController mobile_auth = TextEditingController();
   TextEditingController email_auth = TextEditingController();
   String userId = "";
-  FocusNode mobileFocus = FocusNode();
-  FocusNode mobileAuthFocus = FocusNode();
-  FocusNode mobilePassFocus = FocusNode();
-  FocusNode mobileVerifyFocus = FocusNode();
-  FocusNode mobileReferFocus = FocusNode();
+
   TextEditingController email = TextEditingController();
 
   TextEditingController email_password = TextEditingController();
@@ -98,10 +93,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    initCountry();
-    super.initState();
     email=TextEditingController(text: "vinoth.alpharive@gmail.com");
     email_password=TextEditingController(text: "Vinoth@2020");
+    initCountry();
+    super.initState();
+
 
   }
 
@@ -482,265 +478,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget mobileWidget() {
-    return Form(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                  padding: const EdgeInsets.only(
-                      left: 10.0, right: 10.0, top: 14.0, bottom: 14.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: CustomTheme.of(context)
-                            .splashColor
-                            .withOpacity(0.5),
-                        width: 1.0),
-                    color: CustomTheme.of(context)
-                        .backgroundColor
-                        .withOpacity(0.5),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(5.0),
-                      bottomLeft: Radius.circular(5.0),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: _onPressedShowBottomSheet,
-                        child: Row(
-                          children: [
-                            Text(
-                              countryB
-                                  ? _selectedCountry!.callingCode.toString()
-                                  : "+1",
-                              style: CustomWidget(context: context)
-                                  .CustomTextStyle(
-                                      Theme.of(context).splashColor,
-                                      FontWeight.normal,
-                                      'FontRegular'),
-                            ),
-                            const SizedBox(
-                              width: 3.0,
-                            ),
-                            const Icon(
-                              Icons.keyboard_arrow_down_outlined,
-                              size: 15.0,
-                              color: AppColors.backgroundColor,
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10.0,
-                      ),
-                    ],
-                  )),
-              Flexible(
-                child: TextFormField(
-                  controller: mobile,
-                  focusNode: mobileFocus,
-                  maxLines: 1,
-                  enabled: mobileVerify,
-                  textInputAction: TextInputAction.next,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  ],
-                  keyboardType: TextInputType.number,
-                  style: CustomWidget(context: context).CustomTextStyle(
-                      Theme.of(context).splashColor,
-                      FontWeight.w400,
-                      'FontRegular'),
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.only(
-                        left: 12, right: 0, top: 2, bottom: 2),
-                    hintText: "Please enter Mobile",
-                    suffixIcon: Container(
-                      padding: const EdgeInsets.all(15.0),
-                      child: SvgPicture.asset(
-                        'assets/icon/mobile.svg',
-                        height: 15.0,
-                        width: 15.0,
-                        allowDrawingOutsideViewBox: true,
-                        color: CustomTheme.of(context)
-                            .splashColor
-                            .withOpacity(0.5),
-                      ),
-                    ),
-                    hintStyle: CustomWidget(context: context).CustomTextStyle(
-                        Theme.of(context).splashColor.withOpacity(0.5),
-                        FontWeight.w300,
-                        'FontRegular'),
-                    filled: true,
-                    fillColor: CustomTheme.of(context)
-                        .backgroundColor
-                        .withOpacity(0.5),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5.0),
-                        bottomRight: Radius.circular(5.0),
-                      ),
-                      borderSide: BorderSide(
-                          color: CustomTheme.of(context)
-                              .splashColor
-                              .withOpacity(0.5),
-                          width: 1.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5.0),
-                        bottomRight: Radius.circular(5.0),
-                      ),
-                      borderSide: BorderSide(
-                          color: CustomTheme.of(context)
-                              .splashColor
-                              .withOpacity(0.5),
-                          width: 1.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5.0),
-                        bottomRight: Radius.circular(5.0),
-                      ),
-                      borderSide: BorderSide(
-                          color: CustomTheme.of(context)
-                              .splashColor
-                              .withOpacity(0.5),
-                          width: 1.0),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(5.0),
-                        bottomRight: Radius.circular(5.0),
-                      ),
-                      borderSide: BorderSide(
-                          color: CustomTheme.of(context)
-                              .splashColor
-                              .withOpacity(0.5),
-                          width: 1.0),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          TextFormFieldCustom(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            obscureText: !_passwordVisible,
-            textInputAction: TextInputAction.done,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_]')),
-            ],
-            hintStyle: CustomWidget(context: context).CustomTextStyle(
-                Theme.of(context).splashColor.withOpacity(0.5),
-                FontWeight.w300,
-                'FontRegular'),
-            radius: 5.0,
-            focusNode: mobilePassFocus,
-            controller: mobile_password,
-            enabled: mobilePassVerify,
-            borderColor: CustomTheme.of(context).splashColor.withOpacity(0.5),
-            fillColor: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
-            onChanged: () {},
-            hintText: AppLocalizations.instance.text("loc_password"),
-            textChanged: (value) {},
-            suffix: IconButton(
-              icon: Icon(
-                _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-              ),
-              onPressed: () {
-                setState(() {
-                  _passwordVisible = !_passwordVisible;
-                });
-              },
-            ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return "Please enter Password";
-              } else if (!RegExp(
-                      r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$")
-                  .hasMatch(value)) {
-                return "Please enter valid Password";
-              } else if (value.length < 8) {
-                return "Please enter minimum 8 character Password";
-              }
 
-              return null;
-            },
-            textStyle: CustomWidget(context: context).CustomTextStyle(
-                Theme.of(context).splashColor, FontWeight.w400, 'FontRegular'),
-            maxlines: 1,
-            error: "Enter Valid Password",
-            text: "",
-            onEditComplete: () {
-              mobilePassFocus.unfocus();
-            },
-            textColor: AppColors.blackColor,
-            textInputType: TextInputType.visiblePassword,
-          ),
-          SizedBox(
-            height: mobileAuth ? 20.0 : 0.0,
-          ),
-          mobileAuth
-              ? TextFormFieldCustom(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  onEditComplete: () {
-                    mobileAuthFocus.unfocus();
-                  },
-                  radius: 5.0,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
-                  ],
-                  error: "Enter Valid Email",
-                  textColor: AppColors.borderColor,
-                  borderColor:
-                      CustomTheme.of(context).splashColor.withOpacity(0.5),
-                  fillColor:
-                      CustomTheme.of(context).backgroundColor.withOpacity(0.5),
-                  textInputAction: TextInputAction.next,
-                  focusNode: mobileAuthFocus,
-                  maxlines: 1,
-                  text: '',
-                  hintText: "Two Factor Code",
-                  obscureText: false,
-                  suffix: Container(
-                    width: 0.0,
-                  ),
-                  textChanged: (value) {},
-                  onChanged: () {},
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter Code";
-                    }
-
-                    return null;
-                  },
-                  enabled: true,
-                  textInputType: TextInputType.number,
-                  controller: mobile_auth,
-                  hintStyle: CustomWidget(context: context).CustomTextStyle(
-                      Theme.of(context).splashColor.withOpacity(0.5),
-                      FontWeight.w300,
-                      'FontRegular'),
-                  textStyle: CustomWidget(context: context).CustomTextStyle(
-                      Theme.of(context).splashColor,
-                      FontWeight.w400,
-                      'FontRegular'),
-                )
-              : Container(),
-          const SizedBox(
-            height: 40.0,
-          ),
-        ],
-      ),
-      key: mobileformKey,
-    );
-  }
 
   Widget emailWidget() {
     return Form(

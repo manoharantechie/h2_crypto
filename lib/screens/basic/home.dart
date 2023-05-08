@@ -11,7 +11,7 @@ import 'package:h2_crypto/data/model/banner_list_model.dart';
 import 'package:h2_crypto/data/model/market_list_model.dart';
 import 'package:h2_crypto/data/model/user_details_model.dart';
 import 'package:h2_crypto/screens/basic/side_menu.dart';
-import 'package:h2_crypto/screens/p2p/p2p_home.dart';
+
 import 'package:h2_crypto/screens/side_menu/others/notify_screen.dart';
 import 'package:h2_crypto/screens/trade/market_screen.dart';
 import 'package:h2_crypto/screens/trade/otc_screen.dart';

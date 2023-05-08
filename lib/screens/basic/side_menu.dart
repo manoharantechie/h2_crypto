@@ -7,12 +7,9 @@ import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/common/theme/themes.dart';
 import 'package:h2_crypto/data/api_utils.dart';
 import 'package:h2_crypto/screens/basic/login.dart';
-import 'package:h2_crypto/screens/side_menu/profile/payment_method.dart';
-import 'package:h2_crypto/screens/side_menu/profile/referral_reward.dart';
-import 'package:h2_crypto/screens/side_menu/profile/set_name_screen.dart';
-import 'package:h2_crypto/screens/side_menu/profile/set_name_screen3.dart';
+
 import 'package:h2_crypto/screens/side_menu/security/security.dart';
-import 'package:h2_crypto/screens/wallet/loan_history.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/custom_widget.dart';
@@ -169,38 +166,7 @@ class _SideMenuState extends State<SideMenu> {
                                       FontWeight.w500,
                                       'FontRegular'),
                             ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .push(
-                                  MaterialPageRoute(
-                                      builder: (_) => SetNameScreen()),
-                                )
-                                    .then((val) {
-                                  (val == true || val == null)
-                                      ? _getRequests()
-                                      : null;
-                                });
-                              },
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "Edit",
-                                    style: CustomWidget(context: context)
-                                        .CustomSizedTextStyle(
-                                            12.0,
-                                            Theme.of(context).buttonColor,
-                                            FontWeight.normal,
-                                            'FontRegular'),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: CustomTheme.of(context).buttonColor,
-                                    size: 16.0,
-                                  )
-                                ],
-                              ),
-                            )
+
                           ],
                         ),
                         const SizedBox(
@@ -368,177 +334,12 @@ class _SideMenuState extends State<SideMenu> {
                       width: MediaQuery.of(context).size.width,
                       color: CustomTheme.of(context).buttonColor,
                     ),
-                     const SizedBox(height: 20.0,),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Payment_Method_Screen(),
-                            ));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/bottom/wallet.svg',
-                                color: CustomTheme.of(context).buttonColor,
-                                height: 20.0,
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                "Payment Method",
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    16.0,
-                                    Theme.of(context).splashColor,
-                                    FontWeight.normal,
-                                    'FontRegular'),
-                              ),
-                            ],
-                          ),
-                          SvgPicture.asset(
-                            'assets/sidemenu/arrow.svg',
-                            color: CustomTheme.of(context).splashColor,
-                            height: 20.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    InkWell(
-                      onTap: (){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoanHistory(),
-                            ));
-                      },
-                      child:  Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-
-                              SvgPicture.asset('assets/bottom/future.svg',color:Color(0xFF1A94AE), height: 20.0,),
-                              const SizedBox(width: 10.0,),
-                              Text(
-                                AppLocalizations.instance.text("loc_loan_his"),
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    16.0,
-                                    Theme.of(context).splashColor,
-                                    FontWeight.normal,
-                                    'FontRegular'),
-                              ),
-                            ],
-                          ),
-                          SvgPicture.asset('assets/sidemenu/arrow.svg',color: CustomTheme.of(context).splashColor,height: 20.0,),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RefferralReward(),
-                            ));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/sidemenu/referral.svg',
-                                height: 20.0,
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                AppLocalizations.instance.text("loc_ref_rew"),
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                        16.0,
-                                        Theme.of(context).splashColor,
-                                        FontWeight.normal,
-                                        'FontRegular'),
-                              ),
-                            ],
-                          ),
-                          SvgPicture.asset(
-                            'assets/sidemenu/arrow.svg',
-                            color: CustomTheme.of(context).splashColor,
-                            height: 20.0,
-                          ),
-                        ],
-                      ),
-                    ),
 
                     const SizedBox(
                       height: 20.0,
                     ),
 
-                    // InkWell(
-                    //   onTap: (){
-                    //     Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => const FeesSetting(),
-                    //         ));
-                    //   },
-                    //   child:   Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     children: [
-                    //       Row(
-                    //         children: [
-                    //
-                    //           SvgPicture.asset('assets/sidemenu/fee.svg',height: 20.0,),
-                    //           const SizedBox(width: 10.0,),
-                    //           Text(
-                    //             AppLocalizations.instance.text("loc_fee"),
-                    //             style: GoogleFonts.habibi(
-                    //                 fontSize: 16.0,
-                    //                 color: CustomTheme.of(context).splashColor),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       SvgPicture.asset('assets/sidemenu/arrow.svg',color: CustomTheme.of(context).splashColor,height: 20.0,),
-                    //     ],
-                    //   ),
-                    // ),
-                    //   const SizedBox(height: 20.0,),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Row(
-                    //       children: [
-                    //
-                    //         SvgPicture.asset('assets/sidemenu/api.svg',height: 20.0,),
-                    //         const SizedBox(width: 10.0,),
-                    //         Text(
-                    //           AppLocalizations.instance.text("loc_api"),
-                    //           style: GoogleFonts.habibi(
-                    //               fontSize: 16.0,
-                    //               color: CustomTheme.of(context).splashColor),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //     SvgPicture.asset('assets/sidemenu/arrow.svg',color: CustomTheme.of(context).splashColor,height: 20.0,),
-                    //   ],
-                    // ),
-                    // const SizedBox(height: 20.0,),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
