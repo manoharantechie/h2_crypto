@@ -8,11 +8,11 @@ import 'package:h2_crypto/common/theme/themes.dart';
 import 'package:h2_crypto/data/api_utils.dart';
 import 'package:h2_crypto/screens/basic/login.dart';
 
-import 'package:h2_crypto/screens/side_menu/security/security.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/custom_widget.dart';
+import '../side_menu/security/change_password.dart';
+import '../side_menu/security/kyc_info.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class SideMenu extends StatefulWidget {
 
 class _SideMenuState extends State<SideMenu> {
   bool theme = false;
-
+  bool kycUpdate=false;
   APIUtils apiUtils = APIUtils();
   String name = "";
   String uid = "";
@@ -255,11 +255,21 @@ class _SideMenuState extends State<SideMenu> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SecurityScreen(),
-                            ));
+                        if(kycUpdate)
+                        {
+                          CustomWidget(context: context).  custombar("Security","KYC Already Linked", true);
+
+
+                        }
+                        else
+                        {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const KYCPage(),
+                              ));
+                        }
+
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,61 +284,106 @@ class _SideMenuState extends State<SideMenu> {
                                 width: 10.0,
                               ),
                               Text(
-                                AppLocalizations.instance.text("loc_security"),
+                                AppLocalizations.instance.text("loc_kyc"),
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
-                                        16.0,
-                                        Theme.of(context).splashColor,
-                                        FontWeight.normal,
-                                        'FontRegular'),
+                                    16.0,
+                                    Theme.of(context).splashColor,
+                                    FontWeight.normal,
+                                    'FontRegular'),
                               ),
                             ],
                           ),
-                          SvgPicture.asset(
-                            'assets/sidemenu/arrow.svg',
-                            color: CustomTheme.of(context).splashColor,
-                            height: 20.0,
+                          Row(
+                            children: [
+                              Text(
+                                kycUpdate?"Certified" :"Uncertified",
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    12.0,
+                                    Theme.of(context)
+                                        .splashColor
+                                        .withOpacity(0.5),
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: CustomTheme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5),
+                                size: 16.0,
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ChangePassword(),
+                            ));
+                      },
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/sidemenu/settings.svg',
+                                height: 20.0,
+                              ),
+                              const SizedBox(
+                                width: 10.0,
+                              ),
+                              Text(
+                                AppLocalizations.instance.text("loc_change_password"),
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    16.0,
+                                    Theme.of(context).splashColor,
+                                    FontWeight.normal,
+                                    'FontRegular'),
+                              ),
+                            ],
                           ),
+
+                          Row(
+                            children: [
+                              Text(
+                                "Modify",
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    12.0,
+                                    Theme.of(context)
+                                        .splashColor
+                                        .withOpacity(0.5),
+                                    FontWeight.normal,
+                                    'FontRegular'),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: CustomTheme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5),
+                                size: 16.0,
+                              )
+                            ],
+                          )
                         ],
                       ),
                     ),
                     const SizedBox(
                       height: 20.0,
                     ),
-                    // const SizedBox(height: 20.0,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/sidemenu/settings.svg',
-                              height: 20.0,
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              AppLocalizations.instance.text("loc_setting"),
-                              style: CustomWidget(context: context)
-                                  .CustomSizedTextStyle(
-                                      16.0,
-                                      Theme.of(context).splashColor,
-                                      FontWeight.normal,
-                                      'FontRegular'),
-                            ),
-                          ],
-                        ),
-                        SvgPicture.asset(
-                          'assets/sidemenu/arrow.svg',
-                          color: CustomTheme.of(context).splashColor,
-                          height: 20.0,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
+
                     Container(
                       height: 0.7,
                       width: MediaQuery.of(context).size.width,

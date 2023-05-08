@@ -173,7 +173,7 @@ class APIUtils {
     final response =
         await http.post(Uri.parse(crypto_baseURL + loginURL), body: emailbodyData);
 
-    print(response.body);
+
     return LoginDetailsModel.fromJson(json.decode(response.body));
   }
 
@@ -261,7 +261,6 @@ class APIUtils {
     final response = await http.post(Uri.parse(crypto_baseURL + userWalletBalanceURL),
         headers: {"authorization": "Bearer "+preferences.getString("token").toString()});
 
-    print(response.body);
     return UserWalletBalanceModel.fromJson(json.decode(response.body));
   }
 
@@ -344,7 +343,7 @@ class APIUtils {
         ),
         // headers: {"authorization": preferences.getString("token").toString()}
     );
-    print(response.body);
+
     return CountryCodeModelDetails.fromJson(json.decode(response.body));
   }
 
@@ -415,7 +414,7 @@ class APIUtils {
     final response = await http.post(Uri.parse(crypto_baseURL + tradePairURL),
         headers: {"authorization": "Bearer "+preferences.getString("token").toString()});
 
-    print(response.body);
+
     return CoinListModel.fromJson(json.decode(response.body));
   }
 
@@ -447,41 +446,6 @@ class APIUtils {
     return CommonModel.fromJson(json.decode(response.body));
   }
 
-  Future<CoinBalanceModel> getCoinBalance(String coinone) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    var tradeBody = {
-      'source': coinone,
-    };
-
-    final response = await http.post(Uri.parse(baseURL + getBalUrl),
-        body: tradeBody,
-        headers: {"authorization": preferences.getString("token").toString()});
-
-    return CoinBalanceModel.fromJson(json.decode(response.body));
-  }
-
-  Future<RefreshTokenModel> getRefreshToken(dynamic function) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    var tradeBody = {
-      'token': preferences.getString("refresh").toString(),
-    };
-
-    final response = await http.post(
-      Uri.parse(baseURL + refreshTokenUrl),
-      body: tradeBody,
-    );
-    if (response.statusCode == 200) {
-      RefreshTokenModel loginData =
-          RefreshTokenModel.fromJson(json.decode(response.body));
-      storeData(loginData.data!.accessToken!.token.toString(),
-          loginData.data!.accessToken!.exp.toString());
-
-      function();
-    }
-
-    return RefreshTokenModel.fromJson(json.decode(response.body));
-  }
 
   socketChatConnection(cb) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -515,13 +479,6 @@ class APIUtils {
     return UserDetailsModel.fromJson(json.decode(response.body));
   }
 
-  Future<DepositDetailsModel> getDepositDetails(String idValue) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.get(
-        Uri.parse(baseURL + walletListURL + "?id=" + idValue),
-        headers: {"authorization": preferences.getString("token").toString()});
-    return DepositDetailsModel.fromJson(json.decode(response.body));
-  }
 
   Future<BannerImageListModel> getBannerList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -532,14 +489,6 @@ class APIUtils {
     return BannerImageListModel.fromJson(json.decode(response.body));
   }
 
-  Future<GoogletfaModel> getGoogleTFADetails() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    final response = await http.post(Uri.parse(baseURL + gtfaUrl),
-        headers: {"authorization": preferences.getString("token").toString()});
-
-    return GoogletfaModel.fromJson(json.decode(response.body));
-  }
 
 
 
@@ -628,58 +577,7 @@ class APIUtils {
     return CommonModel.fromJson(json.decode(response.body));
   }
 
-  Future<GoogleEnabletfaModel> enableGoogleTFA(
-      String token, bool status) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    var bodyData = {
-      'f2a_type': "0",
-      'token': token,
-    };
 
-    var bodyaEnableData = {
-      'token': token,
-      "revoke": "true",
-      'f2a_type': "0",
-    };
-
-    final response = await http.post(Uri.parse(baseURL + tfaEnableUrl),
-        body: status ? bodyaEnableData : bodyData,
-        headers: {"authorization": preferences.getString("token").toString()});
-
-    return GoogleEnabletfaModel.fromJson(json.decode(response.body));
-  }
-
-  Future<AllOpenOrderModel> AllopenOrderHistory(String mode) async {
-    var bodyData = {
-      'mode': mode,
-    };
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    String url = baseURL + openOrderUrl + "?all=true";
-    final response = await http.post(Uri.parse(url),
-        body: bodyData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    print(response.body);
-    return AllOpenOrderModel.fromJson(json.decode(response.body));
-  }
-
-  Future<PositionOrderModel> FuturePositionList() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    String url = baseURL + openOrderUrl + "?future=true";
-    final response = await http.post(Uri.parse(url),
-        headers: {"authorization": preferences.getString("token").toString()});
-    return PositionOrderModel.fromJson(json.decode(response.body));
-  }
-
-  Future<FutureOpenOrderModel> FutureOpenOrderList() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    String url = baseURL + openOrderUrl + "?futureorder=true";
-    final response = await http.post(Uri.parse(url),
-        headers: {"authorization": preferences.getString("token").toString()});
-    return FutureOpenOrderModel.fromJson(json.decode(response.body));
-  }
 
   Future<CommonModel> placeTradeOrder(
       String id, String price, String quantity, String type, bool check) async {
@@ -732,38 +630,10 @@ class APIUtils {
         body: verifyData,
         headers: {"authorization": preferences.getString("token").toString()});
 
-    print(response.body);
-    return CommonModel.fromJson(json.decode(response.body));
-  }
-
-  Future<CommonModel> cancelTrade(String tradeID) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    var verifyData = {
-      "tradeId": tradeID,
-    };
-
-    final response = await http.post(Uri.parse(baseURL + cancelTradeUrl),
-        body: verifyData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    print(response.body);
-    return CommonModel.fromJson(json.decode(response.body));
-  }
-
-  Future<CommonModel> updateUserName(String name) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    var verifyData = {
-      "name": name,
-      "updatetype": "name",
-    };
-
-    final response = await http.post(Uri.parse(baseURL + updateNameUrl),
-        body: verifyData,
-        headers: {"authorization": preferences.getString("token").toString()});
 
     return CommonModel.fromJson(json.decode(response.body));
   }
+
 
   Future<DepositHistoryModel> getDepositHistory() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -834,45 +704,7 @@ class APIUtils {
     return WalletBalModel.fromJson(json.decode(response.body));
   }
 
-  Future<CommonModel> checkreferID(String id) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    var verifyData = {
-      "referral_id": id,
-    };
-    final response = await http.post(
-        Uri.parse(
-          baseURL + checkreferUrl,
-        ),
-        body: verifyData,
-        headers: {"authorization": preferences.getString("token").toString()});
-
-    return CommonModel.fromJson(json.decode(response.body));
-  }
-
-
-
-  Future<MarginTransferModel> doTransferSpot(
-    String wallet_id,
-    String balance,
-    String loan_mode,
-  ) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    var loanData = {
-      "wallet_id": wallet_id,
-      "balance": balance,
-      "loan_mode": loan_mode,
-    };
-
-    final response = await http.post(
-        Uri.parse(
-          baseURL + spotToMarginTransferUrl,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    return MarginTransferModel.fromJson(json.decode(response.body));
-  }
 
   Future<InstantValueModel> doInstantCalc(
     String trade_id,
@@ -968,291 +800,10 @@ class APIUtils {
     return OrderBookModel.fromJson(json.decode(response.body));
   }
 
-  Future<LoanHistoryModel> getLoanHistory(
-    String wallet_id,
-    String loan_status,
-    String loan_mode,
-  ) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    var loanData = {
-      "wallet_id": wallet_id,
-      "loan_status": loan_status,
-      "loan_mode": loan_mode,
-    };
-    print(loanData);
-    final response = await http.post(
-        Uri.parse(
-          baseURL + getloanHistoryUrl,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    print(response.body);
-    return LoanHistoryModel.fromJson(json.decode(response.body));
-  }
 
 
-  Future<GetPaymentDetailsModel> getpay_details(
-      String userId, String payment) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    print(preferences.getString("token").toString());
-    var loanData = {"userId": userId, "payment": payment};
 
-    final response = await http.post(
-        Uri.parse(
-          baseURL + paymentUrl,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    /* print("Hello"+response.body);*/
-    return GetPaymentDetailsModel.fromJson(json.decode(response.body));
-  }
 
-  Future<CommonModel> getdel_details(String dele, String userId) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    print(preferences.getString("token").toString());
-    var loanData = {"delete": dele, "userId": userId};
 
-    print("payment body" + loanData.toString());
-    final response = await http.post(
-        Uri.parse(
-          baseURL + paymentUrl,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    /* print("Hello"+response.body);*/
-    return CommonModel.fromJson(json.decode(response.body));
-  }
-
-  Future<GetPostAdData> getAd(String userId, String type) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    var loanData = {
-      "ad_type": type,
-      "userId": userId,
-    };
-    print("Getpost" + loanData.toString());
-    final response = await http.post(
-        Uri.parse(
-          baseURL + p2pGetAllPostAdd + "?ad_type=$type&userId=$userId",
-        ),
-        /*  body: loanData,*/
-        headers: {"authorization": preferences.getString("token").toString()});
-    /* print("Getpostdata :"+response.body);*/
-    return GetPostAdData.fromJson(json.decode(response.body));
-  }
-
-  Future<MyAdsHistoryData> getMyAd(String userId) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.get(
-        Uri.parse(
-          baseURL + p2pGetMyPostAdd + "?userId=$userId",
-        ),
-        headers: {"authorization": preferences.getString("token").toString()});
-    /* print("GetMyadsData :"+response.body);*/
-    return MyAdsHistoryData.fromJson(json.decode(response.body));
-  }
-
-  Future<PurchasedAdsHistoryData> getPurchaseAd(String userId) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.get(
-        Uri.parse(
-          baseURL + p2pGetPurchaseAd + "?senderuserId=$userId",
-        ),
-        headers: {"authorization": preferences.getString("token").toString()});
-    /* print("GetMyadsData :"+response.body);*/
-    return PurchasedAdsHistoryData.fromJson(json.decode(response.body));
-  }
-
-  Future<UploadImageModel> uploadP2PImage2(
-      String trade_id, String userId, String quantity) async {
-    var loanData = {
-      "trade_id": trade_id,
-      "quantity": quantity,
-      "userId": userId,
-    };
-    print("withOutImageData" + loanData.toString());
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.post(
-        Uri.parse(
-          baseURL + p2pUploadImage,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    /*print("GetMyadsData :"+response.body);*/
-    return UploadImageModel.fromJson(json.decode(response.body));
-  }
-
-  Future<UploadImageModel> uploadP2PImage(String trade_id, String post_id,
-      String userId, String quantity, String upload_img) async {
-    var loanData = {
-      "trade_id": trade_id,
-      "post_id": post_id,
-      "quantity": quantity,
-      "userId": userId,
-      "upload_img": upload_img,
-    };
-    print(loanData);
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.post(
-        Uri.parse(
-          baseURL + p2pUploadImage,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    /*print("GetMyadsData :"+response.body);*/
-    return UploadImageModel.fromJson(json.decode(response.body));
-  }
-
-  Future<LoanModel> p2pNotification(String trade_id, String userId) async {
-    var loanData = {
-      "_id": userId,
-      "trade_id": trade_id,
-    };
-
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.post(
-        Uri.parse(
-          baseURL + p2pNotificationUrl,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-
-    return LoanModel.fromJson(json.decode(response.body));
-  }
-
-  Future<LoanModel> p2pCancelTrade(
-      String trade_id, String userId, String userId2) async {
-    var loanData = {
-      "_id": userId,
-      "_id1": userId2,
-      "trade_id": trade_id,
-    };
-    print(loanData);
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.post(
-        Uri.parse(
-          baseURL + p2pCancelUrl,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    print("GetMyadsData :" + response.body);
-    return LoanModel.fromJson(json.decode(response.body));
-  }
-
-  Future<MyAdDetailsModel> getMyAdDetails(String trade_id) async {
-    var loanData = {
-      "purchase_id": trade_id,
-    };
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.get(
-        Uri.parse(
-          baseURL + p2pGetMyPostAdDetails + "?purchase_id=" + trade_id,
-        ),
-        headers: {"authorization": preferences.getString("token").toString()});
-    print("GetMyadsDetailsData :" + response.body);
-    return MyAdDetailsModel.fromJson(json.decode(response.body));
-  }
-
-  Future<UploadImageModel> p2PRelease(String trade_id) async {
-    var loanData = {
-      "purchase_id": trade_id,
-    };
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.post(
-        Uri.parse(
-          baseURL + p2pReleaseFundUrl + "?trade_id=" + trade_id,
-        ),
-        headers: {"authorization": preferences.getString("token").toString()});
-    print("Release Fund :" + response.body);
-    return UploadImageModel.fromJson(json.decode(response.body));
-  }
-
-  Future<LoanModel> editPaymentDetails(
-      String name,
-      String acc_type,
-      String acc_num,
-      String ifsc,
-      String bank_name,
-      String branch,
-      String upi_id,
-      String Payment_name) async {
-    var bank = {
-      "edit": "true",
-      "isstatus": "true",
-      "acc_num": acc_num,
-      "name": name,
-      "ifsc": ifsc,
-      "bank_name": bank_name,
-      "acc_type": acc_type,
-      "Payment_name": Payment_name,
-      "branch": branch
-    };
-
-    var loanData = {
-      "edit": "true",
-      "isstatus": "true",
-      "qr_code": "image",
-      "upi_id": upi_id,
-      "Payment_name": Payment_name,
-    };
-    print(loanData);
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.post(
-        Uri.parse(
-          baseURL + paymentUrl,
-        ),
-        body:
-            Payment_name == "bank" || Payment_name == "imps" ? bank : loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    print("Edit payment :" + response.body);
-    return LoanModel.fromJson(json.decode(response.body));
-  }
-
-  Future<LoanModel> deletePaymentDetails(String Payment_name) async {
-    var loanData = {
-      "delete": "true",
-      "type": Payment_name,
-    };
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.post(
-        Uri.parse(
-          baseURL + paymentUrl,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    print("Release Fund :" + response.body);
-    return LoanModel.fromJson(json.decode(response.body));
-  }
-
-  Future<dynamic> sendChatMessage(
-      String chatid, String author, String message) async {
-    var loanData = {
-      "chatid": chatid,
-      "author": author,
-      "message": message,
-    };
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.post(
-        Uri.parse(
-          baseURL + sendNewMessageUrl,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    return response.body;
-  }
-
-  Future<ChatDataModel> getChatData(String chatId) async {
-    var loanData = {
-      "chatId": chatId,
-    };
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final response = await http.post(
-        Uri.parse(
-          baseURL + chatHistoryUrl,
-        ),
-        body: loanData,
-        headers: {"authorization": preferences.getString("token").toString()});
-    print("Release Fund :" + response.body);
-    return ChatDataModel.fromJson(json.decode(response.body));
-  }
 
 }
