@@ -6,6 +6,7 @@ import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/common/theme/themes.dart';
 import 'package:h2_crypto/data/api_utils.dart';
+import 'package:h2_crypto/data/crypt_model/user_details_model.dart';
 import 'package:h2_crypto/screens/basic/login.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,13 +27,15 @@ class _SideMenuState extends State<SideMenu> {
   bool kycUpdate=false;
   APIUtils apiUtils = APIUtils();
   String name = "";
-  String uid = "";
+  String email = "";
+  bool loading=false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDetails();
+    loading=true;
+   getUserDetails();
   }
 
   void _changeTheme(BuildContext buildContext, MyThemeKeys key) {
@@ -48,7 +51,7 @@ class _SideMenuState extends State<SideMenu> {
               preferences.getString("name").toString() == null
           ? "Set Name"
           : preferences.getString("name").toString();
-      uid = preferences.getString("uid").toString();
+
 
       if (themeType == null || themeType == "null") {
         CustomTheme.instanceOf(context).changeTheme(MyThemeKeys.DARK);
@@ -97,477 +100,374 @@ class _SideMenuState extends State<SideMenu> {
               CustomTheme.of(context).backgroundColor,
               CustomTheme.of(context).accentColor,
             ])),
-        child: Column(
+        child:Stack(
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      InkWell(
-                        child: SvgPicture.asset(
-                          'assets/others/close.svg',
-                          color: CustomTheme.of(context).splashColor,
-                          height: 20.0,
-                        ),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            child: SvgPicture.asset(
+                              'assets/others/close.svg',
+                              color: CustomTheme.of(context).splashColor,
+                              height: 20.0,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (theme) {
+                                  _changeTheme(context, MyThemeKeys.LIGHT);
+                                  StoreData("light");
+                                  theme = false;
+                                } else {
+                                  _changeTheme(context, MyThemeKeys.DARK);
+                                  StoreData("dark");
+                                  theme = true;
+                                }
+                              });
+                            },
+                            child: SvgPicture.asset(
+                              'assets/others/sun.svg',
+                              color: CustomTheme.of(context).splashColor,
+                              height: 20.0,
+                            ),
+                          )
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (theme) {
-                              _changeTheme(context, MyThemeKeys.LIGHT);
-                              StoreData("light");
-                              theme = false;
-                            } else {
-                              _changeTheme(context, MyThemeKeys.DARK);
-                              StoreData("dark");
-                              theme = true;
-                            }
-                          });
-                        },
-                        child: SvgPicture.asset(
-                          'assets/others/sun.svg',
-                          color: CustomTheme.of(context).splashColor,
-                          height: 20.0,
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 15.0,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 20.0, bottom: 20.0),
-                    decoration: BoxDecoration(
-                        color: CustomTheme.of(context)
-                            .buttonColor
-                            .withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(10.0)),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                            left: 10.0, right: 10.0, top: 20.0, bottom: 20.0),
+                        decoration: BoxDecoration(
+                            color: CustomTheme.of(context)
+                                .buttonColor
+                                .withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: Column(
                           children: [
-                            Text(
-                              name,
-                              style: CustomWidget(context: context)
-                                  .CustomSizedTextStyle(
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  name,
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
                                       16.0,
                                       Theme.of(context).splashColor,
                                       FontWeight.w500,
                                       'FontRegular'),
-                            ),
+                                ),
 
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "UID: " + uid,
-                              style: CustomWidget(context: context)
-                                  .CustomSizedTextStyle(
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Email: " + email,
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
                                       12.0,
                                       Theme.of(context)
                                           .splashColor
                                           .withOpacity(0.5),
                                       FontWeight.w400,
                                       'FontRegular'),
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            InkWell(
-                              onTap: (){
-                                Clipboard.setData(ClipboardData(text: uid));
-                                CustomWidget(context: context).custombar(
-                                    "H2Crypto", "UID was Copied", true);
-                              },
-                              child: SvgPicture.asset(
-                                'assets/others/copy.svg',
-                                height: 15.0,
-                              ),
+                                ),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+
+
+                              ],
                             ),
 
+
+                          ],
+                        ),
+                      ),
+                      //  const SizedBox(height: 20.0,),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.64,
+                  margin: EdgeInsets.only(top: 0.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ChangePassword(),
+                                ));
+                          },
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/sidemenu/settings.svg',
+                                    height: 20.0,
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    AppLocalizations.instance.text("loc_change_password"),
+                                    style: CustomWidget(context: context)
+                                        .CustomSizedTextStyle(
+                                        16.0,
+                                        Theme.of(context).splashColor,
+                                        FontWeight.normal,
+                                        'FontRegular'),
+                                  ),
+                                ],
+                              ),
+
+                              Row(
+                                children: [
+                                  Text(
+                                    "Modify",
+                                    style: CustomWidget(context: context)
+                                        .CustomSizedTextStyle(
+                                        12.0,
+                                        Theme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        FontWeight.normal,
+                                        'FontRegular'),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: CustomTheme.of(context)
+                                        .splashColor
+                                        .withOpacity(0.5),
+                                    size: 16.0,
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+
+                        Container(
+                          height: 0.7,
+                          width: MediaQuery.of(context).size.width,
+                          color: CustomTheme.of(context).buttonColor,
+                        ),
+
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/sidemenu/help.svg',
+                                  height: 20.0,
+                                ),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+                                Text(
+                                  AppLocalizations.instance.text("loc_help"),
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      16.0,
+                                      Theme.of(context).splashColor,
+                                      FontWeight.normal,
+                                      'FontRegular'),
+                                ),
+                              ],
+                            ),
+                            SvgPicture.asset(
+                              'assets/sidemenu/arrow.svg',
+                              color: CustomTheme.of(context).splashColor,
+                              height: 20.0,
+                            ),
                           ],
                         ),
                         const SizedBox(
                           height: 20.0,
                         ),
-                        // Container(
-                        //   padding: const EdgeInsets.only(left: 15.0,right: 15.0,top: 12.0,bottom: 12.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/sidemenu/support.svg',
+                                  height: 20.0,
+                                ),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+                                Text(
+                                  AppLocalizations.instance.text("loc_cu_support"),
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      16.0,
+                                      Theme.of(context).splashColor,
+                                      FontWeight.normal,
+                                      'FontRegular'),
+                                ),
+                              ],
+                            ),
+                            SvgPicture.asset(
+                              'assets/sidemenu/arrow.svg',
+                              color: CustomTheme.of(context).splashColor,
+                              height: 20.0,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Row(
+                        //       children: [
                         //
-                        //   decoration: BoxDecoration(
-                        //       color: CustomTheme.of(context).buttonColor.withOpacity(0.5),
-                        //       borderRadius: BorderRadius.circular(30.0)
-                        //
-                        //   ),
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       Row(
-                        //         children: [   SvgPicture.asset('assets/others/vip.svg'),
-                        //           const SizedBox(width: 10.0,),
-                        //           Text(
-                        //             AppLocalizations.instance.text('loc_apply_vip'),
-                        //             style: GoogleFonts.habibi(
-                        //                 fontSize: 13.0,
-                        //                 fontWeight: FontWeight.w500,
-                        //                 color: CustomTheme.of(context).splashColor),
-                        //           ),],
-                        //       ),
-                        //       Text(
-                        //         AppLocalizations.instance.text('loc_enjoy_more'),
-                        //         style: GoogleFonts.habibi(
-                        //             fontSize: 11.0,
-                        //             fontWeight: FontWeight.w500,
-                        //             color: CustomTheme.of(context).splashColor),
-                        //       )
-                        //
-                        //     ],
-                        //   ),
+                        //         SvgPicture.asset('assets/sidemenu/product.svg',height: 20.0,),
+                        //         const SizedBox(width: 10.0,),
+                        //         Text(
+                        //           AppLocalizations.instance.text("loc_pro_sug"),
+                        //           style: GoogleFonts.habibi(
+                        //               fontSize: 16.0,
+                        //               color: CustomTheme.of(context).splashColor),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //     SvgPicture.asset('assets/sidemenu/arrow.svg',color: CustomTheme.of(context).splashColor,height: 20.0,),
+                        //   ],
                         // ),
-                      ],
-                    ),
-                  ),
-                  //  const SizedBox(height: 20.0,),
-                ],
-              ),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.64,
-              margin: EdgeInsets.only(top: 20.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        if(kycUpdate)
-                        {
-                          CustomWidget(context: context).  custombar("Security","KYC Already Linked", true);
-
-
-                        }
-                        else
-                        {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const KYCPage(),
-                              ));
-                        }
-
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/sidemenu/security.svg',
-                                height: 20.0,
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                AppLocalizations.instance.text("loc_kyc"),
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    16.0,
-                                    Theme.of(context).splashColor,
-                                    FontWeight.normal,
-                                    'FontRegular'),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                kycUpdate?"Certified" :"Uncertified",
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    12.0,
-                                    Theme.of(context)
-                                        .splashColor
-                                        .withOpacity(0.5),
-                                    FontWeight.w500,
-                                    'FontRegular'),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: CustomTheme.of(context)
-                                    .splashColor
-                                    .withOpacity(0.5),
-                                size: 16.0,
-                              )
-                            ],
-                          )
-                        ],
-                      )
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ChangePassword(),
-                            ));
-                      },
-                      child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/sidemenu/settings.svg',
-                                height: 20.0,
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              Text(
-                                AppLocalizations.instance.text("loc_change_password"),
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    16.0,
-                                    Theme.of(context).splashColor,
-                                    FontWeight.normal,
-                                    'FontRegular'),
-                              ),
-                            ],
-                          ),
-
-                          Row(
-                            children: [
-                              Text(
-                                "Modify",
-                                style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    12.0,
-                                    Theme.of(context)
-                                        .splashColor
-                                        .withOpacity(0.5),
-                                    FontWeight.normal,
-                                    'FontRegular'),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: CustomTheme.of(context)
-                                    .splashColor
-                                    .withOpacity(0.5),
-                                size: 16.0,
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-
-                    Container(
-                      height: 0.7,
-                      width: MediaQuery.of(context).size.width,
-                      color: CustomTheme.of(context).buttonColor,
-                    ),
-
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                        // const SizedBox(height: 20.0,),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SvgPicture.asset(
-                              'assets/sidemenu/help.svg',
-                              height: 20.0,
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              AppLocalizations.instance.text("loc_help"),
-                              style: CustomWidget(context: context)
-                                  .CustomSizedTextStyle(
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/sidemenu/about.svg',
+                                  height: 20.0,
+                                ),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+                                Text(
+                                  AppLocalizations.instance.text("loc_about"),
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
                                       16.0,
                                       Theme.of(context).splashColor,
                                       FontWeight.normal,
                                       'FontRegular'),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        SvgPicture.asset(
-                          'assets/sidemenu/arrow.svg',
-                          color: CustomTheme.of(context).splashColor,
-                          height: 20.0,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
                             SvgPicture.asset(
-                              'assets/sidemenu/support.svg',
+                              'assets/sidemenu/arrow.svg',
+                              color: CustomTheme.of(context).splashColor,
                               height: 20.0,
                             ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              AppLocalizations.instance.text("loc_cu_support"),
-                              style: CustomWidget(context: context)
-                                  .CustomSizedTextStyle(
-                                      16.0,
-                                      Theme.of(context).splashColor,
-                                      FontWeight.normal,
-                                      'FontRegular'),
-                            ),
                           ],
                         ),
-                        SvgPicture.asset(
-                          'assets/sidemenu/arrow.svg',
-                          color: CustomTheme.of(context).splashColor,
+                        const SizedBox(
                           height: 20.0,
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Row(
-                    //       children: [
-                    //
-                    //         SvgPicture.asset('assets/sidemenu/product.svg',height: 20.0,),
-                    //         const SizedBox(width: 10.0,),
-                    //         Text(
-                    //           AppLocalizations.instance.text("loc_pro_sug"),
-                    //           style: GoogleFonts.habibi(
-                    //               fontSize: 16.0,
-                    //               color: CustomTheme.of(context).splashColor),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //     SvgPicture.asset('assets/sidemenu/arrow.svg',color: CustomTheme.of(context).splashColor,height: 20.0,),
-                    //   ],
-                    // ),
-                    // const SizedBox(height: 20.0,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/sidemenu/about.svg',
-                              height: 20.0,
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              AppLocalizations.instance.text("loc_about"),
-                              style: CustomWidget(context: context)
-                                  .CustomSizedTextStyle(
-                                      16.0,
-                                      Theme.of(context).splashColor,
-                                      FontWeight.normal,
-                                      'FontRegular'),
-                            ),
-                          ],
-                        ),
-                        SvgPicture.asset(
-                          'assets/sidemenu/arrow.svg',
-                          color: CustomTheme.of(context).splashColor,
-                          height: 20.0,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Row(
-                    //       children: [
-                    //
-                    //         SvgPicture.asset('assets/sidemenu/chain.svg',height: 20.0,),
-                    //         const SizedBox(width: 10.0,),
-                    //         Text(
-                    //           AppLocalizations.instance.text("loc_chain"),
-                    //           style: GoogleFonts.habibi(
-                    //               fontSize: 16.0,
-                    //               color: CustomTheme.of(context).splashColor),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //     SvgPicture.asset('assets/sidemenu/arrow.svg',color: CustomTheme.of(context).splashColor,height: 20.0,),
-                    //   ],
-                    // ),
-                    //
-                    // const SizedBox(height: 20.0,),
-                    InkWell(
-                      onTap: () {
-                        showSuccessAlertDialog(
-                            "Logout", "Are you sure want to Logout ?");
-                      },
-                      child: Container(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, right: 15.0, top: 10.0, bottom: 10.0),
-                          decoration: BoxDecoration(
-                              color: CustomTheme.of(context)
-                                  .buttonColor
-                                  .withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.instance.text('loc_logout'),
-                              style: CustomWidget(context: context)
-                                  .CustomTextStyle(
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Row(
+                        //       children: [
+                        //
+                        //         SvgPicture.asset('assets/sidemenu/chain.svg',height: 20.0,),
+                        //         const SizedBox(width: 10.0,),
+                        //         Text(
+                        //           AppLocalizations.instance.text("loc_chain"),
+                        //           style: GoogleFonts.habibi(
+                        //               fontSize: 16.0,
+                        //               color: CustomTheme.of(context).splashColor),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //     SvgPicture.asset('assets/sidemenu/arrow.svg',color: CustomTheme.of(context).splashColor,height: 20.0,),
+                        //   ],
+                        // ),
+                        //
+                        // const SizedBox(height: 20.0,),
+                        InkWell(
+                          onTap: () {
+                            showSuccessAlertDialog(
+                                "Logout", "Are you sure want to Logout ?");
+                          },
+                          child: Container(
+                              padding: const EdgeInsets.only(
+                                  left: 15.0, right: 15.0, top: 10.0, bottom: 10.0),
+                              decoration: BoxDecoration(
+                                  color: CustomTheme.of(context)
+                                      .buttonColor
+                                      .withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Center(
+                                child: Text(
+                                  AppLocalizations.instance.text('loc_logout'),
+                                  style: CustomWidget(context: context)
+                                      .CustomTextStyle(
                                       Theme.of(context).splashColor,
                                       FontWeight.w500,
                                       'FontRegular'),
-                            ),
-                          )),
+                                ),
+                              )),
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                )
+              ],
+            ),
+            loading
+                ? CustomWidget(context: context).loadingIndicator(
+              CustomTheme.of(context).splashColor,
             )
+                : Container()
           ],
-        ),
+        )
       ),
     );
   }
@@ -717,5 +617,25 @@ class _SideMenuState extends State<SideMenu> {
       ),
       (Route route) => false,
     );
+  }
+  getUserDetails() {
+    apiUtils.getUserDetails().then((UserDetailsModel loginData) {
+      if (loginData.success!) {
+        setState(() {
+          loading = false;
+
+          name=loginData.result!.firstName.toString()+" "+loginData.result!.lastName.toString();
+          email=loginData.result!.email.toString();
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
+    });
   }
 }

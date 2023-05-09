@@ -6,7 +6,6 @@ import '../../../common/custom_widget.dart';
 import '../../../common/localization/localizations.dart';
 import '../../../common/theme/custom_theme.dart';
 import '../../../data/api_utils.dart';
-import '../../../data/model/terms_policy_model.dart';
 
 
 class TermsCondition extends StatefulWidget {
@@ -28,7 +27,7 @@ class _TermsConditionState extends State<TermsCondition> {
     // TODO: implement initState
     super.initState();
     loading=true;
-    getTerms();
+
   }
 
   @override
@@ -93,33 +92,4 @@ class _TermsConditionState extends State<TermsCondition> {
     );
   }
 
-  getTerms() {
-    apiUtils.getTerms().then((TermsConditionModel loginData) {
-      if (loginData.statusCode == 200) {
-        setState(() {
-
-          if(widget.title)
-            {
-              data=loginData.data![1].cmsInfo.toString();
-            }
-          else{
-            data=loginData.data![0].cmsInfo.toString();
-          }
-
-
-            loading = false;
-        });
-      } else {
-        setState(() {
-          loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-
-      setState(() {
-        loading = false;
-      });
-    });
-  }
 }

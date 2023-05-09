@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:h2_crypto/common/custom_widget.dart';
-import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/trade_pair_list_model.dart';
-import 'package:h2_crypto/data/model/wallet_list_model.dart';
+import 'package:h2_crypto/data/crypt_model/trade_pair_list_model.dart';
+
+
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);

@@ -6,8 +6,7 @@ import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/common/theme/themes.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/refresh_token_model.dart';
-import 'package:h2_crypto/screens/basic/google_login.dart';
+
 import 'package:h2_crypto/screens/basic/home.dart';
 import 'package:h2_crypto/screens/basic/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -79,18 +78,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   onLoad() {
     if (loggedIn) {
-      if (gooleAuth) {
-        Future.delayed(const Duration(seconds: 5), () {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => GoogleLogin()));
-        });
-      } else {
+
         Future.delayed(const Duration(seconds: 5), () {
           Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
         });
       }
-    } else {
+     else {
       Future.delayed(const Duration(seconds: 5), () {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => LoginScreen()));

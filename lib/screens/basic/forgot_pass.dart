@@ -12,8 +12,8 @@ import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/textformfield_custom.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/common_model.dart';
-import 'package:h2_crypto/data/model/sent_otp_model.dart';
+import 'package:h2_crypto/data/crypt_model/common_model.dart';
+
 import 'package:h2_crypto/screens/basic/login.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -538,8 +538,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     }
                                     else {
                                       setState(() {
-                                        loading = true;
-                                        sendCodeMobile();
+
                                       });
                                     }
                                   }
@@ -550,13 +549,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                             .toString()) {
                                       if (isEmail) {
                                         setState(() {
-                                          loading = true;
-                                          updateCode(true);
+
                                         });
                                       } else {
                                         setState(() {
-                                          loading = true;
-                                          updateCode(false);
+
                                         });
                                       }
                                     } else {
@@ -840,64 +837,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     });
   }
 
-  updateCode(bool condi) {
-    apiUtils
-        .getUpdatePassword(
-            email_password.text, mobile_verify.text, condi, token)
-        .then((CommonModel loginData) {
-      if (loginData.status.toString() == "200") {
-        setState(() {
-          loading = false;
-          getCode = false;
-        });
-        custombar("Forgot Password", loginData.message.toString(), true);
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => LoginScreen()));
-      } else {
-        setState(() {
-          loading = false;
-          custombar("Forgot Password", loginData.message.toString(), false);
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
 
-  sendCodeMobile() {
-    apiUtils
-        .getforgotPassword(
-            APIUtils.forgotMobURL,
-            _selectedCountry!.callingCode.toString() + mobile.text.toString(),
-            false)
-        .then((SentOtpModel loginData) {
-      if (loginData.statusCode.toString() == "200") {
-        setState(() {
-          loading = false;
-          getCode = false;
-          isDisplay=false;
-          token = loginData.data!.accessToken!.token.toString();
-        });
-        custombar("Forgot Password", loginData.message.toString(), true);
-
-        // storeData(loginData.userId.toString(),loginData.username.toString());
-
-      } else {
-        setState(() {
-          loading = false;
-          custombar("Forgot Password", loginData.message.toString(), false);
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
 
   verifyMail() {
     apiUtils

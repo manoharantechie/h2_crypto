@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:h2_crypto/data/api_utils.dart';
 import 'package:h2_crypto/data/crypt_model/coin_list.dart';
-import 'package:h2_crypto/data/model/market_list_model.dart';
-import 'package:h2_crypto/data/model/new_socket_data.dart';
-import 'package:h2_crypto/data/model/socket_data.dart';
-import 'package:h2_crypto/data/model/trade_pair_list_model.dart';
+import 'package:h2_crypto/data/crypt_model/market_list_model.dart';
+import 'package:h2_crypto/data/crypt_model/new_socket_data.dart';
 
+import 'package:h2_crypto/data/crypt_model/trade_pair_list_model.dart';
 
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:web_socket_channel/io.dart';
@@ -39,12 +38,15 @@ class _MarketSceen1State extends State<MarketSceen>
   late TabController _tabController;
 
   List<CoinList> tradePairList = [];
+  List<CoinList> tradePairListAll = [];
 
   IOWebSocketChannel? channelOpenOrder;
-  List arrData=[];
-  List<SocketData> socktList=[];
+  List arrData = [];
 
+  List<String> marketAseetList = [];
+  String selectedmarketAseet = "";
 
+  int indexVal = 0;
 
   // wss://stream.binance.com:9443/ws
   @override
@@ -60,51 +62,38 @@ class _MarketSceen1State extends State<MarketSceen>
     channelOpenOrder = IOWebSocketChannel.connect(
         Uri.parse("wss://ws.sfox.com/ws"),
         pingInterval: Duration(seconds: 30));
-
-
-
-
   }
 
-
   socketData() {
-
-
     channelOpenOrder!.stream.listen(
-          (data) {
-
+      (data) {
         if (data != null || data != "null") {
-
-
-
-
           var decode = jsonDecode(data);
-          NewSocketData ss=NewSocketData.fromJson(decode);
-          for(int m=0;m<tradePairList.length;m++)
+
+        if(mounted)
           {
-            if(tradePairList[m].symbol.toString().toLowerCase()==ss.payload.pair.toString().toLowerCase())
-            {
+            setState(() {
+              NewSocketData ss = NewSocketData.fromJson(decode);
+              for (int m = 0; m < tradePairList.length; m++) {
+                if (tradePairList[m].symbol.toString().toLowerCase() ==
+                    ss.payload.pair.toString().toLowerCase()) {
+                  double open = double.parse(ss.payload.open.toString());
+                  double close = double.parse(ss.payload.last.toString());
+                  double data = ((close - open) / open) * 100;
 
-
-              double open =
-              double.parse(ss.payload.open.toString());
-              double close =
-              double.parse(ss.payload.last.toString());
-              double data = ((close - open) / open)*100;
-
-              tradePairList[m].hrExchange=data.toString();
-              tradePairList[m].currentPrice=double.parse(ss.payload.last.toString()).toString();
-              tradePairList[m].hrVolume=double.parse(ss.payload.volume.toString()).toString();
-            }
+                  tradePairList[m].hrExchange = data.toString();
+                  tradePairList[m].currentPrice =
+                      double.parse(ss.payload.last.toString()).toString();
+                  tradePairList[m].hrVolume =
+                      double.parse(ss.payload.volume.toString()).toString();
+                }
+              }
+            });
           }
 
           // print("Mano");
-
-
         }
-
       },
-
       onDone: () async {
         await Future.delayed(Duration(seconds: 10));
         var messageJSON = {
@@ -138,7 +127,6 @@ class _MarketSceen1State extends State<MarketSceen>
           leading: Container(
             width: 0.0,
           ),
-
           centerTitle: true,
           title: Text(
             "Markets",
@@ -170,492 +158,30 @@ class _MarketSceen1State extends State<MarketSceen>
                   // Add one stop for each color
                   // Values should increase from 0.0 to 1.0
                   stops: [
-                    0.1,
-                    0.5,
-                    0.9,
-                  ],
+                0.1,
+                0.5,
+                0.9,
+              ],
                   colors: [
-                    CustomTheme.of(context).primaryColor,
-                    CustomTheme.of(context).backgroundColor,
-                    CustomTheme.of(context).accentColor,
-                  ])),
+                CustomTheme.of(context).primaryColor,
+                CustomTheme.of(context).backgroundColor,
+                CustomTheme.of(context).accentColor,
+              ])),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.9,
             color: CustomTheme.of(context).primaryColor,
             child: loading
                 ? CustomWidget(context: context)
-                .loadingIndicator(CustomTheme.of(context).splashColor)
+                    .loadingIndicator(CustomTheme.of(context).splashColor)
                 : Column(
-              children: [
-                Stack(
-                  children: [
-                    TabBar(
-                      controller: _tabController,
-                      labelColor: CustomTheme.of(context).cardColor,
-                      //<-- selected text color
-                      unselectedLabelColor: CustomTheme.of(context)
-                          .splashColor
-                          .withOpacity(0.5),
-                      // isScrollable: true,
-                      indicatorPadding:
-                      EdgeInsets.only(left: 10.0, right: 10.0),
-                      indicatorColor: CustomTheme.of(context).cardColor,
-                      tabs: <Widget>[
-                        // Tab(
-                        //   text: "Favourites",
-                        // ),
-                        Tab(
-                          text: "Spot",
-                        ),
-                        // Tab(
-                        //   text: "Margin",
-                        // ),
-                        // Tab(
-                        //   text: "Futures",
-                        // ),
-                      ],
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Container(
-                    color: CustomTheme.of(context).backgroundColor,
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: <Widget>[
-                        favList(),
-                        // spotList()
-                      ],
-                    ),
+                    children: [
+                      Expanded(
+                        child: favList(),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
           ),
         ));
-  }
-
-  Widget spotList() {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              // Add one stop for each color
-              // Values should increase from 0.0 to 1.0
-              stops: [
-                0.1,
-                0.5,
-                0.9,
-              ],
-              colors: [
-                CustomTheme.of(context).primaryColor,
-                CustomTheme.of(context).backgroundColor,
-                CustomTheme.of(context).accentColor,
-              ])),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(15, 2, 15, 2),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Name",
-                            style: CustomWidget(context: context)
-                                .CustomSizedTextStyle(
-                                13.0,
-                                Theme.of(context)
-                                    .hintColor
-                                    .withOpacity(0.5),
-                                FontWeight.w500,
-                                'FontRegular'),
-                          ),
-                          // Padding(
-                          //   padding: EdgeInsets.all(5.0),
-                          //   child: Column(
-                          //     children: [
-                          //       Container(
-                          //         padding:
-                          //             const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          //         child: InkWell(
-                          //           onTap: () {
-                          //           setState(() {
-                          //             marketList.sort((a, b) => a.pair!.compareTo(b.pair!));
-                          //           });
-                          //           },
-                          //           child: SvgPicture.asset(
-                          //             'assets/images/arrow up.svg',
-                          //             height: 10.0,
-                          //             width: 10.0,
-                          //             allowDrawingOutsideViewBox: true,
-                          //             color:
-                          //                 CustomTheme.of(context).splashColor,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       const SizedBox(
-                          //         height: 2.0,
-                          //       ),
-                          //       Container(
-                          //           padding:
-                          //               const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          //           child: InkWell(
-                          //             onTap: () {
-                          //               marketList.sort((a, b) => a.pair!.compareTo(b.pair!));
-                          //             },
-                          //             child: SvgPicture.asset(
-                          //               'assets/images/arrow down.svg',
-                          //               height: 10.0,
-                          //               width: 10.0,
-                          //               allowDrawingOutsideViewBox: true,
-                          //               color:
-                          //                   CustomTheme.of(context).splashColor,
-                          //             ),
-                          //           )),
-                          //       const SizedBox(
-                          //         height: 2.0,
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "/ vol",
-                            style: CustomWidget(context: context)
-                                .CustomSizedTextStyle(
-                                13.0,
-                                Theme.of(context)
-                                    .hintColor
-                                    .withOpacity(0.5),
-                                FontWeight.w500,
-                                'FontRegular'),
-                          ),
-                          // Padding(
-                          //   padding: EdgeInsets.all(5.0),
-                          //   child: Column(
-                          //     children: [
-                          //       Container(
-                          //         padding:
-                          //             const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          //         child: InkWell(
-                          //           onTap: () {
-                          //            setState(() {
-                          //              marketList.sort((a, b) => b.pair!.compareTo(a.pair!));
-                          //            });
-                          //           },
-                          //           child: SvgPicture.asset(
-                          //             'assets/images/arrow up.svg',
-                          //             height: 10.0,
-                          //             width: 10.0,
-                          //             allowDrawingOutsideViewBox: true,
-                          //             color:
-                          //                 CustomTheme.of(context).splashColor,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       const SizedBox(
-                          //         height: 2.0,
-                          //       ),
-                          //       Container(
-                          //           padding:
-                          //               const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          //           child: InkWell(
-                          //             onTap: () {
-                          //            setState(() {
-                          //              marketList.sort((a, b) => b.pair!.compareTo(a.pair!));
-                          //            });
-                          //             },
-                          //             child: SvgPicture.asset(
-                          //               'assets/images/arrow down.svg',
-                          //               height: 10.0,
-                          //               width: 10.0,
-                          //               allowDrawingOutsideViewBox: true,
-                          //               color:
-                          //                   CustomTheme.of(context).splashColor,
-                          //             ),
-                          //           )),
-                          //       const SizedBox(
-                          //         height: 2.0,
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Market Price",
-                        style: CustomWidget(context: context)
-                            .CustomSizedTextStyle(
-                            13.0,
-                            Theme.of(context).hintColor.withOpacity(0.5),
-                            FontWeight.w500,
-                            'FontRegular'),
-                      ),
-                      // Padding(
-                      //   padding: EdgeInsets.all(5.0),
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      //         child: InkWell(
-                      //           onTap: () {
-                      //             Navigator.pop(context);
-                      //           },
-                      //           child: SvgPicture.asset(
-                      //             'assets/images/arrow up.svg',
-                      //             height: 10.0,
-                      //             width: 10.0,
-                      //             allowDrawingOutsideViewBox: true,
-                      //             color: CustomTheme.of(context).splashColor,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       const SizedBox(
-                      //         height: 2.0,
-                      //       ),
-                      //       Container(
-                      //           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      //           child: InkWell(
-                      //             onTap: () {
-                      //               Navigator.pop(context);
-                      //             },
-                      //             child: SvgPicture.asset(
-                      //               'assets/images/arrow down.svg',
-                      //               height: 10.0,
-                      //               width: 10.0,
-                      //               allowDrawingOutsideViewBox: true,
-                      //               color: CustomTheme.of(context).splashColor,
-                      //             ),
-                      //           )),
-                      //       const SizedBox(
-                      //         height: 2.0,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Change",
-                        style: CustomWidget(context: context)
-                            .CustomSizedTextStyle(
-                            13.0,
-                            Theme.of(context).hintColor.withOpacity(0.5),
-                            FontWeight.w500,
-                            'FontRegular'),
-                      ),
-                      // Padding(
-                      //   padding: EdgeInsets.all(5.0),
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      //         child: InkWell(
-                      //           onTap: () {
-                      //             Navigator.pop(context);
-                      //           },
-                      //           child: SvgPicture.asset(
-                      //             'assets/images/arrow up.svg',
-                      //             height: 10.0,
-                      //             width: 10.0,
-                      //             allowDrawingOutsideViewBox: true,
-                      //             color: CustomTheme.of(context).splashColor,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       const SizedBox(
-                      //         height: 2.0,
-                      //       ),
-                      //       Container(
-                      //           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      //           child: InkWell(
-                      //             onTap: () {
-                      //               Navigator.pop(context);
-                      //             },
-                      //             child: SvgPicture.asset(
-                      //               'assets/images/arrow down.svg',
-                      //               height: 10.0,
-                      //               width: 10.0,
-                      //               allowDrawingOutsideViewBox: true,
-                      //               color: CustomTheme.of(context).splashColor,
-                      //             ),
-                      //           )),
-                      //       const SizedBox(
-                      //         height: 2.0,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10.0,
-
-              ),
-              ListView.builder(
-                itemCount: socktList.length,
-                shrinkWrap: true,
-                controller: controller,
-                itemBuilder: (BuildContext context, int index) {
-                  double data =   double.parse(socktList[index].socketDataP.toString());
-                  return Column(
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    socktList[index].s.toString(),
-                                    style: CustomWidget(context: context)
-                                        .CustomSizedTextStyle(
-                                        13.0,
-                                        Theme.of(context)
-                                            .hintColor
-                                            .withOpacity(0.5),
-                                        FontWeight.w500,
-                                        'FontRegular'),
-                                  ),
-                                  const SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  Text(
-                                    double.parse(socktList[index].v.toString())
-                                        .toStringAsFixed(4),
-                                    style: CustomWidget(context: context)
-                                        .CustomSizedTextStyle(
-                                        12.0,
-                                        Theme.of(context)
-                                            .hintColor
-                                            .withOpacity(0.5),
-                                        FontWeight.w500,
-                                        'FontRegular'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            flex: 2,
-                          ),
-                          Flexible(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    double.parse(socktList[index].c.toString())
-                                        .toStringAsFixed(4),
-                                    style: CustomWidget(context: context)
-                                        .CustomSizedTextStyle(
-                                        15.0,
-                                        double.parse(data.toString()) >= 0
-                                            ? Theme.of(context)
-                                            .indicatorColor
-                                            : Theme.of(context).canvasColor,
-                                        FontWeight.w500,
-                                        'FontRegular'),
-                                  ),
-                                  const SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  // Text(
-                                  //   "\$ " +
-                                  //       double.parse(marketList[index]
-                                  //               .tick!['lastPrice']
-                                  //               .toString())
-                                  //           .toStringAsFixed(8),
-                                  //   style: CustomWidget(context: context)
-                                  //       .CustomSizedTextStyle(
-                                  //           12.0,
-                                  //           Theme.of(context)
-                                  //               .hintColor
-                                  //               .withOpacity(0.5),
-                                  //           FontWeight.w500,
-                                  //           'FontRegular'),
-                                  // ),
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                            flex: 2,
-                          ),
-                          Flexible(
-                            child: Container(
-                              child: Center(
-                                  child: Container(
-                                    padding: EdgeInsets.only(
-                                        left: 15.0,
-                                        right: 15.0,
-                                        top: 8.0,
-                                        bottom: 8.0),
-                                    child: Text(
-                                      data.toStringAsFixed(2),
-                                      style: CustomWidget(context: context)
-                                          .CustomSizedTextStyle(
-                                          14.0,
-                                          Theme.of(context).hintColor,
-                                          FontWeight.w500,
-                                          'FontRegular'),
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: double.parse(data.toString()) >= 0
-                                            ? Theme.of(context).indicatorColor
-                                            : Theme.of(context).canvasColor,
-                                        borderRadius: BorderRadius.circular(5.0)),
-                                  )),
-                            ),
-                            flex: 1,
-                          ),
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Widget favList() {
@@ -669,21 +195,101 @@ class _MarketSceen1State extends State<MarketSceen>
               // Add one stop for each color
               // Values should increase from 0.0 to 1.0
               stops: [
-                0.1,
-                0.5,
-                0.9,
-              ],
+            0.1,
+            0.5,
+            0.9,
+          ],
               colors: [
-                CustomTheme.of(context).primaryColor,
-                CustomTheme.of(context).backgroundColor,
-                CustomTheme.of(context).accentColor,
-              ])),
+            CustomTheme.of(context).primaryColor,
+            CustomTheme.of(context).backgroundColor,
+            CustomTheme.of(context).accentColor,
+          ])),
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.fromLTRB(15, 2, 15, 2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: 10.0,
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 0.00),
+                child: ListView.builder(
+                  itemCount: marketAseetList.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Row(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              indexVal = index;
+                              tradePairList.clear();
+                              tradePairList = [];
+                              selectedmarketAseet = marketAseetList[index];
+                              for (int m = 0;
+                                  m < tradePairListAll.length;
+                                  m++) {
+                                if (tradePairListAll[m]
+                                        .marketAsset
+                                        .toString()
+                                        .toLowerCase() ==
+                                    selectedmarketAseet.toLowerCase()) {
+                                  tradePairList.add(tradePairListAll[m]);
+                                }
+                              }
+                            });
+                          },
+                          child: Container(
+                              padding:
+                                  EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  gradient: indexVal == index
+                                      ? LinearGradient(
+                                          begin: Alignment.bottomLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            CustomTheme.of(context).buttonColor,
+                                            CustomTheme.of(context).buttonColor,
+                                          ],
+                                        )
+                                      : LinearGradient(
+                                          begin: Alignment.bottomLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            CustomTheme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.5),
+                                            CustomTheme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.5),
+                                          ],
+                                        )),
+                              child: Center(
+                                child: Text(
+                                  marketAseetList[index].toString(),
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                          14.0,
+                                          indexVal == index
+                                              ? Theme.of(context).splashColor
+                                              : Theme.of(context).shadowColor,
+                                          FontWeight.w400,
+                                          'FontRegular'),
+                                ),
+                              )),
+                        ),
+                        const SizedBox(
+                          width: 10.0,
+                        )
+                      ],
+                    );
+                  },
+                ),
+                height: 35.0,
+              ),
               const SizedBox(
                 height: 10.0,
               ),
@@ -699,61 +305,13 @@ class _MarketSceen1State extends State<MarketSceen>
                             "Name",
                             style: CustomWidget(context: context)
                                 .CustomSizedTextStyle(
-                                13.0,
-                                Theme.of(context)
-                                    .hintColor
-                                    .withOpacity(0.5),
-                                FontWeight.w500,
-                                'FontRegular'),
+                                    13.0,
+                                    Theme.of(context)
+                                        .hintColor
+                                        .withOpacity(0.5),
+                                    FontWeight.w500,
+                                    'FontRegular'),
                           ),
-                          // Padding(
-                          //   padding: EdgeInsets.all(5.0),
-                          //   child: Column(
-                          //     children: [
-                          //       Container(
-                          //         padding:
-                          //             const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          //         child: InkWell(
-                          //           onTap: () {
-                          //             setState(() {
-                          //               tradePair.sort((a, b) => a.pair!.compareTo(b.pair!));
-                          //             });
-                          //           },
-                          //           child: SvgPicture.asset(
-                          //             'assets/images/arrow up.svg',
-                          //             height: 10.0,
-                          //             width: 10.0,
-                          //             color:
-                          //                 CustomTheme.of(context).splashColor,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       const SizedBox(
-                          //         height: 2.0,
-                          //       ),
-                          //       Container(
-                          //           padding:
-                          //               const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          //           child: InkWell(
-                          //             onTap: () {
-                          //               setState(() {
-                          //                 tradePair.sort((a, b) => a.pair!.compareTo(b.pair!));
-                          //               });
-                          //             },
-                          //             child: SvgPicture.asset(
-                          //               'assets/images/arrow down.svg',
-                          //               height: 10.0,
-                          //               width: 10.0,
-                          //               color:
-                          //                   CustomTheme.of(context).splashColor,
-                          //             ),
-                          //           )),
-                          //       const SizedBox(
-                          //         height: 2.0,
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                         ],
                       ),
                       Row(
@@ -762,60 +320,13 @@ class _MarketSceen1State extends State<MarketSceen>
                             "/ vol",
                             style: CustomWidget(context: context)
                                 .CustomSizedTextStyle(
-                                13.0,
-                                Theme.of(context)
-                                    .hintColor
-                                    .withOpacity(0.5),
-                                FontWeight.w500,
-                                'FontRegular'),
+                                    13.0,
+                                    Theme.of(context)
+                                        .hintColor
+                                        .withOpacity(0.5),
+                                    FontWeight.w500,
+                                    'FontRegular'),
                           ),
-                          // Padding(
-                          //   padding: EdgeInsets.all(5.0),
-                          //   child: Column(
-                          //     children: [
-                          //       Container(
-                          //         padding:
-                          //             const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          //         child: InkWell(
-                          //           onTap: () {
-                          //
-                          //
-                          //           },
-                          //           child: SvgPicture.asset(
-                          //             'assets/images/arrow up.svg',
-                          //             height: 10.0,
-                          //             width: 10.0,
-                          //
-                          //             color:
-                          //                 CustomTheme.of(context).splashColor,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       const SizedBox(
-                          //         height: 2.0,
-                          //       ),
-                          //       Container(
-                          //           padding:
-                          //               const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          //           child: InkWell(
-                          //             onTap: () {
-                          //
-                          //             },
-                          //             child: SvgPicture.asset(
-                          //               'assets/images/arrow down.svg',
-                          //               height: 10.0,
-                          //               width: 10.0,
-                          //
-                          //               color:
-                          //                   CustomTheme.of(context).splashColor,
-                          //             ),
-                          //           )),
-                          //       const SizedBox(
-                          //         height: 2.0,
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                         ],
                       ),
                     ],
@@ -829,53 +340,11 @@ class _MarketSceen1State extends State<MarketSceen>
                         "Market Price",
                         style: CustomWidget(context: context)
                             .CustomSizedTextStyle(
-                            13.0,
-                            Theme.of(context).hintColor.withOpacity(0.5),
-                            FontWeight.w500,
-                            'FontRegular'),
+                                13.0,
+                                Theme.of(context).hintColor.withOpacity(0.5),
+                                FontWeight.w500,
+                                'FontRegular'),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.all(5.0),
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      //         child: InkWell(
-                      //           onTap: () {
-                      //             Navigator.pop(context);
-                      //           },
-                      //           child: SvgPicture.asset(
-                      //             'assets/images/arrow up.svg',
-                      //             height: 10.0,
-                      //             width: 10.0,
-                      //             allowDrawingOutsideViewBox: true,
-                      //             color: CustomTheme.of(context).splashColor,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       const SizedBox(
-                      //         height: 2.0,
-                      //       ),
-                      //       Container(
-                      //           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      //           child: InkWell(
-                      //             onTap: () {
-                      //               Navigator.pop(context);
-                      //             },
-                      //             child: SvgPicture.asset(
-                      //               'assets/images/arrow down.svg',
-                      //               height: 10.0,
-                      //               width: 10.0,
-                      //               allowDrawingOutsideViewBox: true,
-                      //               color: CustomTheme.of(context).splashColor,
-                      //             ),
-                      //           )),
-                      //       const SizedBox(
-                      //         height: 2.0,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                   const SizedBox(
@@ -887,53 +356,11 @@ class _MarketSceen1State extends State<MarketSceen>
                         "Change",
                         style: CustomWidget(context: context)
                             .CustomSizedTextStyle(
-                            13.0,
-                            Theme.of(context).hintColor.withOpacity(0.5),
-                            FontWeight.w500,
-                            'FontRegular'),
+                                13.0,
+                                Theme.of(context).hintColor.withOpacity(0.5),
+                                FontWeight.w500,
+                                'FontRegular'),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.all(5.0),
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      //         child: InkWell(
-                      //           onTap: () {
-                      //             Navigator.pop(context);
-                      //           },
-                      //           child: SvgPicture.asset(
-                      //             'assets/images/arrow up.svg',
-                      //             height: 10.0,
-                      //             width: 10.0,
-                      //             allowDrawingOutsideViewBox: true,
-                      //             color: CustomTheme.of(context).splashColor,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       const SizedBox(
-                      //         height: 2.0,
-                      //       ),
-                      //       Container(
-                      //           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      //           child: InkWell(
-                      //             onTap: () {
-                      //               Navigator.pop(context);
-                      //             },
-                      //             child: SvgPicture.asset(
-                      //               'assets/images/arrow down.svg',
-                      //               height: 10.0,
-                      //               width: 10.0,
-                      //               allowDrawingOutsideViewBox: true,
-                      //               color: CustomTheme.of(context).splashColor,
-                      //             ),
-                      //           )),
-                      //       const SizedBox(
-                      //         height: 2.0,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                   const SizedBox(
@@ -949,8 +376,8 @@ class _MarketSceen1State extends State<MarketSceen>
                 shrinkWrap: true,
                 controller: controller,
                 itemBuilder: (BuildContext context, int index) {
-
-                  double data = double.parse(tradePairList[index].hrExchange.toString());
+                  double data =
+                      double.parse(tradePairList[index].hrExchange.toString());
                   return Column(
                     children: [
                       Row(
@@ -965,28 +392,29 @@ class _MarketSceen1State extends State<MarketSceen>
                                     tradePairList[index].tradePair.toString(),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
-                                        13.0,
-                                        Theme.of(context)
-                                            .hintColor
-                                            .withOpacity(0.5),
-                                        FontWeight.w500,
-                                        'FontRegular'),
+                                            13.0,
+                                            Theme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.5),
+                                            FontWeight.w500,
+                                            'FontRegular'),
                                   ),
                                   const SizedBox(
                                     height: 5.0,
                                   ),
                                   Text(
-                                    double.parse(tradePairList[index].hrVolume
-                                        .toString())
+                                    double.parse(tradePairList[index]
+                                            .hrVolume
+                                            .toString())
                                         .toStringAsFixed(2),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
-                                        12.0,
-                                        Theme.of(context)
-                                            .hintColor
-                                            .withOpacity(0.5),
-                                        FontWeight.w500,
-                                        'FontRegular'),
+                                            12.0,
+                                            Theme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.5),
+                                            FontWeight.w500,
+                                            'FontRegular'),
                                   ),
                                 ],
                               ),
@@ -999,17 +427,18 @@ class _MarketSceen1State extends State<MarketSceen>
                                 children: [
                                   Text(
                                     double.parse(tradePairList[index]
-                                        .currentPrice.toString())
+                                            .currentPrice
+                                            .toString())
                                         .toStringAsFixed(4),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
-                                        15.0,
-                                        double.parse(data.toString()) >= 0
-                                            ? Theme.of(context)
-                                            .indicatorColor
-                                            : Theme.of(context).canvasColor,
-                                        FontWeight.w500,
-                                        'FontRegular'),
+                                            15.0,
+                                            double.parse(data.toString()) >= 0
+                                                ? Theme.of(context)
+                                                    .indicatorColor
+                                                : Theme.of(context).canvasColor,
+                                            FontWeight.w500,
+                                            'FontRegular'),
                                   ),
                                   const SizedBox(
                                     height: 5.0,
@@ -1041,26 +470,26 @@ class _MarketSceen1State extends State<MarketSceen>
                             child: Container(
                               child: Center(
                                   child: Container(
-                                    padding: EdgeInsets.only(
-                                        left: 15.0,
-                                        right: 15.0,
-                                        top: 8.0,
-                                        bottom: 8.0),
-                                    child: Text(
-                                      data.toStringAsFixed(2),
-                                      style: CustomWidget(context: context)
-                                          .CustomSizedTextStyle(
+                                padding: EdgeInsets.only(
+                                    left: 15.0,
+                                    right: 15.0,
+                                    top: 8.0,
+                                    bottom: 8.0),
+                                child: Text(
+                                  data.toStringAsFixed(2),
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
                                           14.0,
                                           Theme.of(context).hintColor,
                                           FontWeight.w500,
                                           'FontRegular'),
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: double.parse(data.toString()) >= 0
-                                            ? Theme.of(context).indicatorColor
-                                            : Theme.of(context).canvasColor,
-                                        borderRadius: BorderRadius.circular(5.0)),
-                                  )),
+                                ),
+                                decoration: BoxDecoration(
+                                    color: double.parse(data.toString()) >= 0
+                                        ? Theme.of(context).indicatorColor
+                                        : Theme.of(context).canvasColor,
+                                    borderRadius: BorderRadius.circular(5.0)),
+                              )),
                             ),
                             flex: 1,
                           ),
@@ -1084,20 +513,32 @@ class _MarketSceen1State extends State<MarketSceen>
 
   getCoinList() {
     apiUtils.getCoinList().then((CoinListModel loginData) {
-      if (loginData.success! ) {
+      if (loginData.success!) {
         setState(() {
-          loading=false;
+          loading = false;
+
           tradePairList = [];
-          tradePairList = loginData.result!;
-          for(int m=0;m<tradePairList.length;m++)
-          {
+          tradePairListAll = [];
 
-              arrData.add("ticker.sfox."+tradePairList[m].symbol.toString());
+          tradePairListAll = loginData.result!;
 
 
+          for (int m = 0; m < tradePairListAll.length; m++) {
+            arrData.add("ticker.sfox." + tradePairListAll[m].symbol.toString());
+            marketAseetList.add(tradePairListAll[m].marketAsset.toString());
           }
 
+
+          marketAseetList = marketAseetList.toSet().toList();
+          selectedmarketAseet = marketAseetList.first;
           loading = false;
+          for (int m = 0; m < tradePairListAll.length; m++) {
+            if (tradePairListAll[m].marketAsset.toString().toLowerCase() ==
+                selectedmarketAseet.toLowerCase()) {
+              tradePairList.add(tradePairListAll[m]);
+            }
+          }
+
 
 
           var messageJSON = {
@@ -1105,8 +546,6 @@ class _MarketSceen1State extends State<MarketSceen>
             "feeds": arrData,
           };
           channelOpenOrder!.sink.add(json.encode(messageJSON));
-
-
           socketData();
         });
       } else {
@@ -1121,6 +560,7 @@ class _MarketSceen1State extends State<MarketSceen>
     });
   }
 }
+
 class Tag {
   String name;
   double value;

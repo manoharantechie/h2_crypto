@@ -8,7 +8,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:h2_crypto/common/colors.dart';
 import 'package:h2_crypto/common/country.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/common_model.dart';
+import 'package:h2_crypto/data/crypt_model/common_model.dart';
+import 'package:h2_crypto/data/crypt_model/country_code.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io' as Io;
@@ -18,7 +19,7 @@ import '../../../common/custom_button.dart';
 import '../../../common/custom_widget.dart';
 import '../../../common/localization/localizations.dart';
 import '../../../common/theme/custom_theme.dart';
-import '../../../data/model/country_code.dart';
+
 import 'link_email_address.dart';
 
 class KYCPage extends StatefulWidget {

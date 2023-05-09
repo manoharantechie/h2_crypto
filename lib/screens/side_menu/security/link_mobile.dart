@@ -15,13 +15,13 @@ import 'package:h2_crypto/common/text_field_custom_prefix.dart';
 import 'package:h2_crypto/common/textformfield_custom.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/common_model.dart';
+import 'package:h2_crypto/data/crypt_model/common_model.dart';
 import 'package:h2_crypto/screens/basic/home.dart';
 
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../data/model/sent_otp_model.dart';
+
 
 class LinkMobileNo extends StatefulWidget {
   const LinkMobileNo({Key? key}) : super(key: key);

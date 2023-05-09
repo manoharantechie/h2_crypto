@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/common_model.dart';
+import 'package:h2_crypto/data/crypt_model/common_model.dart';
 
 import '../../../common/colors.dart';
 import '../../../common/custom_button.dart';

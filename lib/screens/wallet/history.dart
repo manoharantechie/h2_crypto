@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'package:h2_crypto/data/model/wallet_list_model.dart';
-
+import 'package:h2_crypto/data/crypt_model/coin_list.dart';
 import '../../../common/custom_button.dart';
 import '../../../common/custom_widget.dart';
 import '../../../common/localization/localizations.dart';
@@ -24,7 +22,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
 
   APIUtils apiUtils=APIUtils();
   bool loading=false;
-  List<WalletList> coinList=[];
+  List<CoinList> coinList=[];
   ScrollController controller=ScrollController();
 
 
@@ -33,8 +31,8 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
     // TODO: implement initState
     super.initState();
     selectedTime = selectedRupee.first;
-    loading=true;
-    getCoinList();
+
+
   }
 
 
@@ -957,29 +955,4 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
   }
 
 
-  getCoinList() {
-    apiUtils
-        .getWalletList()
-        .then((WalletListModel loginData) {
-      if (loginData.statusCode==200) {
-        setState(() {
-          loading = false;
-          coinList=loginData.data!;
-
-
-        });
-
-      } else {
-        setState(() {
-          loading = false;
-
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
 }

@@ -14,9 +14,8 @@ import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/textformfield_custom.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/login_model.dart';
+import 'package:h2_crypto/data/crypt_model/login_model.dart';
 import 'package:h2_crypto/screens/basic/forgot_pass.dart';
-import 'package:h2_crypto/screens/basic/google_login.dart';
 import 'package:h2_crypto/screens/basic/home.dart';
 import 'package:h2_crypto/screens/basic/register.dart';
 
@@ -25,7 +24,7 @@ import 'package:h2_crypto/screens/side_menu/security/link_email_address.dart';
 import 'package:h2_crypto/screens/side_menu/security/link_mobile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../data/model/sent_otp_model.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -93,8 +92,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    email=TextEditingController(text: "vinoth.alpharive@gmail.com");
-    email_password=TextEditingController(text: "Vinoth@2020");
+    // email=TextEditingController(text: "vinoth.alpharive@gmail.com");
+    // email_password=TextEditingController(text: "Vinoth@2020");
     initCountry();
     super.initState();
 

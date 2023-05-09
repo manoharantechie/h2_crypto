@@ -1,4 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,21 +8,21 @@ import 'package:h2_crypto/common/custom_widget.dart';
 import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/banner_list_model.dart';
-import 'package:h2_crypto/data/model/market_list_model.dart';
-import 'package:h2_crypto/data/model/user_details_model.dart';
+import 'package:h2_crypto/data/crypt_model/coin_list.dart';
+import 'package:h2_crypto/data/crypt_model/market_list_model.dart';
+import 'package:h2_crypto/data/crypt_model/new_socket_data.dart';
+import 'package:h2_crypto/data/crypt_model/user_wallet_balance_model.dart';
+
 import 'package:h2_crypto/screens/basic/side_menu.dart';
 
 import 'package:h2_crypto/screens/side_menu/others/notify_screen.dart';
 import 'package:h2_crypto/screens/trade/market_screen.dart';
-import 'package:h2_crypto/screens/trade/otc_screen.dart';
 import 'package:h2_crypto/screens/trade/trade.dart';
 import 'package:h2_crypto/screens/wallet/transaction_history.dart';
 import 'package:h2_crypto/screens/wallet/wallet.dart';
+import 'package:h2_crypto/screens/wallet/withdraw.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:socket_io_client/socket_io_client.dart';
-
-import '../../data/model/user_wallet_balance_model.dart';
+import 'package:web_socket_channel/io.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -39,7 +40,8 @@ class _HomeState extends State<Home>
   ScrollController _scrollController = ScrollController();
   APIUtils apiUtils = APIUtils();
   int? currentIndex;
-  int? selectIndex ;
+  int? selectIndex;
+
   List<MarketListModel> marketList = [];
   List<String> bannerList = [];
 
@@ -58,12 +60,11 @@ class _HomeState extends State<Home>
   List<BottomNavItem>? _bottomItems;
   List<UserWalletResult> coinList = [];
 
-  List grid_name = [
-    "Withdraw",
-    "Exchange",
-    "Market",
-    "Support"
-  ];
+  List<CoinList> tradePairList = [];
+
+  IOWebSocketChannel? channelOpenOrder;
+  List arrData = [];
+  List grid_name = ["Withdraw", "Exchange", "Market", "Support"];
 
   List grid_img = [
     "assets/bottom/wallet.svg",
@@ -72,18 +73,15 @@ class _HomeState extends State<Home>
     "assets/sidemenu/support.svg"
   ];
 
-
   void onSelectItem(int index) async {
     setState(() {
-      selectIndex=index;
+      selectIndex = index;
       if (index == 0) {
         dashView = true;
-
       } else {
         dashView = false;
         currentIndex = index;
         screen = bottomPage[index - 1];
-        print(currentIndex);
       }
     });
   }
@@ -96,6 +94,9 @@ class _HomeState extends State<Home>
     currentIndex = 0;
     selectIndex = 0;
 
+    channelOpenOrder = IOWebSocketChannel.connect(
+        Uri.parse("wss://ws.sfox.com/ws"),
+        pingInterval: Duration(seconds: 30));
     bottomPage = [
       MarketSceen(),
       TradeScreen(),
@@ -104,25 +105,74 @@ class _HomeState extends State<Home>
     ];
     dashView = true;
     _bottomItems = createBottomItems();
-    getBannerList();
     loading = true;
 
     loading = true;
-    getDetails();
+
     getCoinList();
-
+    getPairList();
 
     _tabController = TabController(vsync: this, length: 3);
+  }
+
+  socketData() {
+    print("Mano");
+    channelOpenOrder!.stream.listen(
+      (data) {
+        if (data != null || data != "null") {
+          var decode = jsonDecode(data);
+
+          print(decode);
+          if (mounted) {
+            setState(() {
+              NewSocketData ss = NewSocketData.fromJson(decode);
+              for (int m = 0; m < tradePairList.length; m++) {
+                if (tradePairList[m].symbol.toString().toLowerCase() ==
+                    ss.payload.pair.toString().toLowerCase()) {
+                  double open = double.parse(ss.payload.open.toString());
+                  double close = double.parse(ss.payload.last.toString());
+                  double data = ((close - open) / open) * 100;
+
+                  tradePairList[m].hrExchange = data.toString();
+                  tradePairList[m].currentPrice =
+                      double.parse(ss.payload.last.toString()).toString();
+                  tradePairList[m].hrVolume =
+                      double.parse(ss.payload.volume.toString()).toString();
+                }
+              }
+            });
+          }
+
+          // print("Mano");
+        }
+      },
+      onDone: () async {
+        await Future.delayed(Duration(seconds: 10));
+        var messageJSON = {
+          "type": "subscribe",
+          "feeds": arrData,
+        };
+
+        channelOpenOrder = IOWebSocketChannel.connect(
+            Uri.parse("wss://ws.sfox.com/ws"),
+            pingInterval: Duration(seconds: 30));
+
+        channelOpenOrder!.sink.add(json.encode(messageJSON));
+        channelOpenOrder!.sink.add(json.encode(messageJSON));
+        socketData();
+      },
+      onError: (error) => print("Err" + error),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop:()async{
-       return showSuccesssAlertDialog();
+      onWillPop: () async {
+        return showSuccesssAlertDialog();
       },
       child: Scaffold(
-        backgroundColor:    CustomTheme.of(context).primaryColor,
+        backgroundColor: CustomTheme.of(context).primaryColor,
         key: _scaffoldKey,
         appBar: currentIndex == 0
             ? AppBar(
@@ -175,7 +225,10 @@ class _HomeState extends State<Home>
                 //     ),
                 //   ),
                 // ),
-          title:  Image.asset('assets/icon/logo.png',height: 35.0,),
+                title: Image.asset(
+                  'assets/icon/logo.png',
+                  height: 35.0,
+                ),
                 centerTitle: true,
                 leading: InkWell(
                     onTap: () {
@@ -196,12 +249,9 @@ class _HomeState extends State<Home>
                 actions: [
                   InkWell(
                       onTap: () {
-
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => NotifyScreen(
-
-                            ),
+                            builder: (context) => NotifyScreen(),
                           ),
                         );
                       },
@@ -237,7 +287,8 @@ class _HomeState extends State<Home>
           child: Stack(
             children: [
               // PageStorage(child: assetsUI(), bucket: bucket),
-              PageStorage(child: dashView ? DashBoard() : screen, bucket: bucket),
+              PageStorage(
+                  child: dashView ? DashBoard() : screen, bucket: bucket),
             ],
           ),
         ),
@@ -290,9 +341,7 @@ class _HomeState extends State<Home>
         bottomNavigationBar: BottomNav(
           index: currentIndex,
           selectedIndex: selectIndex,
-
           elevation: 10.0,
-
           color: CustomTheme.of(context).bottomAppBarColor,
           iconStyle: IconStyle(
             color: CustomTheme.of(context).splashColor.withOpacity(0.5),
@@ -317,8 +366,7 @@ class _HomeState extends State<Home>
           onTap: (i) {
             setState(() {
               onSelectItem(i);
-              currentIndex=i;
-
+              currentIndex = i;
             });
           },
           items: _bottomItems,
@@ -326,31 +374,6 @@ class _HomeState extends State<Home>
       ),
     );
   }
-
-
-
-  getSocketData() async {
-    await apiUtils.socketChatConnection(() {
-      if (apiUtils.socketChat!.connected) {
-        apiUtils.socketChat!.emit('join', 'test');
-        apiUtils.socketChat!.on('reply', (data) {
-          var resp = data
-              .map<MarketListModel>((json) => MarketListModel.fromJson(json))
-              .toList();
-          if (mounted) {
-            setState(() {
-              marketList = [];
-              marketList.clear;
-              marketList = resp;
-              loading = false;
-            });
-          }
-        });
-        apiUtils.socketChat!.onDisconnect((_) => print('disconnect'));
-      } else {}
-    });
-  }
-
 
   showSuccesssAlertDialog() {
     showDialog(
@@ -371,13 +394,13 @@ class _HomeState extends State<Home>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                    "Are you sure?".toUpperCase(),
+                      "Are you sure?".toUpperCase(),
                       style: CustomWidget(context: context)
                           .CustomSizedTextStyle(
-                          16.0,
-                          Theme.of(context).buttonColor,
-                          FontWeight.bold,
-                          'FontRegular'),
+                              16.0,
+                              Theme.of(context).buttonColor,
+                              FontWeight.bold,
+                              'FontRegular'),
                     ),
                     Container(
                         margin: EdgeInsets.only(top: 7.0, bottom: 10.0),
@@ -387,10 +410,10 @@ class _HomeState extends State<Home>
                       "Do you want to exit an App",
                       style: CustomWidget(context: context)
                           .CustomSizedTextStyle(
-                          16.0,
-                          Theme.of(context).buttonColor,
-                          FontWeight.w500,
-                          'FontRegular'),
+                              16.0,
+                              Theme.of(context).buttonColor,
+                              FontWeight.w500,
+                              'FontRegular'),
                     ),
                     SizedBox(
                       height: 10.0,
@@ -422,10 +445,10 @@ class _HomeState extends State<Home>
                                   "ok".toUpperCase(),
                                   style: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      15.0,
-                                      Theme.of(context).splashColor,
-                                      FontWeight.w500,
-                                      'FontRegular'),
+                                          15.0,
+                                          Theme.of(context).splashColor,
+                                          FontWeight.w500,
+                                          'FontRegular'),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -460,10 +483,10 @@ class _HomeState extends State<Home>
                                   "Cancel".toUpperCase(),
                                   style: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      15.0,
-                                      Theme.of(context).splashColor,
-                                      FontWeight.w500,
-                                      'FontRegular'),
+                                          15.0,
+                                          Theme.of(context).splashColor,
+                                          FontWeight.w500,
+                                          'FontRegular'),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -501,42 +524,7 @@ class _HomeState extends State<Home>
                     const SizedBox(
                       height: 10.0,
                     ),
-                    bannerList.isNotEmpty
-                        ? Container(
-                            height: MediaQuery.of(context).size.height * 0.23,
-                            width: MediaQuery.of(context).size.width,
-                            child: CarouselSlider(
-                              options: CarouselOptions(
-                                onPageChanged: (index, reason) {
-                                  setState(() {
-                                    slideIndex = index;
-                                  });
-                                },
-                                autoPlay: true,
-                                aspectRatio: 1.0,
-                                enlargeCenterPage: true,
-                                viewportFraction: 1,
-                              ),
-                              items: bannerList
-                                  .map((item) => Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        padding: EdgeInsets.all(1),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          color: CustomTheme.of(context)
-                                              .backgroundColor,
-                                        ),
-                                        child: Image.network(
-                                          APIUtils.baseURL + item,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ))
-                                  .toList(),
-                            ),
-                          )
-                        : Container(),
+
                     const SizedBox(
                       height: 10.0,
                     ),
@@ -599,10 +587,10 @@ class _HomeState extends State<Home>
                                       .toString());
                                   double data = (open - close) / 100;
                                   return GestureDetector(
-                                    onTap: (){
+                                    onTap: () {
                                       setState(() {
-                                        currentIndex=1;
-                                        dashView=false;
+                                        currentIndex = 1;
+                                        dashView = false;
                                         onSelectItem(2);
                                       });
                                     },
@@ -614,7 +602,7 @@ class _HomeState extends State<Home>
                                         ),
                                         Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               children: [
@@ -623,14 +611,14 @@ class _HomeState extends State<Home>
                                                       .pair
                                                       .toString(),
                                                   style: CustomWidget(
-                                                      context: context)
+                                                          context: context)
                                                       .CustomSizedTextStyle(
-                                                      14.0,
-                                                      Theme.of(context)
-                                                          .splashColor
-                                                          .withOpacity(0.5),
-                                                      FontWeight.w500,
-                                                      'FontRegular'),
+                                                          14.0,
+                                                          Theme.of(context)
+                                                              .splashColor
+                                                              .withOpacity(0.5),
+                                                          FontWeight.w500,
+                                                          'FontRegular'),
                                                 ),
                                                 const SizedBox(
                                                   width: 3.0,
@@ -638,18 +626,20 @@ class _HomeState extends State<Home>
                                                 Text(
                                                   data.toStringAsFixed(2),
                                                   style: CustomWidget(
-                                                      context: context)
+                                                          context: context)
                                                       .CustomSizedTextStyle(
-                                                      14.0,
-                                                      double.parse(data
-                                                          .toString()) >=
-                                                          0
-                                                          ? Theme.of(context)
-                                                          .indicatorColor
-                                                          : Theme.of(context)
-                                                          .canvasColor,
-                                                      FontWeight.w600,
-                                                      'FontRegular'),
+                                                          14.0,
+                                                          double.parse(data
+                                                                      .toString()) >=
+                                                                  0
+                                                              ? Theme.of(
+                                                                      context)
+                                                                  .indicatorColor
+                                                              : Theme.of(
+                                                                      context)
+                                                                  .canvasColor,
+                                                          FontWeight.w600,
+                                                          'FontRegular'),
                                                   textAlign: TextAlign.start,
                                                 ),
                                               ],
@@ -659,16 +649,16 @@ class _HomeState extends State<Home>
                                             ),
                                             Text(
                                               double.parse(marketList[index]
-                                                  .tick!['lastPrice']
-                                                  .toString())
+                                                      .tick!['lastPrice']
+                                                      .toString())
                                                   .toStringAsFixed(8),
                                               style:
-                                              CustomWidget(context: context)
-                                                  .CustomSizedTextStyle(
-                                                  14.0,
-                                                  Color(0xFFDD2942),
-                                                  FontWeight.w600,
-                                                  'FontRegular'),
+                                                  CustomWidget(context: context)
+                                                      .CustomSizedTextStyle(
+                                                          14.0,
+                                                          Color(0xFFDD2942),
+                                                          FontWeight.w600,
+                                                          'FontRegular'),
                                             ),
                                             const SizedBox(
                                               height: 5.0,
@@ -676,17 +666,17 @@ class _HomeState extends State<Home>
                                             Text(
                                               "\$ " +
                                                   double.parse(marketList[index]
-                                                      .tick!['lastPrice']
-                                                      .toString())
+                                                          .tick!['lastPrice']
+                                                          .toString())
                                                       .toStringAsFixed(8),
                                               style:
-                                              CustomWidget(context: context)
-                                                  .CustomSizedTextStyle(
-                                                  14.0,
-                                                  Theme.of(context)
-                                                      .splashColor,
-                                                  FontWeight.w400,
-                                                  'FontRegular'),
+                                                  CustomWidget(context: context)
+                                                      .CustomSizedTextStyle(
+                                                          14.0,
+                                                          Theme.of(context)
+                                                              .splashColor,
+                                                          FontWeight.w400,
+                                                          'FontRegular'),
                                               textAlign: TextAlign.start,
                                             ),
                                           ],
@@ -717,7 +707,7 @@ class _HomeState extends State<Home>
                         padding: EdgeInsets.zero,
                         controller: _scrollController,
                         gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 4,
                           crossAxisSpacing: 20,
                           mainAxisSpacing: 20,
@@ -728,7 +718,20 @@ class _HomeState extends State<Home>
                         itemBuilder: (BuildContext context, index) {
                           return InkWell(
                             onTap: () {
-
+                              if (index == 0) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => WithDraw(
+                                        id: "0",
+                                        coinList: coinList,
+                                      ),
+                                    ));
+                              } else if (index == 1) {
+                                onSelectItem(2);
+                              } else if (index == 2) {
+                                onSelectItem(1);
+                              }
                             },
                             child: Container(
                                 // padding: EdgeInsets.only(
@@ -740,7 +743,9 @@ class _HomeState extends State<Home>
                                   // color: Theme.of(context).focusColor,
                                   border: Border.all(
                                       width: 1.0,
-                                      color: Theme.of(context).splashColor.withOpacity(0.5)),
+                                      color: Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5)),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 alignment: Alignment.center,
@@ -761,10 +766,10 @@ class _HomeState extends State<Home>
                                       grid_name[index].toString(),
                                       style: CustomWidget(context: context)
                                           .CustomSizedTextStyle(
-                                          12.0,
-                                          Theme.of(context).splashColor,
-                                          FontWeight.w500,
-                                          'FontRegular'),
+                                              12.0,
+                                              Theme.of(context).splashColor,
+                                              FontWeight.w500,
+                                              'FontRegular'),
                                       textAlign: TextAlign.center,
                                     ),
                                   ],
@@ -781,24 +786,30 @@ class _HomeState extends State<Home>
                       children: [
                         Text(
                           "Top Cryptocurency",
-                          style: CustomWidget(context: context).CustomSizedTextStyle(
-                              15.0,
-                              Theme.of(context).splashColor,
-                              FontWeight.w500,
-                              'FontRegular'),
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                                  15.0,
+                                  Theme.of(context).splashColor,
+                                  FontWeight.w500,
+                                  'FontRegular'),
                           textAlign: TextAlign.center,
                         ),
                         Column(
                           children: [
-                            Text(
-                              "See All",
-                              style: CustomWidget(context: context)
-                                  .CustomSizedTextStyle(
-                                  12.0,
-                                  Theme.of(context).buttonColor,
-                                  FontWeight.w500,
-                                  'FontRegular'),
-                              textAlign: TextAlign.center,
+                            InkWell(
+                              onTap: (){
+
+                              },
+                              child: Text(
+                                "See All",
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                        12.0,
+                                        Theme.of(context).buttonColor,
+                                        FontWeight.w500,
+                                        'FontRegular'),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                             const SizedBox(
                               height: 3.0,
@@ -806,8 +817,8 @@ class _HomeState extends State<Home>
                             Container(
                               width: 50,
                               height: 1.0,
-                              decoration:
-                              BoxDecoration(color: Theme.of(context).primaryColor),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor),
                             )
                           ],
                         )
@@ -818,154 +829,309 @@ class _HomeState extends State<Home>
                       height: 20.0,
                     ),
 
-                    coinList.length > 0
-                        ? Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: SingleChildScrollView(
-                            controller: controller,
-                            child: Column(
-                              children: [
-                                SingleChildScrollView(
-                                  child: ListView.builder(
-                                    itemCount: 5,
-                                    shrinkWrap: true,
-                                    controller: controller,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return Column(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0, top: 15.0),
-                                            decoration: BoxDecoration(
-                                                border: Border.all(width: 1.0,color: CustomTheme.of(context).splashColor.withOpacity(0.5),),
-                                                borderRadius: BorderRadius.circular(10.0)
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceEvenly,
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      height: 40.0,
-                                                      width: 40.0,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.0),
-                                                        color: CustomTheme.of(
-                                                            context)
-                                                            .cardColor,
-                                                      ),
-                                                      padding:
-                                                      EdgeInsets.all(5.0),
-                                                      child: SvgPicture.network(
-                                                        coinList[index]
-                                                            .image
-                                                            .toString(),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 15.0,
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        Text(
-                                                          coinList[index]
-                                                              .name
-                                                              .toString(),
-                                                          style: CustomWidget(
-                                                              context:
-                                                              context)
-                                                              .CustomTextStyle(
-                                                              Theme.of(
-                                                                  context)
-                                                                  .splashColor,
-                                                              FontWeight.w400,
-                                                              'FontRegular'),
-                                                          softWrap: true,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 10.0,
-                                                        ),
-                                                        Text(
-                                                          "( " +
-                                                              coinList[index]
-                                                                  .symbol
-                                                                  .toString()
-                                                                  .toUpperCase() +
-                                                              " )",
-                                                          style: CustomWidget(
-                                                              context:
-                                                              context)
-                                                              .CustomTextStyle(
-                                                              Theme.of(
-                                                                  context)
-                                                                  .splashColor,
-                                                              FontWeight
-                                                                  .normal,
-                                                              'FontRegular'),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                                Text(
-                                                  coinList[index]
-                                                      .balance
-                                                      .toString(),
-                                                  style: CustomWidget(
-                                                      context: context)
-                                                      .CustomTextStyle(
-                                                      Theme.of(context)
-                                                          .splashColor,
-                                                      FontWeight.w400,
-                                                      'FontRegular'),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 15.0,
-                                          ),
+                    // coinList.length > 0
+                    //     ? Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     child: SingleChildScrollView(
+                    //         controller: controller,
+                    //         child: Column(
+                    //           children: [
+                    //             SingleChildScrollView(
+                    //               child: ListView.builder(
+                    //                 itemCount: 5,
+                    //                 shrinkWrap: true,
+                    //                 controller: controller,
+                    //                 itemBuilder: (BuildContext context, int index) {
+                    //                   return Column(
+                    //                     children: [
+                    //                       Container(
+                    //                         padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0, top: 15.0),
+                    //                         decoration: BoxDecoration(
+                    //                             border: Border.all(width: 1.0,color: CustomTheme.of(context).splashColor.withOpacity(0.5),),
+                    //                             borderRadius: BorderRadius.circular(10.0)
+                    //                         ),
+                    //                         child: Row(
+                    //                           mainAxisAlignment:
+                    //                           MainAxisAlignment.spaceBetween,
+                    //                           children: [
+                    //                             Row(
+                    //                               mainAxisAlignment:
+                    //                               MainAxisAlignment
+                    //                                   .spaceEvenly,
+                    //                               crossAxisAlignment:
+                    //                               CrossAxisAlignment.center,
+                    //                               children: [
+                    //                                 Container(
+                    //                                   height: 40.0,
+                    //                                   width: 40.0,
+                    //                                   decoration: BoxDecoration(
+                    //                                     borderRadius:
+                    //                                     BorderRadius.circular(
+                    //                                         5.0),
+                    //                                     color: CustomTheme.of(
+                    //                                         context)
+                    //                                         .cardColor,
+                    //                                   ),
+                    //                                   padding:
+                    //                                   EdgeInsets.all(5.0),
+                    //                                   child: SvgPicture.network(
+                    //                                     coinList[index]
+                    //                                         .image
+                    //                                         .toString(),
+                    //                                     fit: BoxFit.cover,
+                    //                                   ),
+                    //                                 ),
+                    //                                 const SizedBox(
+                    //                                   width: 15.0,
+                    //                                 ),
+                    //                                 Column(
+                    //                                   crossAxisAlignment:
+                    //                                   CrossAxisAlignment
+                    //                                       .start,
+                    //                                   children: [
+                    //                                     Text(
+                    //                                       coinList[index]
+                    //                                           .name
+                    //                                           .toString(),
+                    //                                       style: CustomWidget(
+                    //                                           context:
+                    //                                           context)
+                    //                                           .CustomTextStyle(
+                    //                                           Theme.of(
+                    //                                               context)
+                    //                                               .splashColor,
+                    //                                           FontWeight.w400,
+                    //                                           'FontRegular'),
+                    //                                       softWrap: true,
+                    //                                       overflow: TextOverflow
+                    //                                           .ellipsis,
+                    //                                     ),
+                    //                                     const SizedBox(
+                    //                                       width: 10.0,
+                    //                                     ),
+                    //                                     Text(
+                    //                                       "( " +
+                    //                                           coinList[index]
+                    //                                               .symbol
+                    //                                               .toString()
+                    //                                               .toUpperCase() +
+                    //                                           " )",
+                    //                                       style: CustomWidget(
+                    //                                           context:
+                    //                                           context)
+                    //                                           .CustomTextStyle(
+                    //                                           Theme.of(
+                    //                                               context)
+                    //                                               .splashColor,
+                    //                                           FontWeight
+                    //                                               .normal,
+                    //                                           'FontRegular'),
+                    //                                     ),
+                    //                                   ],
+                    //                                 )
+                    //                               ],
+                    //                             ),
+                    //                             Text(
+                    //                               coinList[index]
+                    //                                   .balance
+                    //                                   .toString(),
+                    //                               style: CustomWidget(
+                    //                                   context: context)
+                    //                                   .CustomTextStyle(
+                    //                                   Theme.of(context)
+                    //                                       .splashColor,
+                    //                                   FontWeight.w400,
+                    //                                   'FontRegular'),
+                    //                             ),
+                    //                           ],
+                    //                         ),
+                    //                       ),
+                    //                       const SizedBox(
+                    //                         height: 15.0,
+                    //                       ),
+                    //
+                    //                     ],
+                    //                   );
+                    //                 },
+                    //               ),
+                    //             )
+                    //           ],
+                    //         )))
 
-                                        ],
-                                      );
-                                    },
+                    tradePairList.length > 0
+                        ? ListView.builder(
+                            itemCount: 10,
+                            shrinkWrap: true,
+                            controller: controller,
+                            itemBuilder: (BuildContext context, int index) {
+                              double data = double.parse(
+                                  tradePairList[index].hrExchange.toString());
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        child: Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                tradePairList[index]
+                                                    .tradePair
+                                                    .toString(),
+                                                style: CustomWidget(
+                                                        context: context)
+                                                    .CustomSizedTextStyle(
+                                                        13.0,
+                                                        Theme.of(context)
+                                                            .hintColor
+                                                            .withOpacity(0.5),
+                                                        FontWeight.w500,
+                                                        'FontRegular'),
+                                              ),
+                                              const SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              Text(
+                                                double.parse(
+                                                        tradePairList[index]
+                                                            .hrVolume
+                                                            .toString())
+                                                    .toStringAsFixed(2),
+                                                style: CustomWidget(
+                                                        context: context)
+                                                    .CustomSizedTextStyle(
+                                                        12.0,
+                                                        Theme.of(context)
+                                                            .hintColor
+                                                            .withOpacity(0.5),
+                                                        FontWeight.w500,
+                                                        'FontRegular'),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        flex: 2,
+                                      ),
+                                      Flexible(
+                                        child: Container(
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                double.parse(
+                                                        tradePairList[index]
+                                                            .currentPrice
+                                                            .toString())
+                                                    .toStringAsFixed(4),
+                                                style: CustomWidget(
+                                                        context: context)
+                                                    .CustomSizedTextStyle(
+                                                        15.0,
+                                                        double.parse(data
+                                                                    .toString()) >=
+                                                                0
+                                                            ? Theme.of(context)
+                                                                .indicatorColor
+                                                            : Theme.of(context)
+                                                                .canvasColor,
+                                                        FontWeight.w500,
+                                                        'FontRegular'),
+                                              ),
+                                              const SizedBox(
+                                                height: 5.0,
+                                              ),
+                                              // Text(
+                                              //   "\$ " +
+                                              //       double.parse(marketList[index]
+                                              //               .tick!['lastPrice']
+                                              //               .toString())
+                                              //           .toStringAsFixed(8),
+                                              //   style: CustomWidget(context: context)
+                                              //       .CustomSizedTextStyle(
+                                              //           12.0,
+                                              //           Theme.of(context)
+                                              //               .hintColor
+                                              //               .withOpacity(0.5),
+                                              //           FontWeight.w500,
+                                              //           'FontRegular'),
+                                              // ),
+                                            ],
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                          ),
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                        ),
+                                        flex: 2,
+                                      ),
+                                      Flexible(
+                                        child: Container(
+                                          child: Center(
+                                              child: Container(
+                                            padding: EdgeInsets.only(
+                                                left: 15.0,
+                                                right: 15.0,
+                                                top: 8.0,
+                                                bottom: 8.0),
+                                            child: Text(
+                                              data.toStringAsFixed(2),
+                                              style:
+                                                  CustomWidget(context: context)
+                                                      .CustomSizedTextStyle(
+                                                          14.0,
+                                                          Theme.of(context)
+                                                              .hintColor,
+                                                          FontWeight.w500,
+                                                          'FontRegular'),
+                                            ),
+                                            decoration: BoxDecoration(
+                                                color: double.parse(
+                                                            data.toString()) >=
+                                                        0
+                                                    ? Theme.of(context)
+                                                        .indicatorColor
+                                                    : Theme.of(context)
+                                                        .canvasColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0)),
+                                          )),
+                                        ),
+                                        flex: 1,
+                                      ),
+                                    ],
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                   ),
-                                )
-                              ],
-                            )))
+                                  const SizedBox(
+                                    height: 10.0,
+                                  ),
+                                ],
+                              );
+                            },
+                          )
                         : Container(
-                      margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.38),
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      color: CustomTheme.of(context).primaryColor,
-                      child: Center(
-                        child: Text(
-                          "No Records Found..!",
-                          style: CustomWidget(context: context).CustomTextStyle(
-                              Theme.of(context).splashColor,
-                              FontWeight.w400,
-                              'FontRegular'),
-                        ),
-                      ),
-                    ),
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            color: CustomTheme.of(context).primaryColor,
+                            child: Center(
+                              child: Text(
+                                "No Records Found..!",
+                                style: CustomWidget(context: context)
+                                    .CustomTextStyle(Colors.white,
+                                        FontWeight.w400, 'FontRegular'),
+                              ),
+                            ),
+                          ),
 
                     SizedBox(
                       height: 20.0,
                     ),
-
                   ],
                 ),
         ));
@@ -992,36 +1158,32 @@ class _HomeState extends State<Home>
     });
   }
 
-  getBannerList() {
-    apiUtils.getBannerList().then((BannerImageListModel loginData) {
-      if (loginData.statusCode.toString() == "200") {
+  getPairList() {
+    apiUtils.getCoinList().then((CoinListModel loginData) {
+      if (loginData.success!) {
         setState(() {
           loading = false;
 
-          for (int m = 0; m < loginData.data!.length; m++) {
-            bannerList.add(loginData.data![m].imgUrl!);
+          tradePairList = [];
+
+          tradePairList = loginData.result!;
+
+          tradePairList
+            ..sort((a, b) => double.parse(b.currentPrice.toString())
+                .compareTo(double.parse(a.currentPrice.toString())));
+
+          for (int m = 0; m < tradePairList.length; m++) {
+            arrData.add("ticker.sfox." + tradePairList[m].symbol.toString());
           }
-        });
-      } else {
-        setState(() {
-          loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      print(error);
-      setState(() {
-        loading = false;
-      });
-    });
-  }
 
-  getDetails() {
-    apiUtils.getUserDetails().then((UserDetailsModel loginData) {
-      if (loginData.statusCode.toString() == "200") {
-        setState(() {
           loading = false;
-          StoreData(
-              loginData.data!.name.toString(), loginData.data!.id.toString());
+
+          var messageJSON = {
+            "type": "subscribe",
+            "feeds": arrData,
+          };
+          channelOpenOrder!.sink.add(json.encode(messageJSON));
+          socketData();
         });
       } else {
         setState(() {
@@ -1029,6 +1191,8 @@ class _HomeState extends State<Home>
         });
       }
     }).catchError((Object error) {
+      print("testErr");
+      print(error);
       setState(() {
         loading = false;
       });
@@ -1070,8 +1234,8 @@ class _HomeState extends State<Home>
   List<BottomNavigationBarItem> bottomItems() {
     return [
       BottomNavigationBarItem(
-        icon:Padding(
-          child:  SvgPicture.asset(
+        icon: Padding(
+          child: SvgPicture.asset(
             'assets/bottom/home.svg',
             height: 22.0,
             width: 22.0,
@@ -1080,7 +1244,7 @@ class _HomeState extends State<Home>
           padding: EdgeInsets.only(bottom: 8.0),
         ),
         activeIcon: Padding(
-          child:  SvgPicture.asset(
+          child: SvgPicture.asset(
             'assets/bottom/home.svg',
             height: 22.0,
             width: 22.0,
@@ -1091,8 +1255,8 @@ class _HomeState extends State<Home>
         label: AppLocalizations.instance.text("loc_side_home"),
       ),
       BottomNavigationBarItem(
-        icon:Padding(
-          child:  SvgPicture.asset(
+        icon: Padding(
+          child: SvgPicture.asset(
             'assets/bottom/market.svg',
             height: 22.0,
             width: 22.0,
@@ -1101,7 +1265,7 @@ class _HomeState extends State<Home>
           padding: EdgeInsets.only(bottom: 8.0),
         ),
         activeIcon: Padding(
-          child:  SvgPicture.asset(
+          child: SvgPicture.asset(
             'assets/bottom/market.svg',
             height: 22.0,
             width: 22.0,
@@ -1113,7 +1277,7 @@ class _HomeState extends State<Home>
       ),
       BottomNavigationBarItem(
         icon: Padding(
-          child:  SvgPicture.asset(
+          child: SvgPicture.asset(
             'assets/bottom/trade.svg',
             height: 22.0,
             width: 22.0,
@@ -1121,8 +1285,8 @@ class _HomeState extends State<Home>
           ),
           padding: EdgeInsets.only(bottom: 8.0),
         ),
-        activeIcon:Padding(
-          child:  SvgPicture.asset(
+        activeIcon: Padding(
+          child: SvgPicture.asset(
             'assets/bottom/trade.svg',
             height: 22.0,
             width: 22.0,
@@ -1134,7 +1298,7 @@ class _HomeState extends State<Home>
       ),
       BottomNavigationBarItem(
         icon: Padding(
-          child:  SvgPicture.asset(
+          child: SvgPicture.asset(
             'assets/bottom/future.svg',
             height: 22.0,
             width: 22.0,
@@ -1142,8 +1306,8 @@ class _HomeState extends State<Home>
           ),
           padding: EdgeInsets.only(bottom: 8.0),
         ),
-        activeIcon:Padding(
-          child:  SvgPicture.asset(
+        activeIcon: Padding(
+          child: SvgPicture.asset(
             'assets/bottom/future.svg',
             height: 22.0,
             width: 22.0,
@@ -1155,7 +1319,7 @@ class _HomeState extends State<Home>
       ),
       BottomNavigationBarItem(
         icon: Padding(
-          child:  SvgPicture.asset(
+          child: SvgPicture.asset(
             'assets/bottom/wallet.svg',
             height: 22.0,
             width: 22.0,
@@ -1164,7 +1328,7 @@ class _HomeState extends State<Home>
           padding: EdgeInsets.only(bottom: 8.0),
         ),
         activeIcon: Padding(
-          child:  SvgPicture.asset(
+          child: SvgPicture.asset(
             'assets/bottom/wallet.svg',
             height: 22.0,
             width: 22.0,

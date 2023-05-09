@@ -42,6 +42,7 @@ class CoinList {
   String? hrExchange;
   int? coinoneDecimal;
   int? cointwoDecimal;
+  int? isinstant;
 
   CoinList({
     this.tradePair,
@@ -53,6 +54,7 @@ class CoinList {
     this.hrExchange,
     this.coinoneDecimal,
     this.cointwoDecimal,
+    this.isinstant,
   });
 
   factory CoinList.fromJson(Map<String, dynamic> json) => CoinList(
@@ -65,6 +67,7 @@ class CoinList {
     hrExchange: json["hr_exchange"],
     coinoneDecimal: json["coinone_decimal"],
     cointwoDecimal: json["cointwo_decimal"],
+    isinstant: json["is_instant"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -77,6 +80,7 @@ class CoinList {
     "hr_exchange": hrExchange,
     "coinone_decimal": coinoneDecimal,
     "cointwo_decimal": cointwoDecimal,
+    "is_instant": isinstant,
   };
 }
 

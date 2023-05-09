@@ -6,14 +6,10 @@ import 'package:h2_crypto/common/custom_widget.dart';
 import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/assets_list_model.dart';
-import 'package:h2_crypto/data/model/user_wallet_balance_model.dart';
-import 'package:h2_crypto/data/model/wallet_list_model.dart';
-import 'package:h2_crypto/screens/wallet/deposit.dart';
-import 'package:h2_crypto/screens/wallet/transfer.dart';
-import 'package:h2_crypto/screens/wallet/withdraw.dart';
+import 'package:h2_crypto/data/crypt_model/user_wallet_balance_model.dart';
 
-import '../../data/model/balance_list_model.dart';
+import 'package:h2_crypto/screens/wallet/deposit.dart';
+import 'package:h2_crypto/screens/wallet/withdraw.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({Key? key}) : super(key: key);
@@ -39,7 +35,6 @@ class _WalletScreenState extends State<WalletScreen> {
     super.initState();
     loading = true;
     getCoinList();
-    getBalanceList();
   }
 
   @override
@@ -556,11 +551,11 @@ class _WalletScreenState extends State<WalletScreen> {
                                                             Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                  builder: (context) => DepositScreen(
-                                                                      id: coinList[
-                                                                              index]
-                                                                          .symbol
-                                                                          .toString()),
+                                                                  builder: (context) =>
+                                                                      DepositScreen(
+                                                                          id: index
+                                                                              .toString(),
+                                                                      coinList:coinList,),
                                                                 ));
                                                           },
                                                         ),
@@ -571,7 +566,11 @@ class _WalletScreenState extends State<WalletScreen> {
                                                                 MaterialPageRoute(
                                                                   builder:
                                                                       (context) =>
-                                                                          const WithDraw(),
+                                                                           WithDraw(
+                                                                             id: index
+                                                                                 .toString(),
+                                                                             coinList:coinList,
+                                                                           ),
                                                                 ));
                                                           },
                                                           child: Container(
@@ -675,27 +674,6 @@ class _WalletScreenState extends State<WalletScreen> {
           searchPair = loginData.result!;
 
           coinList..sort((a, b) => b.balance!.compareTo(a.balance!));
-        });
-      } else {
-        setState(() {
-          loading = false;
-        });
-      }
-    }).catchError((Object error) {
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  getBalanceList() {
-    apiUtils.getWalletBalance().then((WalletBalModel loginData) {
-      print(loginData.statusCode);
-      if (loginData.statusCode == 200) {
-        setState(() {
-          loading = false;
-          btcBalance = loginData.data!.btcBalance.toString();
-          usdBalance = loginData.data!.usdtBalance.toString();
         });
       } else {
         setState(() {

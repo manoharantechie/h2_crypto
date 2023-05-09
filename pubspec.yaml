@@ -51,6 +51,7 @@ dependencies:
   permission_handler:
   moment_dart:
   device_info_plus:
+  webview_flutter: ^4.2.0
 
 dev_dependencies:
   flutter_test:

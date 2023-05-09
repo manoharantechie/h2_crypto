@@ -7,7 +7,7 @@ import 'package:h2_crypto/common/text_field_custom_prefix.dart';
 import 'package:h2_crypto/common/textformfield_custom.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
-import 'package:h2_crypto/data/model/common_model.dart';
+import 'package:h2_crypto/data/crypt_model/common_model.dart';
 
 
 class ChangePassword extends StatefulWidget {
@@ -378,8 +378,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
                                        if(passwordController.text.toString()==confirmpasswordController.text.toString())
                                        {
-                                         loading = true;
-                                         changePassword();
+
 
                                        }
                                        else
@@ -434,35 +433,4 @@ class _ChangePasswordState extends State<ChangePassword> {
     );
   }
 
-  changePassword() {
-
-    apiUtils.changePasswordRequest(currentpasswordController.text, passwordController.text, ).then((CommonModel loginData) {
-      setState(() {
-        loading = false;
-      });
-
-      if (loginData.status.toString() == "200") {
-
-        setState(() {
-          currentpasswordController.clear();
-          passwordController.clear();
-          confirmpasswordController.clear();
-          CustomWidget(context: context).  custombar("Change Password", loginData.message.toString(), true);
-
-
-        });
-      } else {
-        CustomWidget(context: context).  custombar("Change Password", loginData.message.toString(), false);
-
-
-      }
-    }).catchError((Object error) {
-
-
-
-      setState(() {
-        loading = false;
-      });
-    });
-  }
 }
