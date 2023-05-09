@@ -101,9 +101,11 @@ class _SellTradeScreenState extends State<TradeScreen>
   IOWebSocketChannel? channelOpenOrder;
 
   List<BuySellData> buyData = [];
+  List<BuySellData> buyReverseData = [];
 
   String quoteID = "";
   List<BuySellData> sellData = [];
+  List<BuySellData> sellReverseData = [];
 
   List<CoinList> coinList = [];
   List<CoinList> searchAssetPair = [];
@@ -179,6 +181,8 @@ class _SellTradeScreenState extends State<TradeScreen>
       sellData.clear();
       buyData = [];
       sellData = [];
+      buyReverseData = [];
+      sellReverseData = [];
     });
     channelOpenOrder!.stream.listen(
       (data) {
@@ -281,14 +285,25 @@ class _SellTradeScreenState extends State<TradeScreen>
                     list1[m][0].toString(),
                     list1[m][1].toString(),
                   ));
+                  buyReverseData.add(BuySellData(
+                    list1[m][0].toString(),
+                    list1[m][1].toString(),
+                  ));
                 }
                 for (int m = 0; m < list2.length; m++) {
                   sellData.add(BuySellData(
                     list2[m][0].toString(),
                     list2[m][1].toString(),
                   ));
+                  sellReverseData.add(BuySellData(
+                    list2[m][0].toString(),
+                    list2[m][1].toString(),
+                  ));
                 }
               }
+
+              buyReverseData=buyReverseData.reversed.toList();
+              sellReverseData=sellReverseData.reversed.toList();
             });
           }
         }
@@ -792,6 +807,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                   ? ListView.builder(
                                       controller: controller,
                                       itemCount: sellData.length,
+                                      reverse: true,
                                       itemBuilder:
                                           ((BuildContext context, int index) {
                                         return Column(
@@ -1095,6 +1111,368 @@ class _SellTradeScreenState extends State<TradeScreen>
     );
   }
 
+  Widget marketSellWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                AppLocalizations.instance.text("loc_sell_trade_price") +
+                    "\n(" +
+                    secondCoin +
+                    ")",
+                style: CustomWidget(context: context).CustomSizedTextStyle(
+                    12.0,
+                    Theme.of(context).splashColor.withOpacity(0.5),
+                    FontWeight.w500,
+                    'FontRegular'),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                AppLocalizations.instance.text("loc_sell_trade_Qty") +
+                    "\n(" +
+                    firstCoin +
+                    ")",
+                style: CustomWidget(context: context).CustomSizedTextStyle(
+                    12.0,
+                    Theme.of(context).splashColor.withOpacity(0.5),
+                    FontWeight.w500,
+                    'FontRegular'),
+                textAlign: TextAlign.end,
+              ),
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 5.0,
+        ),
+        socketLoader
+            ? Container(
+          height: MediaQuery.of(context).size.height * 0.38,
+          child: CustomWidget(context: context)
+              .loadingIndicator(AppColors.whiteColor),
+        )
+            : buyData.length > 0 && sellData.length > 0
+            ? Column(
+          children: [
+            sellOption
+                ? SizedBox(
+              height: !buyOption
+                  ? MediaQuery.of(context).size.height * 0.34
+                  : MediaQuery.of(context).size.height * 0.17,
+              child: sellReverseData.length > 0
+                  ? ListView.builder(
+                  controller: controller,
+                  reverse: true,
+                  itemCount: sellReverseData.length,
+                  itemBuilder:
+                  ((BuildContext context, int index) {
+                    return Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              buySell = true;
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment
+                                .spaceBetween,
+                            children: [
+                              Text(
+                                double.parse(sellReverseData[index]
+                                    .price
+                                    .toString())
+                                    .toStringAsFixed(
+                                    decimalIndex),
+                                style: CustomWidget(
+                                    context: context)
+                                    .CustomSizedTextStyle(
+                                    10.0,
+                                    Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                              ),
+                              Text(
+                                double.parse(sellReverseData[index]
+                                    .quantity
+                                    .toString()
+                                    .replaceAll(
+                                    ",", ""))
+                                    .toStringAsFixed(
+                                    decimalIndex),
+                                style: CustomWidget(
+                                    context: context)
+                                    .CustomSizedTextStyle(
+                                    10.0,
+                                    Theme.of(context)
+                                        .splashColor,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    );
+                  }))
+                  : Container(
+                height: !buyOption
+                    ? MediaQuery.of(context).size.height *
+                    0.38
+                    : MediaQuery.of(context).size.height *
+                    0.17,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        // Add one stop for each color
+                        // Values should increase from 0.0 to 1.0
+                        stops: [
+                          0.1,
+                          0.5,
+                          0.9,
+                        ],
+                        colors: [
+                          CustomTheme.of(context)
+                              .primaryColor,
+                          CustomTheme.of(context)
+                              .backgroundColor,
+                          CustomTheme.of(context).accentColor,
+                        ])),
+                child: Center(
+                  child: Text(
+                    " No Data Found..!",
+                    style: TextStyle(
+                      fontFamily: "FontRegular",
+                      color: CustomTheme.of(context)
+                          .splashColor,
+                    ),
+                  ),
+                ),
+              ),
+            )
+                : Container(
+              color: Colors.white,
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            buyOption
+                ? SizedBox(
+                height: !sellOption
+                    ? MediaQuery.of(context).size.height * 0.40
+                    : MediaQuery.of(context).size.height * 0.20,
+                child: buyData.length > 0
+                    ? ListView.builder(
+                    controller: controller,
+                    itemCount: buyData.length,
+                    itemBuilder:
+                    ((BuildContext context, int index) {
+                      return InkWell(
+                          onTap: () {
+                            setState(() {
+                              buySell = false;
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment
+                                .spaceBetween,
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                double.parse(buyData[index]
+                                    .price
+                                    .toString())
+                                    .toStringAsFixed(
+                                    decimalIndex),
+                                style: CustomWidget(
+                                    context: context)
+                                    .CustomSizedTextStyle(
+                                    10.0,
+                                    Theme.of(context)
+                                        .indicatorColor,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                              ),
+                              Text(
+                                double.parse(buyData[index]
+                                    .quantity
+                                    .toString()
+                                    .replaceAll(",", ""))
+                                    .toStringAsFixed(
+                                    decimalIndex),
+                                style: CustomWidget(
+                                    context: context)
+                                    .CustomSizedTextStyle(
+                                    10.0,
+                                    Theme.of(context)
+                                        .splashColor,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                              ),
+                            ],
+                          ));
+                    }))
+                    : Container(
+                  height: !sellOption
+                      ? MediaQuery.of(context).size.height *
+                      0.40
+                      : MediaQuery.of(context).size.height *
+                      0.20,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          // Add one stop for each color
+                          // Values should increase from 0.0 to 1.0
+                          stops: [
+                            0.1,
+                            0.5,
+                            0.9,
+                          ],
+                          colors: [
+                            CustomTheme.of(context)
+                                .primaryColor,
+                            CustomTheme.of(context)
+                                .backgroundColor,
+                            CustomTheme.of(context).accentColor,
+                          ])),
+                  child: Center(
+                    child: Text(
+                      " No Data Found..!",
+                      style: TextStyle(
+                        fontFamily: "FontRegular",
+                        color: CustomTheme.of(context)
+                            .splashColor,
+                      ),
+                    ),
+                  ),
+                ))
+                : Container(),
+          ],
+        )
+            : Container(
+          height: MediaQuery.of(context).size.height * 0.40,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  // Add one stop for each color
+                  // Values should increase from 0.0 to 1.0
+                  stops: [
+                    0.1,
+                    0.5,
+                    0.9,
+                  ],
+                  colors: [
+                    CustomTheme.of(context).primaryColor,
+                    CustomTheme.of(context).backgroundColor,
+                    CustomTheme.of(context).accentColor,
+                  ])),
+          child: Center(
+            child: Text(
+              " No Data Found..!",
+              style: TextStyle(
+                fontFamily: "FontRegular",
+                color: CustomTheme.of(context).splashColor,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 12.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              height: 35.0,
+              padding: const EdgeInsets.only(
+                  left: 10.0, right: 10.0, top: 0.0, bottom: 0.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+                color: CustomTheme.of(context).cardColor,
+              ),
+              child: Center(
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    canvasColor: CustomTheme.of(context).backgroundColor,
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                      items: _decimal
+                          .map((value) => DropdownMenuItem(
+                        child: Text(
+                          value,
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              12.0,
+                              Theme.of(context).splashColor,
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                        value: value,
+                      ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedDecimal = value.toString();
+                          for (int m = 0; m < _decimal.length; m++) {
+                            if (value == _decimal[m]) {
+                              if (m == 0) {
+                                decimalIndex = 2;
+                              } else if (m == 1) {
+                                decimalIndex = 4;
+                              } else {
+                                decimalIndex = 8;
+                              }
+                            }
+                          }
+                        });
+                      },
+                      isExpanded: false,
+                      value: selectedDecimal,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: CustomTheme.of(context).splashColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                showSuccessAlertDialog();
+              },
+              child: Container(
+                padding: EdgeInsets.all(3.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: CustomTheme.of(context).cardColor,
+                ),
+                child: SvgPicture.asset(
+                  'assets/images/align.svg',
+                  height: 30.0,
+                ),
+              ),
+            )
+          ],
+        )
+      ],
+    );
+  }
   Widget openOrdersUIS() {
     return Column(
       children: [
