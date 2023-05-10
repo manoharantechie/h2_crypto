@@ -503,9 +503,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             radius: 5.0,
             focusNode: emailFirstFocus,
             controller: firstname_email,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z]')),
-            ],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z]')),
+            // ],
             enabled: true,
             borderColor: CustomTheme.of(context).splashColor.withOpacity(0.5),
             fillColor: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
@@ -550,9 +550,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             radius: 5.0,
             focusNode: emailLastFocus,
             controller: lastname_email,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z]')),
-            ],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z]')),
+            // ],
             enabled: true,
             borderColor: CustomTheme.of(context).splashColor.withOpacity(0.5),
             fillColor: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
@@ -598,9 +598,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             fillColor: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
             textInputAction: TextInputAction.next,
             focusNode: emailFocus,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9_.]')),
-            ],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9_.]')),
+            // ],
             maxlines: 1,
             text: '',
             hintText: "Please enter email",
@@ -647,9 +647,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Theme.of(context).splashColor,
                 FontWeight.w400,
                 'FontRegular'),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_]')),
-            ],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_]')),
+            // ],
             radius: 5.0,
             focusNode: emailPassFocus,
             controller: email_password,
@@ -716,9 +716,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Theme.of(context).splashColor,
                 FontWeight.w400,
                 'FontRegular'),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_]')),
-            ],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_]')),
+            // ],
             radius: 5.0,
             focusNode: emailConfPassFocus,
             controller: email_confi_password,

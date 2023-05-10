@@ -291,9 +291,9 @@ class _QuickBuySellScreenState extends State<QuickBuySellScreen> {
                           maxlines: 1,
                           text: '',
                           hintText: "Quantity",
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9.]')),
-                          ],
+                          // inputFormatters: [
+                          //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9.]')),
+                          // ],
                           obscureText: false,
                           suffix: Container(
                             width: 0.0,

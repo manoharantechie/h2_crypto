@@ -280,9 +280,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     },
                                     radius: 5.0,
                                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9@.]')),
-                                    ],
+                                    // inputFormatters: [
+                                    //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9@.]')),
+                                    // ],
                                     error: "Enter Valid Email",
                                     textColor: AppColors.appColor,
                                     borderColor: CustomTheme.of(context)
@@ -325,9 +325,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     obscureText: !_passwordVisible,
                                     textInputAction: TextInputAction.done,
                                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_]')),
-                                    ],
+                                    // inputFormatters: [
+                                    //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_]')),
+                                    // ],
                                     hintStyle: CustomWidget(context: context)
                                         .CustomTextStyle(
                                             Theme.of(context)
@@ -396,9 +396,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   TextFormFieldCustom(
                                     obscureText: !_confirmpasswordVisible,
                                     textInputAction: TextInputAction.done,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_]')),
-                                    ],
+                                    // inputFormatters: [
+                                    //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_]')),
+                                    // ],
                                     autovalidateMode: AutovalidateMode.onUserInteraction,
                                     hintStyle: CustomWidget(context: context)
                                         .CustomTextStyle(
@@ -761,9 +761,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             maxlines: 1,
             text: '',
             hintText: AppLocalizations.instance.text("loc_email"),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9.]')),
-            ],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9.]')),
+            // ],
             obscureText: false,
             suffix: Container(
               width: 0.0,

@@ -490,9 +490,9 @@ class _LoginScreenState extends State<LoginScreen> {
               FocusScope.of(context).requestFocus(emailPassFocus);
             },
             radius: 5.0,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9!_.]')),
-            ],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9!_.]')),
+            // ],
             error: "Enter Valid Email",
             textColor: CustomTheme.of(context).splashColor,
             borderColor: CustomTheme.of(context).splashColor.withOpacity(0.5),
@@ -546,9 +546,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 Theme.of(context).splashColor.withOpacity(0.5),
                 FontWeight.w300,
                 'FontRegular'),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_.]')),
-            ],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_.$]')),
+            // ],
             textStyle: CustomWidget(context: context).CustomTextStyle(
                 Theme.of(context).splashColor, FontWeight.w400, 'FontRegular'),
             radius: 5.0,
@@ -610,9 +610,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   fillColor: AppColors.borderColor,
                   textInputAction: TextInputAction.next,
                   focusNode: emailVerifyFocus,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9_.]')),
-            ],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9_.]')),
+            // ],
                   maxlines: 1,
                   text: '',
                   hintText: AppLocalizations.instance.text("loc_email_code"),
@@ -654,9 +654,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     emailAuthFocus.unfocus();
                   },
                   radius: 5.0,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9_.]')),
-                  ],
+                  // inputFormatters: [
+                  //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9_.]')),
+                  // ],
                   error: "Enter Valid Email",
                   textColor: AppColors.borderColor,
                   borderColor: AppColors.borderColor,

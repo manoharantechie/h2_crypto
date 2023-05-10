@@ -21,7 +21,7 @@ class TextFormFieldCustom extends StatelessWidget {
   final TextEditingController controller;
   final TextStyle hintStyle;
   final TextStyle textStyle;
-  final inputFormatters;
+  // final inputFormatters;
 
   final Widget suffix;
   final FormFieldValidator<String> validator;
@@ -32,7 +32,7 @@ class TextFormFieldCustom extends StatelessWidget {
   const TextFormFieldCustom(
       {required this.onEditComplete,
       required this.error,
-      required this.inputFormatters,
+      // required this.inputFormatters,
       required this.textColor,
       required this.borderColor,
       required this.fillColor,
@@ -65,7 +65,7 @@ class TextFormFieldCustom extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         focusNode: focusNode,
-        inputFormatters: inputFormatters,
+        // inputFormatters: inputFormatters,
         maxLines: maxlines,
         autocorrect: true,
         enabled: enabled,
