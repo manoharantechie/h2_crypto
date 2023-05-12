@@ -93,7 +93,7 @@ class _WithDrawState extends State<WithDraw> {
                 Container(
                   padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.18,
+                  height: MediaQuery.of(context).size.height * 0.19,
                   decoration: BoxDecoration(
                     color: CustomTheme.of(context).buttonColor.withOpacity(0.2),
                     borderRadius: BorderRadius.all(
