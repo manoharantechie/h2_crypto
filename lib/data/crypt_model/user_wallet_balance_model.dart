@@ -32,7 +32,7 @@ class UserWalletResult {
   String? asset;
   String? symbol;
   String? name;
-  Type? type;
+  dynamic type;
   String? image;
   String? pointValue;
   String? perdayWithdraw;
@@ -59,7 +59,7 @@ class UserWalletResult {
     asset: json["asset"],
     symbol: json["symbol"],
     name: json["name"],
-    type: typeValues.map[json["type"]],
+    type: json["type"],
     image: json["image"],
     pointValue: json["point_value"],
     perdayWithdraw: json["perday_withdraw"],
@@ -73,7 +73,7 @@ class UserWalletResult {
     "asset": asset,
     "symbol": symbol,
     "name": name,
-    "type": typeValues.reverse[type],
+    "type": type,
     "image": image,
     "point_value": pointValue,
     "perday_withdraw": perdayWithdraw,
@@ -84,22 +84,4 @@ class UserWalletResult {
   };
 }
 
-enum Type { COIN, TOKEN, FIAT }
 
-final typeValues = EnumValues({
-  "coin": Type.COIN,
-  "fiat": Type.FIAT,
-  "token": Type.TOKEN
-});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
-}

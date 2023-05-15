@@ -2075,9 +2075,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                       } else {
                         if (firstCoin.toLowerCase() ==
                             availableBalance[m].currency.toLowerCase()) {
-                          print(firstCoin.toLowerCase());
-                          print(availableBalance[m].currency.toLowerCase());
-                          print(availableBalance[m].trading);
+
                           balance = availableBalance[m].balance;
                           escrow = availableBalance[m].available;
                           totalBalance = availableBalance[m].trading;
@@ -4317,7 +4315,6 @@ class _SellTradeScreenState extends State<TradeScreen>
     apiUtils.getDoneOrdersDetails().then((dynamic loginData) {
       setState(() {
         List<dynamic> listData = loginData;
-        print(listData[0]);
         for (int m = 0; m < listData.length; m++) {
           historyOrders.add(OpenOrderList(
             id: listData[m]["id"].toString(),
@@ -4652,12 +4649,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                 availableBalance[m]
                                                     .currency
                                                     .toLowerCase()) {
-                                              print(firstCoin.toLowerCase());
-                                              print(availableBalance[m]
-                                                  .currency
-                                                  .toLowerCase());
-                                              print(
-                                                  availableBalance[m].trading);
+
                                               balance =
                                                   availableBalance[m].balance;
                                               escrow =

@@ -116,13 +116,11 @@ class _HomeState extends State<Home>
   }
 
   socketData() {
-    print("Mano");
     channelOpenOrder!.stream.listen(
       (data) {
         if (data != null || data != "null") {
           var decode = jsonDecode(data);
 
-          print(decode);
           if (mounted) {
             setState(() {
               NewSocketData ss = NewSocketData.fromJson(decode);

@@ -4,6 +4,7 @@ import 'package:h2_crypto/data/crypt_model/asset_details_model.dart';
 import 'package:h2_crypto/data/crypt_model/assets_list_model.dart';
 import 'package:h2_crypto/data/crypt_model/check_quote_model.dart';
 import 'package:h2_crypto/data/crypt_model/country_code.dart';
+import 'package:h2_crypto/data/crypt_model/history_model.dart';
 import 'package:h2_crypto/data/crypt_model/individual_user_details.dart';
 import 'package:h2_crypto/data/crypt_model/login_model.dart';
 import 'package:h2_crypto/data/crypt_model/quote_details_model.dart';
@@ -52,6 +53,8 @@ class APIUtils {
   static const String depositInfoUrl = 'v1/user/deposit/address/';
   static const String getQuoteInfoUrl = 'api/check-quote';
   static const String cancelTradeUrl = 'api/cancel-trade';
+  static const String tranHisUrl = 'api/transaction-histroy';
+  static const String fiatDepUrl = 'v1/user/wire-instructions';
 
   Future<CommonModel> doVerifyRegister(
       String first_name,
@@ -405,9 +408,11 @@ class APIUtils {
     return json.decode(response.body);
   }
 
-
-  Future<QuoteDetailsModel> getQuoteDetails(String pair, String side, String quantity,
-      ) async {
+  Future<QuoteDetailsModel> getQuoteDetails(
+    String pair,
+    String side,
+    String quantity,
+  ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var spotStopData = {
       "pair": pair,
@@ -419,15 +424,16 @@ class APIUtils {
         Uri.parse(
           crypto_baseURL + getQuoteInfoUrl,
         ),
-        body:  spotStopData,
+        body: spotStopData,
         headers: {
           "authorization": "Bearer " + preferences.getString("token").toString()
         });
     return QuoteDetailsModel.fromJson(json.decode(response.body));
   }
 
-  Future<CommonModel> cancelTradeOption(String order_id,
-      ) async {
+  Future<CommonModel> cancelTradeOption(
+    String order_id,
+  ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var spotStopData = {
       "order_id": order_id,
@@ -437,10 +443,34 @@ class APIUtils {
         Uri.parse(
           crypto_baseURL + cancelTradeUrl,
         ),
-        body:  spotStopData,
+        body: spotStopData,
         headers: {
           "authorization": "Bearer " + preferences.getString("token").toString()
         });
     return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<TransHistoryListModel> getTransHistory() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + tranHisUrl,
+        ),
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return TransHistoryListModel.fromJson(json.decode(response.body));
+  }
+
+  Future<dynamic> getFiatDepositDetails() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    final response = await http
+        .get(Uri.parse(crypto_baseURL_Sfox + fiatDepUrl), headers: {
+      "authorization": "Bearer " + preferences.getString("sfox").toString()
+    });
+
+    return json.decode(response.body);
   }
 }
