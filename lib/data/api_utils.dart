@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:h2_crypto/data/crypt_model/bank_model.dart';
 import 'package:h2_crypto/data/crypt_model/coin_list.dart';
 import 'package:h2_crypto/data/crypt_model/asset_details_model.dart';
 import 'package:h2_crypto/data/crypt_model/assets_list_model.dart';
@@ -55,6 +56,8 @@ class APIUtils {
   static const String cancelTradeUrl = 'api/cancel-trade';
   static const String tranHisUrl = 'api/transaction-histroy';
   static const String fiatDepUrl = 'v1/user/wire-instructions';
+  static const String bankListUrl = 'api/list-bank';
+  static const String addBankUrl = 'api/add-bank';
 
   Future<CommonModel> doVerifyRegister(
       String first_name,
@@ -404,7 +407,6 @@ class APIUtils {
       "authorization": "Bearer " + preferences.getString("sfox").toString()
     });
 
-    print(response.body);
     return json.decode(response.body);
   }
 
@@ -466,11 +468,91 @@ class APIUtils {
   Future<dynamic> getFiatDepositDetails() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    final response = await http
-        .get(Uri.parse(crypto_baseURL_Sfox + fiatDepUrl), headers: {
-      "authorization": "Bearer " + preferences.getString("sfox").toString()
-    });
+    final response = await http.get(Uri.parse(crypto_baseURL_Sfox + fiatDepUrl),
+        headers: {
+          "authorization": "Bearer " + preferences.getString("sfox").toString()
+        });
 
     return json.decode(response.body);
+  }
+
+  Future<BankListModel> getBankDetails() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + bankListUrl,
+        ),
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return BankListModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> removebankDetails(
+    String bankAccountType,
+    String type,
+    bool isInternational,
+    String first_name,
+    String last_name,
+    String accountnumber,
+    String bankname,
+    String swiftnumber,
+    String wireInstructions,
+    String wireRoutingnumber,
+    String routingnumber,
+  ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var bankData = {
+      "bankAccountType": bankAccountType,
+      "type": type,
+      "isInternational": isInternational,
+      "first_name": first_name,
+      "last_name": last_name,
+      "accountnumber": accountnumber,
+      "wireInstructions": wireInstructions,
+    };
+    var InbankData = {
+      "bankAccountType": bankAccountType,
+      "type": type,
+      "isInternational": isInternational,
+      "first_name": first_name,
+      "last_name": last_name,
+      "accountnumber": accountnumber,
+      "bankname": bankname,
+      "swiftnumber": swiftnumber,
+      "wireInstructions": wireInstructions,
+      "wireRoutingnumber": wireRoutingnumber,
+      "routingnumber": routingnumber,
+    };
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + cancelTradeUrl,
+        ),
+        body: isInternational ? InbankData : bankData,
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> addbankDetails(
+    String bankid,
+  ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var bankData = {
+      "bankid": bankid,
+    };
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + cancelTradeUrl,
+        ),
+        body: bankData,
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return CommonModel.fromJson(json.decode(response.body));
   }
 }
