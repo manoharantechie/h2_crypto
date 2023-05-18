@@ -5,6 +5,7 @@ import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/data/api_utils.dart';
 import 'package:h2_crypto/data/crypt_model/bank_model.dart';
+import 'package:h2_crypto/screens/bank/add_bank.dart';
 
 class BankScreen extends StatefulWidget {
   const BankScreen({Key? key}) : super(key: key);
@@ -48,13 +49,22 @@ class _BankScreenState extends State<BankScreen> {
             )),
         centerTitle: true,
         actions: [
-        Padding(padding: EdgeInsets.only(top: 10.0,bottom: 10.0,right: 10.0),child:   Container(
-
-          decoration: BoxDecoration(
-              color: CustomTheme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(5.0)),
-          padding: EdgeInsets.all(5.0),
-          child: Icon(Icons.add,size: 20.0,),
+        Padding(padding: EdgeInsets.only(top: 10.0,bottom: 10.0,right: 10.0),child: InkWell(
+          onTap: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AddBankScreen(),
+                ));
+          },
+          child:  Container(
+            decoration: BoxDecoration(
+                color: CustomTheme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(5.0)),
+            padding: EdgeInsets.all(5.0),
+            child: Icon(Icons.add,size: 20.0,),
+          ),
         ),)
         ],
         title: Text(
