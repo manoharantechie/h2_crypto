@@ -8,6 +8,7 @@ import 'package:h2_crypto/common/theme/themes.dart';
 import 'package:h2_crypto/data/api_utils.dart';
 import 'package:h2_crypto/data/crypt_model/user_details_model.dart';
 import 'package:h2_crypto/screens/basic/login.dart';
+import 'package:h2_crypto/screens/bank/bank_screen.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -277,6 +278,53 @@ class _SideMenuState extends State<SideMenu> {
                           height: 20.0,
                         ),
 
+
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const BankScreen(),
+                                ));
+                          },
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/sidemenu/order.svg',
+                                    height: 20.0,
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    "Bank Details",
+                                    style: CustomWidget(context: context)
+                                        .CustomSizedTextStyle(
+                                        16.0,
+                                        Theme.of(context).splashColor,
+                                        FontWeight.normal,
+                                        'FontRegular'),
+                                  ),
+                                ],
+                              ),
+
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: CustomTheme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5),
+                                size: 16.0,
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
                         Container(
                           height: 0.7,
                           width: MediaQuery.of(context).size.width,
