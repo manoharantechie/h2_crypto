@@ -58,6 +58,7 @@ class APIUtils {
   static const String fiatDepUrl = 'v1/user/wire-instructions';
   static const String bankListUrl = 'api/list-bank';
   static const String addBankUrl = 'api/add-bank';
+  static const String coinWithUrl = '/api/withdraw-asset';
 
   Future<CommonModel> doVerifyRegister(
       String first_name,
@@ -489,10 +490,10 @@ class APIUtils {
     return BankListModel.fromJson(json.decode(response.body));
   }
 
-  Future<CommonModel> removebankDetails(
+  Future<CommonModel> addbankDetails(
     String bankAccountType,
     String type,
-    bool isInternational,
+    String isInternational,
     String first_name,
     String last_name,
     String accountnumber,
@@ -530,14 +531,14 @@ class APIUtils {
         Uri.parse(
           crypto_baseURL + cancelTradeUrl,
         ),
-        body: isInternational ? InbankData : bankData,
+        body: isInternational == "true" ? InbankData : bankData,
         headers: {
           "authorization": "Bearer " + preferences.getString("token").toString()
         });
     return CommonModel.fromJson(json.decode(response.body));
   }
 
-  Future<CommonModel> addbankDetails(
+  Future<CommonModel> removebankDetails(
     String bankid,
   ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -548,6 +549,29 @@ class APIUtils {
     final response = await http.post(
         Uri.parse(
           crypto_baseURL + cancelTradeUrl,
+        ),
+        body: bankData,
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> coinWithdrawDetails(
+    String asset,
+    String address,
+    String amount,
+  ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var bankData = {
+      "asset": asset,
+      "address": address,
+      "amount": amount,
+    };
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + coinWithUrl,
         ),
         body: bankData,
         headers: {

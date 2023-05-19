@@ -74,6 +74,7 @@ class _KYCPageState extends State<KYCPage> {
   List<String> idProofType = [
     "Passport",
     "Driving Licence",
+    "SSN",
   ];
   String selectedGender = "";
   String selectedIdProof = "";

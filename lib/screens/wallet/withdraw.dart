@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:h2_crypto/data/api_utils.dart';
+import 'package:h2_crypto/data/crypt_model/bank_model.dart';
+import 'package:h2_crypto/data/crypt_model/common_model.dart';
 import 'package:h2_crypto/data/crypt_model/user_wallet_balance_model.dart';
+import 'package:h2_crypto/screens/bank/add_bank.dart';
 
 import '../../../common/colors.dart';
 import '../../../common/custom_button.dart';
@@ -28,10 +31,14 @@ class _WithDrawState extends State<WithDraw> {
   APIUtils apiUtils = APIUtils();
   bool loading = false;
   TextEditingController searchController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   ScrollController controller = ScrollController();
 
   int indexVal = 0;
+  List<BankList> bankList = [];
+  BankList? selectedBank;
 
   @override
   void initState() {
@@ -40,8 +47,15 @@ class _WithDrawState extends State<WithDraw> {
 
     coinList = widget.coinList;
     selectedCoin = coinList[int.parse(widget.id)];
+    print(coinList[int.parse(widget.id)].type);
   }
 
+  _getRequests() async {
+    setState(() {
+      loading = true;
+      getBankList();
+    });
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -228,7 +242,97 @@ class _WithDrawState extends State<WithDraw> {
                           SizedBox(
                             height: 10.0,
                           ),
-                          Container(
+                     selectedCoin!.type.toString()=="fiat"?   bankList.length>0?  Container(
+                            height: 45.0,
+                            padding: const EdgeInsets.only(
+                                left: 10.0, right: 10.0, top: 0.0, bottom: 0.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              color:  CustomTheme.of(context)
+                                  .buttonColor
+                                  .withOpacity(0.2),
+                            ),
+                            child: Center(
+                              child: Theme(
+                                data: Theme.of(context).copyWith(
+                                  canvasColor:
+                                  CustomTheme.of(context).cardColor,
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    items: bankList
+                                        .map((value) => DropdownMenuItem(
+                                      child: Text(
+                                        value.bankName.toString(),
+                                        style: CustomWidget(
+                                            context: context)
+                                            .CustomSizedTextStyle(
+                                            12.0,
+                                            Theme.of(context)
+                                                .splashColor,
+                                            FontWeight.w500,
+                                            'FontRegular'),
+                                      ),
+                                      value: value,
+                                    ))
+                                        .toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedBank = value;
+                                      });
+                                    },
+                                    isExpanded: true,
+                                    value: selectedBank,
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color:
+                                      CustomTheme.of(context).splashColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ): Padding(
+                       padding: EdgeInsets.only(top:0.0, bottom: 0.0, ),
+                       child: InkWell(
+                         onTap: () {
+                           Navigator.of(context)
+                               .push(
+                             MaterialPageRoute(builder: (_) => AddBankScreen()),
+                           )
+                               .then((val) => val ? _getRequests() : null);
+                         },
+                         child: Container(
+                           height: 45.0,
+                           decoration: BoxDecoration(
+                               color: CustomTheme.of(context)
+                                   .buttonColor
+                                   .withOpacity(0.2),
+                               borderRadius: BorderRadius.circular(5.0)),
+                           padding: EdgeInsets.only(left: 10.0,right: 10.0),
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+
+                               Text(
+                                 "Link A Bank Account",
+                                 style: CustomWidget(context: context).CustomSizedTextStyle(16.0,
+                                     Theme.of(context).splashColor, FontWeight.w500, 'FontRegular'),
+                               ),
+
+                               Icon(
+                                 Icons.add,
+                                 size: 20.0,
+                               )
+                             ],
+                           ),
+                         ),
+                       ),
+                     ):Container(),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                          selectedCoin!.type.toString()=="fiat"? Container():      Container(
                             padding: EdgeInsets.fromLTRB(10.0, 5, 10.0, 0),
                             decoration: BoxDecoration(
                               color: CustomTheme.of(context)
@@ -253,6 +357,7 @@ class _WithDrawState extends State<WithDraw> {
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
+                                    controller: addressController,
                                   ),
                                 ),
                                 SizedBox(
@@ -305,6 +410,7 @@ class _WithDrawState extends State<WithDraw> {
                               children: [
                                 Flexible(
                                   child: TextField(
+
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Withdrawal volume',
@@ -316,11 +422,13 @@ class _WithDrawState extends State<WithDraw> {
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
+                                    controller: amountController,
                                     textInputAction: TextInputAction.done,
                                     keyboardType:
                                         TextInputType.numberWithOptions(
                                             decimal: true),
                                   ),
+
                                 ),
                                 SizedBox(
                                   width: 10.0,
@@ -500,11 +608,35 @@ class _WithDrawState extends State<WithDraw> {
                               buttonColor: CustomTheme.of(context).buttonColor,
                               splashColor: CustomTheme.of(context).buttonColor,
                               onPressed: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //       builder: (context) => const SetNameScreen3(),
-                                //     ));
+                                setState(() {
+                                  if(selectedCoin!.type.toString()=="fiat")
+                                    {
+
+                                    }
+                                  else
+                                    {
+
+                                      if(addressController.text.isEmpty)
+                                        {
+
+                                          CustomWidget(context: context)
+                                              .custombar("H2Crypto", "Enter Withdraw Address", false);
+                                        }
+                                      else if(amountController.text.isEmpty)
+                                        {
+                                          CustomWidget(context: context)
+                                              .custombar("H2Crypto","Enter  Withdraw amount", false);
+
+                                        }
+                                      else
+                                        {
+                                          loading=true;
+                                          coinWithdraw();
+
+                                        }
+
+                                    }
+                                });
                               },
                               paddng: 1.0),
                           SizedBox(
@@ -678,6 +810,7 @@ class _WithDrawState extends State<WithDraw> {
                                       selectedCoin = coinList[index];
                                       indexVal = 0;
 
+                                      print(selectedCoin!.type);
                                       Navigator.pop(context);
                                     });
                                   },
@@ -734,5 +867,79 @@ class _WithDrawState extends State<WithDraw> {
             },
           );
         });
+  }
+
+  getBankList() {
+    apiUtils.getBankDetails().then((BankListModel loginData) {
+      if (loginData.success!) {
+        setState(() {
+          loading = false;
+          bankList = loginData.result!;
+          selectedBank=bankList.first;
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  coinWithdraw() {
+    apiUtils.coinWithdrawDetails(selectedCoin!.name.toString(), addressController.text.toString(), amountController.text.toString()).then((CommonModel loginData) {
+      if (loginData.status!) {
+        setState(() {
+          loading = false;
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), true);
+          amountController.clear();
+          addressController.clear();
+          getCoinList();
+          searchCoinList.clear();
+          coinList.clear();
+          coinList=[];
+          searchCoinList=[];
+
+        });
+      } else {
+        setState(() {
+          loading = false;
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), false);
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  getCoinList() {
+    apiUtils.walletBalanceInfo().then((UserWalletBalanceModel loginData) {
+      if (loginData.success!) {
+        setState(() {
+
+          loading = false;
+          coinList = loginData.result!;
+          searchCoinList = loginData.result!;
+          selectedCoin=coinList.first;
+
+          coinList..sort((a, b) => b.balance!.compareTo(a.balance!));
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
+    });
   }
 }
