@@ -609,12 +609,7 @@ class _WithDrawState extends State<WithDraw> {
                               splashColor: CustomTheme.of(context).buttonColor,
                               onPressed: () {
                                 setState(() {
-                                  if(selectedCoin!.type.toString()=="fiat")
-                                    {
 
-                                    }
-                                  else
-                                    {
 
                                       if(addressController.text.isEmpty)
                                         {
@@ -635,7 +630,7 @@ class _WithDrawState extends State<WithDraw> {
 
                                         }
 
-                                    }
+
                                 });
                               },
                               paddng: 1.0),
