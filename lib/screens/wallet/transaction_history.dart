@@ -70,7 +70,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).accentColor,
+              Theme.of(context).dialogBackgroundColor,
             ])),
         child: Stack(
           children: [
@@ -156,7 +156,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ),
                 transHistory.length > 0
                     ?     Container(
-                  height: MediaQuery.of(context).size.height * 0.76,
+                  height: MediaQuery.of(context).size.height * 0.74,
                   child: ListView.builder(
                       itemCount: transHistory.length,
                       shrinkWrap: true,
@@ -232,7 +232,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                                   .toString(),
                                               style: CustomWidget(context: context)
                                                   .CustomTextStyle(
-                                                  Theme.of(context).buttonColor,
+                                                  Theme.of(context).shadowColor,
                                                   FontWeight.w500,
                                                   'FontRegular'),
                                             ),
@@ -250,7 +250,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                   Container(
                                     height: 0.5,
                                     color: Theme.of(context)
-                                        .buttonColor
+                                        .shadowColor
                                         .withOpacity(0.5),
                                   ),
                                   const SizedBox(
@@ -270,7 +270,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                               .toUpperCase(),
                                           style: CustomWidget(context: context)
                                               .CustomTextStyle(
-                                                  Theme.of(context).buttonColor,
+                                                  Theme.of(context).shadowColor,
                                                   FontWeight.w500,
                                                   'FontRegular'),
                                         ),
@@ -278,7 +278,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                           transHistory[index].amount.toString(),
                                           style: CustomWidget(context: context)
                                               .CustomTextStyle(
-                                                  Theme.of(context).buttonColor,
+                                                  Theme.of(context).shadowColor,
                                                   FontWeight.w500,
                                                   'FontRegular'),
                                         ),
@@ -324,7 +324,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                   Container(
                                     height: 0.5,
                                     color: Theme.of(context)
-                                        .buttonColor
+                                        .shadowColor
                                         .withOpacity(0.5),
                                   ),
                                   const SizedBox(
@@ -361,7 +361,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                                   .toString(),
                                           style: CustomWidget(context: context)
                                               .CustomTextStyle(
-                                                  Theme.of(context).buttonColor,
+                                                  Theme.of(context).shadowColor,
                                                   FontWeight.w500,
                                                   'FontRegular'),
                                         ),
@@ -379,7 +379,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                   Container(
                                     height: 0.5,
                                     color: Theme.of(context)
-                                        .buttonColor
+                                        .shadowColor
                                         .withOpacity(0.5),
                                   ),
                                   const SizedBox(
@@ -411,7 +411,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                               .toUpperCase(),
                                           style: CustomWidget(context: context)
                                               .CustomTextStyle(
-                                                  Theme.of(context).buttonColor,
+                                                  Theme.of(context).shadowColor,
                                                   FontWeight.w500,
                                                   'FontRegular'),
                                         ),
@@ -447,7 +447,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                           colors: [
                             CustomTheme.of(context).primaryColor,
                             CustomTheme.of(context).backgroundColor,
-                            CustomTheme.of(context).accentColor,
+                            Theme.of(context).dialogBackgroundColor,
                           ])),
                   child: Center(
                     child: Text(

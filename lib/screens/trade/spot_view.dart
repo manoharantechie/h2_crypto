@@ -81,7 +81,7 @@ class _SpotViewState extends State<SpotView> {
                 colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).accentColor,
+                  Theme.of(context).dialogBackgroundColor,
                 ])),
         child: SingleChildScrollView (
             child: Column(
@@ -92,7 +92,7 @@ class _SpotViewState extends State<SpotView> {
                   height: MediaQuery.of(context).size.height * 0.28,
                   decoration: BoxDecoration(
                     color:
-                    CustomTheme.of(context).buttonColor.withOpacity(0.2),
+                    CustomTheme.of(context).shadowColor.withOpacity(0.2),
                     borderRadius: BorderRadius.all(
                       Radius.circular(5.0),
                     ),
@@ -262,7 +262,7 @@ class _SpotViewState extends State<SpotView> {
                       Container(
                         padding: EdgeInsets.fromLTRB(15.0,5.0,15.0,5.0),
                         decoration: BoxDecoration(
-                          border: Border.all(width: 1.0, color: CustomTheme.of(context).buttonColor.withOpacity(0.5),),
+                          border: Border.all(width: 1.0, color: CustomTheme.of(context).shadowColor.withOpacity(0.5),),
                             borderRadius: BorderRadius.all(Radius.circular(25.0), ),
                         ),
                         child: Row(
@@ -340,7 +340,7 @@ class _SpotViewState extends State<SpotView> {
                       Container(
                         padding: EdgeInsets.fromLTRB(15.0,5.0,15.0,5.0),
                         decoration: BoxDecoration(
-                          border: Border.all(width: 1.0, color: CustomTheme.of(context).buttonColor.withOpacity(0.5),),
+                          border: Border.all(width: 1.0, color: CustomTheme.of(context).shadowColor.withOpacity(0.5),),
                           borderRadius: BorderRadius.all(Radius.circular(25.0), ),
                         ),
                         child: Row(
@@ -465,7 +465,7 @@ class _SpotViewState extends State<SpotView> {
                                   width: MediaQuery.of(context).size.width,
                                   decoration: BoxDecoration(
                                     color: selectedBtn
-                                        ? CustomTheme.of(context).buttonColor
+                                        ? CustomTheme.of(context).shadowColor
                                         : CustomTheme.of(context).hintColor.withOpacity(0.5),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(2.0),
@@ -500,7 +500,7 @@ class _SpotViewState extends State<SpotView> {
                                   width: MediaQuery.of(context).size.width,
                                   decoration: BoxDecoration(
                                     color: !selectedBtn
-                                        ? CustomTheme.of(context).buttonColor: CustomTheme.of(context).hintColor.withOpacity(0.5),
+                                        ? CustomTheme.of(context).shadowColor: CustomTheme.of(context).hintColor.withOpacity(0.5),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(2.0),
                                     ),

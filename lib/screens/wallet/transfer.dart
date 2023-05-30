@@ -90,7 +90,7 @@ class _TransferScreenState extends State<TransferScreen> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).accentColor,
+              Theme.of(context).dialogBackgroundColor,
             ])),
         child: SafeArea(
           child: SingleChildScrollView(
@@ -105,7 +105,7 @@ class _TransferScreenState extends State<TransferScreen> {
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color:
-                          CustomTheme.of(context).buttonColor.withOpacity(0.2),
+                          CustomTheme.of(context).shadowColor.withOpacity(0.2),
                       borderRadius: BorderRadius.all(
                         Radius.circular(5.0),
                       ),
@@ -195,7 +195,7 @@ class _TransferScreenState extends State<TransferScreen> {
                                   height: 45,
                                   decoration: BoxDecoration(
                                       color:
-                                          CustomTheme.of(context).buttonColor,
+                                          CustomTheme.of(context).shadowColor,
                                       borderRadius:
                                           BorderRadius.circular(25.0)),
                                   padding: const EdgeInsets.all(10.0),
@@ -337,7 +337,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       border: Border.all(
                         width: 1.0,
                         color: CustomTheme.of(context)
-                            .buttonColor
+                            .shadowColor
                             .withOpacity(0.5),
                       ),
                       color: Colors.transparent,
@@ -354,7 +354,7 @@ class _TransferScreenState extends State<TransferScreen> {
                               hintText: 'BTC/USDT',
                               hintStyle: TextStyle(
                                 fontSize: 13.0,
-                                color: CustomTheme.of(context).buttonColor,
+                                color: CustomTheme.of(context).shadowColor,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -414,7 +414,7 @@ class _TransferScreenState extends State<TransferScreen> {
                               border: Border.all(
                                 width: 1.0,
                                 color: CustomTheme.of(context)
-                                    .buttonColor
+                                    .shadowColor
                                     .withOpacity(0.5),
                               ),
                               color: selectedBtn
@@ -440,7 +440,7 @@ class _TransferScreenState extends State<TransferScreen> {
                                     .CustomSizedTextStyle(
                                     13.0,
                                     selectedBtn
-                                        ? CustomTheme.of(context).buttonColor
+                                        ? CustomTheme.of(context).shadowColor
                                         : CustomTheme.of(context).hintColor,
                                     FontWeight.w400,
                                     'FontRegular'),
@@ -458,7 +458,7 @@ class _TransferScreenState extends State<TransferScreen> {
                               border: Border.all(
                                 width: 1.0,
                                 color: CustomTheme.of(context)
-                                    .buttonColor
+                                    .shadowColor
                                     .withOpacity(0.5),
                               ),
                               color: !selectedBtn
@@ -484,7 +484,7 @@ class _TransferScreenState extends State<TransferScreen> {
                                     .CustomSizedTextStyle(
                                     13.0,
                                     !selectedBtn
-                                        ? CustomTheme.of(context).buttonColor
+                                        ? CustomTheme.of(context).shadowColor
                                         : CustomTheme.of(context).hintColor,
                                     FontWeight.w400,
                                     'FontRegular'),
@@ -548,7 +548,7 @@ class _TransferScreenState extends State<TransferScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           borderSide: BorderSide(
                               color: CustomTheme.of(context)
-                                  .buttonColor
+                                  .shadowColor
                                   .withOpacity(0.5),
                               width: 1.0),
                         ),
@@ -556,7 +556,7 @@ class _TransferScreenState extends State<TransferScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           borderSide: BorderSide(
                               color: CustomTheme.of(context)
-                                  .buttonColor
+                                  .shadowColor
                                   .withOpacity(0.5),
                               width: 1.0),
                         ),
@@ -595,9 +595,9 @@ class _TransferScreenState extends State<TransferScreen> {
                           Theme.of(context).splashColor,
                           FontWeight.w500,
                           'FontRegular'),
-                      iconColor: CustomTheme.of(context).buttonColor,
-                      buttonColor: CustomTheme.of(context).buttonColor,
-                      splashColor: CustomTheme.of(context).buttonColor,
+                      iconColor: CustomTheme.of(context).shadowColor,
+                      buttonColor: CustomTheme.of(context).shadowColor,
+                      splashColor: CustomTheme.of(context).shadowColor,
                       onPressed: () {
                         // Navigator.push(
                         //     context,

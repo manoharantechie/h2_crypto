@@ -96,7 +96,7 @@ class _AddBankScreenState extends State<AddBankScreen> {
                   colors: [
                 CustomTheme.of(context).primaryColor,
                 CustomTheme.of(context).backgroundColor,
-                CustomTheme.of(context).accentColor,
+                Theme.of(context).dialogBackgroundColor,
               ])),
           child: Stack(
             children: [
@@ -859,7 +859,7 @@ class _AddBankScreenState extends State<AddBankScreen> {
                             },
                             child: Container(
                                 decoration: BoxDecoration(
-                                  color: CustomTheme.of(context).buttonColor,
+                                  color: CustomTheme.of(context).shadowColor,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5.0)),
                                 ),

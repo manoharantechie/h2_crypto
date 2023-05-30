@@ -108,9 +108,9 @@ class _CustomTabsState extends State<CustomTabView> with TickerProviderStateMixi
             isScrollable: false,
             controller: controller,
             labelColor: AppColors.whiteColor,
-            labelStyle:CustomWidget(context: context).CustomSizedTextStyle( 18.0,Theme.of(context).buttonColor,FontWeight.w500, 'FontRegular'),
+            labelStyle:CustomWidget(context: context).CustomSizedTextStyle( 18.0,Theme.of(context).shadowColor,FontWeight.w500, 'FontRegular'),
             unselectedLabelColor: Theme.of(context).highlightColor.withOpacity(0.5),
-            indicatorColor: AppColors.buttonColor,
+            indicatorColor: AppColors.shadowColor,
             indicatorWeight: 3.0,
             // indicator:  UnderlineTabIndicator(
             //     borderSide: BorderSide(width: 3.0,color: AppColors.appBaseColor),

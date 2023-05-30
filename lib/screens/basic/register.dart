@@ -155,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).accentColor,
+                  Theme.of(context).dialogBackgroundColor,
                 ])),
             child: SingleChildScrollView(
               controller: controller,
@@ -251,7 +251,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         //               width: MediaQuery.of(context).size.width *
                         //                   0.25,
                         //               color: isEmail
-                        //                   ? CustomTheme.of(context).buttonColor
+                        //                   ? CustomTheme.of(context).shadowColor
                         //                   : CustomTheme.of(context)
                         //                       .primaryColor
                         //                       .withOpacity(0.1),
@@ -290,7 +290,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         //               width: MediaQuery.of(context).size.width *
                         //                   0.25,
                         //               color: isMobile
-                        //                   ? CustomTheme.of(context).buttonColor
+                        //                   ? CustomTheme.of(context).shadowColor
                         //                   : CustomTheme.of(context)
                         //                       .primaryColor
                         //                       .withOpacity(0.1),
@@ -355,7 +355,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             ));
                                       },
                                       style: TextStyle(
-                                          color: Theme.of(context).buttonColor,
+                                          color: Theme.of(context).shadowColor,
                                           fontWeight: FontWeight.w400),
                                     ),
                                     TextSpan(
@@ -371,7 +371,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             ));
                                       },
                                       style: TextStyle(
-                                          color: Theme.of(context).buttonColor,
+                                          color: Theme.of(context).shadowColor,
                                           fontWeight: FontWeight.w400),
                                     ),
                                   ],
@@ -394,9 +394,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     Theme.of(context).splashColor,
                                     FontWeight.w500,
                                     'FontRegular'),
-                            iconColor: CustomTheme.of(context).buttonColor,
-                            buttonColor: CustomTheme.of(context).buttonColor,
-                            splashColor: CustomTheme.of(context).buttonColor,
+                            iconColor: CustomTheme.of(context).shadowColor,
+                            buttonColor: CustomTheme.of(context).shadowColor,
+                            splashColor: CustomTheme.of(context).shadowColor,
                             onPressed: () {
                               setState(() {
                                 FocusScope.of(context).unfocus();
@@ -455,7 +455,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       style: CustomWidget(context: context)
                                           .CustomSizedTextStyle(
                                               16.0,
-                                              Theme.of(context).buttonColor,
+                                              Theme.of(context).shadowColor,
                                               FontWeight.w500,
                                               'FontRegular'),
                                     ),

@@ -123,7 +123,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).accentColor,
+                  Theme.of(context).dialogBackgroundColor,
                 ])),
             child: SingleChildScrollView(
               controller: controller,
@@ -207,7 +207,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                         width: MediaQuery.of(context).size.width *
                                             0.25,
                                         color: isEmail
-                                            ? CustomTheme.of(context).buttonColor
+                                            ? CustomTheme.of(context).shadowColor
                                             : CustomTheme.of(context)
                                                 .primaryColor
                                                 .withOpacity(0.1),
@@ -243,7 +243,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                         width: MediaQuery.of(context).size.width *
                                             0.25,
                                         color: isMobile
-                                            ? CustomTheme.of(context).buttonColor
+                                            ? CustomTheme.of(context).shadowColor
                                             : CustomTheme.of(context)
                                                 .primaryColor
                                                 .withOpacity(0.1),
@@ -512,9 +512,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     Theme.of(context).splashColor,
                                     FontWeight.w500,
                                     'FontRegular'),
-                            iconColor: CustomTheme.of(context).buttonColor,
-                            buttonColor: CustomTheme.of(context).buttonColor,
-                            splashColor: CustomTheme.of(context).buttonColor,
+                            iconColor: CustomTheme.of(context).shadowColor,
+                            buttonColor: CustomTheme.of(context).shadowColor,
+                            splashColor: CustomTheme.of(context).shadowColor,
                             onPressed: () {
                               setState(() {
                                 FocusScope.of(context).unfocus();

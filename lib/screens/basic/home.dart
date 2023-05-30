@@ -190,11 +190,11 @@ class _HomeState extends State<Home>
                 //     height: 40.0,
                 //     decoration: BoxDecoration(
                 //         color:
-                //             CustomTheme.of(context).buttonColor.withOpacity(0.2),
+                //             CustomTheme.of(context).shadowColor.withOpacity(0.2),
                 //         borderRadius: BorderRadius.circular(5.0),
                 //         border: Border.all(
                 //             color: CustomTheme.of(context)
-                //                 .buttonColor
+                //                 .shadowColor
                 //                 .withOpacity(0.5),
                 //             width: 0.2)),
                 //     child: Row(
@@ -204,7 +204,7 @@ class _HomeState extends State<Home>
                 //         ),
                 //         Icon(
                 //           Icons.search_rounded,
-                //           color: CustomTheme.of(context).buttonColor,
+                //           color: CustomTheme.of(context).shadowColor,
                 //           size: 15.0,
                 //         ),
                 //         const SizedBox(
@@ -215,7 +215,7 @@ class _HomeState extends State<Home>
                 //           style: CustomWidget(context: context)
                 //               .CustomSizedTextStyle(
                 //                   13.0,
-                //                   Theme.of(context).buttonColor,
+                //                   Theme.of(context).shadowColor,
                 //                   FontWeight.w300,
                 //                   'FontRegular'),
                 //         ),
@@ -241,7 +241,7 @@ class _HomeState extends State<Home>
                       child: SvgPicture.asset(
                         'assets/others/menu.svg',
                         height: 15.0,
-                        color: CustomTheme.of(context).buttonColor,
+                        color: CustomTheme.of(context).shadowColor,
                       ),
                     )),
                 actions: [
@@ -258,7 +258,7 @@ class _HomeState extends State<Home>
                         child: SvgPicture.asset(
                           'assets/others/notify.svg',
                           height: 15.0,
-                          color: CustomTheme.of(context).buttonColor,
+                          color: CustomTheme.of(context).shadowColor,
                         ),
                       ))
                 ],
@@ -280,7 +280,7 @@ class _HomeState extends State<Home>
                   colors: [
                 CustomTheme.of(context).primaryColor,
                 CustomTheme.of(context).backgroundColor,
-                CustomTheme.of(context).accentColor,
+                Theme.of(context).dialogBackgroundColor,
               ])),
           child: Stack(
             children: [
@@ -295,12 +295,12 @@ class _HomeState extends State<Home>
         //     height: 70.0,
         //     child: Container(
         //       decoration: BoxDecoration(
-        //         color: CustomTheme.of(context).buttonColor,
+        //         color: CustomTheme.of(context).shadowColor,
         //       ),
         //       child: Container(
         //         margin: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
         //         decoration: BoxDecoration(
-        //           color: CustomTheme.of(context).buttonColor,
+        //           color: CustomTheme.of(context).shadowColor,
         //         ),
         //         child: BottomNavigationBar(
         //           elevation: 0.0,
@@ -310,7 +310,7 @@ class _HomeState extends State<Home>
         //           items: bottomItems(),
         //           currentIndex: currentIndex,
         //           showSelectedLabels: true,
-        //           backgroundColor:currentIndex==selectIndex? CustomTheme.of(context).buttonColor: CustomTheme.of(context).bottomAppBarColor,
+        //           backgroundColor:currentIndex==selectIndex? CustomTheme.of(context).shadowColor: CustomTheme.of(context).bottomAppBarColor,
         //           selectedLabelStyle: !unSelected
         //               ? CustomWidget(context: context).CustomSizedTextStyle(
         //                   12.0,
@@ -348,7 +348,7 @@ class _HomeState extends State<Home>
           ),
           bgStyle: BgStyle(
             color: CustomTheme.of(context).bottomAppBarColor.withOpacity(0.5),
-            onSelectColor: CustomTheme.of(context).buttonColor,
+            onSelectColor: CustomTheme.of(context).shadowColor,
           ),
           labelStyle: LabelStyle(
             visible: true,
@@ -396,20 +396,20 @@ class _HomeState extends State<Home>
                       style: CustomWidget(context: context)
                           .CustomSizedTextStyle(
                               16.0,
-                              Theme.of(context).buttonColor,
+                              Theme.of(context).shadowColor,
                               FontWeight.bold,
                               'FontRegular'),
                     ),
                     Container(
                         margin: EdgeInsets.only(top: 7.0, bottom: 10.0),
                         height: 2.0,
-                        color: CustomTheme.of(context).buttonColor),
+                        color: CustomTheme.of(context).shadowColor),
                     Text(
                       "Do you want to exit an App",
                       style: CustomWidget(context: context)
                           .CustomSizedTextStyle(
                               16.0,
-                              Theme.of(context).buttonColor,
+                              Theme.of(context).shadowColor,
                               FontWeight.w500,
                               'FontRegular'),
                     ),
@@ -428,8 +428,8 @@ class _HomeState extends State<Home>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
-                                      CustomTheme.of(context).buttonColor,
-                                      CustomTheme.of(context).buttonColor
+                                      CustomTheme.of(context).shadowColor,
+                                      CustomTheme.of(context).shadowColor
                                     ],
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,
@@ -466,8 +466,8 @@ class _HomeState extends State<Home>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
-                                      CustomTheme.of(context).buttonColor,
-                                      CustomTheme.of(context).buttonColor,
+                                      CustomTheme.of(context).shadowColor,
+                                      CustomTheme.of(context).shadowColor,
                                     ],
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,
@@ -532,11 +532,11 @@ class _HomeState extends State<Home>
                     const SizedBox(
                       height: 10.0,
                     ),
-                    Row(
+                   /* Row(
                       children: [
                         SvgPicture.asset(
                           'assets/others/speaker.svg',
-                          color: CustomTheme.of(context).buttonColor,
+                          color: CustomTheme.of(context).shadowColor,
                         ),
                         const SizedBox(
                           width: 10.0,
@@ -559,7 +559,7 @@ class _HomeState extends State<Home>
                     ),
                     const SizedBox(
                       height: 10.0,
-                    ),
+                    ),*/
                     marketList.isNotEmpty
                         ? Container(
                             height: 85,
@@ -567,7 +567,7 @@ class _HomeState extends State<Home>
                                 const EdgeInsets.only(top: 10.0, left: 10.0),
                             decoration: BoxDecoration(
                                 color: CustomTheme.of(context)
-                                    .buttonColor
+                                    .shadowColor
                                     .withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(5)),
                             child: Center(
@@ -754,7 +754,7 @@ class _HomeState extends State<Home>
                                     SvgPicture.asset(
                                       grid_img[index].toString(),
                                       height: 25.0,
-                                      color: Theme.of(context).buttonColor,
+                                      color: Theme.of(context).shadowColor,
                                     ),
                                     SizedBox(
                                       height: 10.0,
@@ -803,7 +803,7 @@ class _HomeState extends State<Home>
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
                                         12.0,
-                                        Theme.of(context).buttonColor,
+                                        Theme.of(context).shadowColor,
                                         FontWeight.w500,
                                         'FontRegular'),
                                 textAlign: TextAlign.center,

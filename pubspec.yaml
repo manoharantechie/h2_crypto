@@ -48,6 +48,7 @@ dependencies:
   flutter_html: ^3.0.0-alpha.5
   timeago: ^3.3.0
   image_picker:
+  barcode_scan2:
   permission_handler:
   moment_dart:
   device_info_plus:

@@ -81,7 +81,7 @@ class _NotifyScreenState extends State<NotifyScreen> {
                 colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).accentColor,
+                  Theme.of(context).dialogBackgroundColor,
                 ])),
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -99,7 +99,7 @@ class _NotifyScreenState extends State<NotifyScreen> {
                   colors: [
                     CustomTheme.of(context).primaryColor,
                     CustomTheme.of(context).backgroundColor,
-                    CustomTheme.of(context).accentColor,
+                    Theme.of(context).dialogBackgroundColor,
                   ])),
           child: Center(
             child: Text(

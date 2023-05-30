@@ -92,8 +92,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    // email=TextEditingController(text: "vinoth.alpharive@gmail.com");
-    // email_password=TextEditingController(text: "Vinoth@2020");
+    email=TextEditingController(text: "vinoth.alpharive@gmail.com");
+    email_password=TextEditingController(text: "Vinoth@2020");
     initCountry();
     super.initState();
 
@@ -206,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).accentColor,
+                  Theme.of(context).dialogBackgroundColor,
                 ])),
             child: SingleChildScrollView(
               controller: controller,
@@ -289,7 +289,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         //               width: MediaQuery.of(context).size.width *
                         //                   0.25,
                         //               color: isEmail
-                        //                   ? CustomTheme.of(context).buttonColor
+                        //                   ? CustomTheme.of(context).shadowColor
                         //                   : CustomTheme.of(context)
                         //                       .primaryColor
                         //                       .withOpacity(0.1),
@@ -326,7 +326,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         //               width: MediaQuery.of(context).size.width *
                         //                   0.25,
                         //               color: isMobile
-                        //                   ? CustomTheme.of(context).buttonColor
+                        //                   ? CustomTheme.of(context).shadowColor
                         //                   : CustomTheme.of(context)
                         //                       .primaryColor
                         //                       .withOpacity(0.1),
@@ -356,8 +356,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     FontWeight.w500,
                                     'FontRegular'),
                             iconColor: AppColors.borderColor,
-                            buttonColor: CustomTheme.of(context).buttonColor,
-                            splashColor: CustomTheme.of(context).buttonColor,
+                            buttonColor: CustomTheme.of(context).shadowColor,
+                            splashColor: CustomTheme.of(context).shadowColor,
                             onPressed: () {
                                 setState(() {
                                   FocusScope.of(context).unfocus();
@@ -397,7 +397,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: CustomWidget(context: context)
                                   .CustomSizedTextStyle(
                                       16.0,
-                                      Theme.of(context).buttonColor,
+                                      Theme.of(context).shadowColor,
                                       FontWeight.normal,
                                       'FontRegular'),
                               textAlign: TextAlign.center,
@@ -449,7 +449,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       style: CustomWidget(context: context)
                                           .CustomSizedTextStyle(
                                               16.0,
-                                              Theme.of(context).buttonColor,
+                                              Theme.of(context).shadowColor,
                                               FontWeight.normal,
                                               'FontRegular'),
                                     ),

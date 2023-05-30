@@ -99,7 +99,7 @@ class _SideMenuState extends State<SideMenu> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).accentColor,
+              Theme.of(context).dialogBackgroundColor,
             ])),
         child:Stack(
           children: [
@@ -154,7 +154,7 @@ class _SideMenuState extends State<SideMenu> {
                             left: 10.0, right: 10.0, top: 20.0, bottom: 20.0),
                         decoration: BoxDecoration(
                             color: CustomTheme.of(context)
-                                .buttonColor
+                                .shadowColor
                                 .withOpacity(0.3),
                             borderRadius: BorderRadius.circular(10.0)),
                         child: Column(
@@ -328,7 +328,7 @@ class _SideMenuState extends State<SideMenu> {
                         Container(
                           height: 0.7,
                           width: MediaQuery.of(context).size.width,
-                          color: CustomTheme.of(context).buttonColor,
+                          color: CustomTheme.of(context).shadowColor,
                         ),
 
                         const SizedBox(
@@ -486,7 +486,7 @@ class _SideMenuState extends State<SideMenu> {
                                   left: 15.0, right: 15.0, top: 10.0, bottom: 10.0),
                               decoration: BoxDecoration(
                                   color: CustomTheme.of(context)
-                                      .buttonColor
+                                      .shadowColor
                                       .withOpacity(0.5),
                                   borderRadius: BorderRadius.circular(10.0)),
                               child: Center(
@@ -543,20 +543,20 @@ class _SideMenuState extends State<SideMenu> {
                       style: CustomWidget(context: context)
                           .CustomSizedTextStyle(
                               16.0,
-                              Theme.of(context).buttonColor,
+                              Theme.of(context).shadowColor,
                               FontWeight.bold,
                               'FontRegular'),
                     ),
                     Container(
                         margin: EdgeInsets.only(top: 7.0, bottom: 10.0),
                         height: 2.0,
-                        color: CustomTheme.of(context).buttonColor),
+                        color: CustomTheme.of(context).shadowColor),
                     Text(
                       message,
                       style: CustomWidget(context: context)
                           .CustomSizedTextStyle(
                               16.0,
-                              Theme.of(context).buttonColor,
+                              Theme.of(context).shadowColor,
                               FontWeight.w500,
                               'FontRegular'),
                     ),
@@ -575,8 +575,8 @@ class _SideMenuState extends State<SideMenu> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
-                                      CustomTheme.of(context).buttonColor,
-                                      CustomTheme.of(context).buttonColor
+                                      CustomTheme.of(context).shadowColor,
+                                      CustomTheme.of(context).shadowColor
                                     ],
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,
@@ -614,8 +614,8 @@ class _SideMenuState extends State<SideMenu> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
-                                      CustomTheme.of(context).buttonColor,
-                                      CustomTheme.of(context).buttonColor,
+                                      CustomTheme.of(context).shadowColor,
+                                      CustomTheme.of(context).shadowColor,
                                     ],
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,

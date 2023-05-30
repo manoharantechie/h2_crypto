@@ -118,7 +118,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
                 // Add one stop for each color
                 // Values should increase from 0.0 to 1.0
                 stops: [0.1, 0.5, 0.9,],
-                colors: [CustomTheme.of(context).primaryColor,CustomTheme.of(context).backgroundColor, CustomTheme.of(context).accentColor,])),
+                colors: [CustomTheme.of(context).primaryColor,CustomTheme.of(context).backgroundColor, Theme.of(context).dialogBackgroundColor,])),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -259,7 +259,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
                     width: MediaQuery.of(context).size.width,
 
                     decoration: BoxDecoration(
-                      color: CustomTheme.of(context).buttonColor.withOpacity(0.2),
+                      color: CustomTheme.of(context).shadowColor.withOpacity(0.2),
                       borderRadius: BorderRadius.all(Radius.circular(5.0),),
                     ),
                     child: Column(
@@ -329,7 +329,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
                         Container(
                           padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0 ,0.0),
                           decoration: BoxDecoration(
-                            border: Border.all(width: 1.0, color: CustomTheme.of(context).buttonColor.withOpacity(0.5),),
+                            border: Border.all(width: 1.0, color: CustomTheme.of(context).shadowColor.withOpacity(0.5),),
                             color: Colors.transparent,
                             borderRadius: BorderRadius.all(Radius.circular(5.0),),
                           ),
@@ -434,7 +434,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
                               style: CustomWidget(context: context)
                                   .CustomSizedTextStyle(
                                   11.0,
-                                  Theme.of(context).buttonColor,
+                                  Theme.of(context).shadowColor,
                                   FontWeight.w400,
                                   'FontRegular'),
                             ),
