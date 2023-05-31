@@ -143,7 +143,10 @@ class _SellTradeScreenState extends State<TradeScreen>
     tradeTabController = TabController(vsync: this, length: 3);
     selectedDecimal = _decimal.first;
     loading = true;
-
+    _animationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 10000));
+    _colorTween = ColorTween(begin: Colors.grey.withOpacity(0.5), end: Colors.transparent)
+        .animate(_animationController!);
     getData();
 
     channelOpenOrder = IOWebSocketChannel.connect(
@@ -415,6 +418,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                       spotOption = false;
                                       marginOption = true;
                                       quickAmountController.clear();
+                                      val="";
                                       priceController.clear();
                                       amountController.clear();
                                       getCoinList();
@@ -470,6 +474,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                       openOrders = [];
                                       spotOption = true;
                                       marginOption = false;
+                                      val="";
 
                                       priceController.clear();
                                       amountController.clear();
@@ -3070,7 +3075,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                     setState(() {
                       buySell = true;
                       quickAmountController.clear();
-
+                      val="";
                       quoteID = "";
                       quote = false;
                       totalAmount = "0.0";
@@ -3120,6 +3125,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                   setState(() {
                     buySell = false;
                     quickAmountController.clear();
+                    val="";
 
                     totalAmount = "0.0";
                     _currentSliderValue = 0;
@@ -3200,22 +3206,10 @@ class _SellTradeScreenState extends State<TradeScreen>
                     setState(() {
                       totalAmount = "0.00";
 
+
                       if (quickAmountController.text.isNotEmpty) {
                         tradeAmount = quickAmountController.text;
-                       /* double amount =
-                            double.parse(quickAmountController.text);
-                        if (amount >= 0) {
-                          tradeAmount = quickAmountController.text;
 
-                          totalAmount = (double.parse(
-                                      quickAmountController.text.toString()) *
-                                  double.parse(QuicklivePrice))
-                              .toStringAsFixed(3);
-                          print("totalAmount"+totalAmount);
-                        } else {
-                          tradeAmount = quickAmountController.text;
-                          totalAmount = "0.000";
-                        }*/
                       } else {
                         tradeAmount = quickAmountController.text;
                         totalAmount = "0.000";
@@ -3264,51 +3258,7 @@ class _SellTradeScreenState extends State<TradeScreen>
         Container(
           child: Row(
             children: [
-              /*Flexible(
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      if (double.parse(QuicklivePrice) > 0) {
-                        double perce = ((double.parse(balance) * 10) /
-                                double.parse(livePrice)) /
-                            100;
 
-                        quickAmountController.text =
-                            double.parse(perce.toString()).toStringAsFixed(4);
-                        double a = double.parse(perce
-                            .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
-                        double b = double.parse(livePrice);
-                        totalAmount =
-                            double.parse((a * b).toString()).toStringAsFixed(4);
-                      }
-                    });
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.0),
-                      color:
-                          Theme.of(context).bottomAppBarColor.withOpacity(0.5),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "10%",
-                        style: CustomWidget(context: context)
-                            .CustomSizedTextStyle(
-                                10.0,
-                                Theme.of(context).splashColor,
-                                FontWeight.w500,
-                                'FontRegular'),
-                      ),
-                    ),
-                  ),
-                ),
-                flex: 1,
-              ),
-              const SizedBox(
-                width: 5.0,
-              ),*/
               Flexible(
                 child: InkWell(
                   onTap: () {

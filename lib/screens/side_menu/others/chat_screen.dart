@@ -368,17 +368,9 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
+
                 Container(
-                  margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                  height: 1.0,
-                  color:
-                      CustomTheme.of(context).highlightColor.withOpacity(0.2),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  color: CustomTheme.of(context).highlightColor,
+                  color: CustomTheme.of(context).primaryColor,
                   child: Container(
                     margin: const EdgeInsets.only(
                         left: 10.0, right: 10.0, bottom: 10.0, top: 10.0),
@@ -423,7 +415,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             )),
                         Padding(
                             padding:
-                                const EdgeInsets.only(left: 10.0, bottom: 0.0),
+                            const EdgeInsets.only(left: 10.0, bottom: 0.0),
                             child: InkWell(
                               onTap: () {
                                 setState(() {
@@ -434,11 +426,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                 });
                               },
                               child: Container(
-                                margin:
-                                    EdgeInsets.only(left: 15.0, right: 10.0),
-                                width: 35.0,
-                                height: 35.0,
-                                color: CustomTheme.of(context).shadowColor,
+                                margin: EdgeInsets.only(
+                                  left: 15.0,
+                                ),
+                                width: 45.0,
+                                height: 45.0,
+                                decoration: BoxDecoration(
+                                    color: CustomTheme.of(context).shadowColor,
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(30.0),
+                                        bottomRight: Radius.circular(30.0))),
                                 child: Center(
                                   child: Icon(
                                     Icons.send,
