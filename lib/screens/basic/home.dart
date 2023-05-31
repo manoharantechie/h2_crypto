@@ -50,7 +50,6 @@ class _HomeState extends State<Home>
 
   late Widget screen = Container();
   bool loading = false;
-
   List<Widget> bottomPage = [];
   bool dashView = false;
   int slideIndex = 0;
@@ -109,7 +108,7 @@ class _HomeState extends State<Home>
     getCoinList();
     getPairList();
 
-    _tabController = TabController(vsync: this, length: 3);
+
   }
 
   socketData() {
