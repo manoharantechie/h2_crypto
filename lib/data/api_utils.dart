@@ -9,6 +9,7 @@ import 'package:h2_crypto/data/crypt_model/history_model.dart';
 import 'package:h2_crypto/data/crypt_model/individual_user_details.dart';
 import 'package:h2_crypto/data/crypt_model/login_model.dart';
 import 'package:h2_crypto/data/crypt_model/quote_details_model.dart';
+import 'package:h2_crypto/data/crypt_model/support_ticket_model.dart';
 import 'package:h2_crypto/data/crypt_model/user_details_model.dart';
 import 'package:h2_crypto/data/crypt_model/user_wallet_balance_model.dart';
 import 'package:http/http.dart' as http;
@@ -59,6 +60,7 @@ class APIUtils {
   static const String bankListUrl = 'api/list-bank';
   static const String addBankUrl = 'api/add-bank';
   static const String coinWithUrl = '/api/withdraw-asset';
+  static const String supportListUrl = '/api/ticket-view';
 
   Future<CommonModel> doVerifyRegister(
       String first_name,
@@ -578,5 +580,19 @@ class APIUtils {
           "authorization": "Bearer " + preferences.getString("token").toString()
         });
     return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<SupportTicketListData> fetchSupportTicketList() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + supportListUrl,
+        ),
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return SupportTicketListData.fromJson(json.decode(response.body));
   }
 }
