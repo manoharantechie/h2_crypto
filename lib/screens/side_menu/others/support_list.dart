@@ -105,7 +105,7 @@ class _SupportTicketListState extends State<SupportTicketList> {
 
   Widget supportListUI() {
     return Container(
-      child: Column(
+      child: Stack(
         children: [
           Container(
             margin: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -146,174 +146,171 @@ class _SupportTicketListState extends State<SupportTicketList> {
               ],
             ),
           ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          Expanded(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.80,
-              child: ticketList.length > 0
-                  ? Container(
-                      height: MediaQuery.of(context).size.height,
-                      child: ListView.builder(
-                          itemCount: ticketList.length,
-                          shrinkWrap: true,
-                          controller: controller,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Column(
-                              children: [
-                                InkWell(
-                                  onTap:(){
-                                   Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChatScreen(ticket_id:ticketList[index].ticketId.toString(),)));
-                                  },
-                                   child: Container(
-                                    margin: EdgeInsets.only(
-                                        left: 10.0, right: 10.0, top: 5.0),
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        color: CustomTheme.of(context).cardColor,
-                                        borderRadius: BorderRadius.circular(5.0)),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          height: 10.0,
+          Container(
+            height: MediaQuery.of(context).size.height,
+            margin: EdgeInsets.only(top: 50.0),
+            child: ticketList.length > 0
+                ? Container(
+                    height: MediaQuery.of(context).size.height,
+                    padding: EdgeInsets.only(bottom: 10.0),
+                    child: ListView.builder(
+                        itemCount: ticketList.length,
+                        shrinkWrap: true,
+                        controller: controller,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Column(
+                            children: [
+                              InkWell(
+                                onTap:(){
+                                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChatScreen(ticket_id:ticketList[index].ticketId.toString(),)));
+                                },
+                                 child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: 10.0, right: 10.0, top: 5.0),
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                      color: CustomTheme.of(context).cardColor,
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 10.0, right: 10.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Ticket Id",
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomTextStyle(
+                                                          Theme.of(context)
+                                                              .splashColor
+                                                              .withOpacity(0.6),
+                                                          FontWeight.w500,
+                                                          'FontRegular'),
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Text(
+                                                  ticketList[index]
+                                                      .ticketId
+                                                      .toString(),
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomTextStyle(
+                                                          Theme.of(context)
+                                                              .splashColor,
+                                                          FontWeight.w500,
+                                                          'FontRegular'),
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Text(
+                                                  "Title",
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomTextStyle(
+                                                          Theme.of(context)
+                                                              .splashColor
+                                                              .withOpacity(0.6),
+                                                          FontWeight.w500,
+                                                          'FontRegular'),
+                                                ),
+                                                SizedBox(
+                                                  height: 5.0,
+                                                ),
+                                                Text(
+                                                  ticketList[index]
+                                                      .subject
+                                                      .toString(),
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomTextStyle(
+                                                          Theme.of(context)
+                                                              .splashColor,
+                                                          FontWeight.w500,
+                                                          'FontRegular'),
+                                                ),
+                                              ],
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                            ),
+                                            Column(
+                                              children: [
+                                                Text(
+                                                  DateFormat("MMM d,yyyy")
+                                                      .format(ticketList[index]
+                                                          .createdAt!)
+                                                      .toString(),
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomTextStyle(
+                                                          Theme.of(context)
+                                                              .splashColor,
+                                                          FontWeight.w500,
+                                                          'FontRegular'),
+                                                ),
+                                              ],
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                            ),
+                                          ],
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10.0, right: 10.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "Ticket Id",
-                                                    style: CustomWidget(
-                                                            context: context)
-                                                        .CustomTextStyle(
-                                                            Theme.of(context)
-                                                                .splashColor
-                                                                .withOpacity(0.6),
-                                                            FontWeight.w500,
-                                                            'FontRegular'),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Text(
-                                                    ticketList[index]
-                                                        .ticketId
-                                                        .toString(),
-                                                    style: CustomWidget(
-                                                            context: context)
-                                                        .CustomTextStyle(
-                                                            Theme.of(context)
-                                                                .splashColor,
-                                                            FontWeight.w500,
-                                                            'FontRegular'),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Text(
-                                                    "Title",
-                                                    style: CustomWidget(
-                                                            context: context)
-                                                        .CustomTextStyle(
-                                                            Theme.of(context)
-                                                                .splashColor
-                                                                .withOpacity(0.6),
-                                                            FontWeight.w500,
-                                                            'FontRegular'),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5.0,
-                                                  ),
-                                                  Text(
-                                                    ticketList[index]
-                                                        .subject
-                                                        .toString(),
-                                                    style: CustomWidget(
-                                                            context: context)
-                                                        .CustomTextStyle(
-                                                            Theme.of(context)
-                                                                .splashColor,
-                                                            FontWeight.w500,
-                                                            'FontRegular'),
-                                                  ),
-                                                ],
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                              ),
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    DateFormat("MMM d,yyyy")
-                                                        .format(ticketList[index]
-                                                            .createdAt!)
-                                                        .toString(),
-                                                    style: CustomWidget(
-                                                            context: context)
-                                                        .CustomTextStyle(
-                                                            Theme.of(context)
-                                                                .splashColor,
-                                                            FontWeight.w500,
-                                                            'FontRegular'),
-                                                  ),
-                                                ],
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 5.0,
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                      const SizedBox(
+                                        height: 5.0,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            );
-                          }),
-                    )
-                  : Container(
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              // Add one stop for each color
-                              // Values should increase from 0.0 to 1.0
-                              stops: [
-                            0.1,
-                            0.5,
-                            0.9,
-                          ],
-                              colors: [
-                            CustomTheme.of(context).primaryColor,
-                            CustomTheme.of(context).backgroundColor,
-                            Theme.of(context).dialogBackgroundColor,
-                          ])),
-                      child: Center(
-                        child: Text(
-                          " No records Found..!",
-                          style: TextStyle(
-                            fontFamily: "FontRegular",
-                            color: CustomTheme.of(context).splashColor,
-                          ),
+                              ),
+                            ],
+                          );
+                        }),
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            // Add one stop for each color
+                            // Values should increase from 0.0 to 1.0
+                            stops: [
+                          0.1,
+                          0.5,
+                          0.9,
+                        ],
+                            colors: [
+                          CustomTheme.of(context).primaryColor,
+                          CustomTheme.of(context).backgroundColor,
+                          Theme.of(context).dialogBackgroundColor,
+                        ])),
+                    child: Center(
+                      child: Text(
+                        " No records Found..!",
+                        style: TextStyle(
+                          fontFamily: "FontRegular",
+                          color: CustomTheme.of(context).splashColor,
                         ),
                       ),
                     ),
-            ),
+                  ),
           )
         ],
       ),
@@ -383,6 +380,8 @@ class _SupportTicketListState extends State<SupportTicketList> {
                             InkWell(
                               onTap: (){
                                 Navigator.pop(context);
+                                subjectController.clear();
+                                messageController.clear();
                               },
                               child: Container(
                                 margin: EdgeInsets.only(right: 15.0),

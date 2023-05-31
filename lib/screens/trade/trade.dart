@@ -137,10 +137,6 @@ class _SellTradeScreenState extends State<TradeScreen>
     // TODO: implement initState
     super.initState();
     selectedTime = chartTime.first;
-    _animationController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 10000));
-    _colorTween = ColorTween(begin: Colors.grey.withOpacity(0.5), end: Colors.transparent)
-        .animate(_animationController!);
     selectedMarginType = marginType.first;
 
     _tabController = TabController(vsync: this, length: 2);
@@ -181,7 +177,7 @@ class _SellTradeScreenState extends State<TradeScreen>
 
   Future changeColors() async {
     while (true) {
-      await new Future.delayed(const Duration(seconds: 2), () {
+      await new Future.delayed(const Duration(seconds: 10), () {
         if (_animationController!.status == AnimationStatus.completed) {
           _animationController!.reverse();
         } else {
@@ -418,7 +414,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                       totalAmount = "0.0";
                                       spotOption = false;
                                       marginOption = true;
-
+                                      quickAmountController.clear();
                                       priceController.clear();
                                       amountController.clear();
                                       getCoinList();
@@ -4564,6 +4560,10 @@ class _SellTradeScreenState extends State<TradeScreen>
           _remainingTime = 10;
           quote = true;
           _startTimer();
+          _animationController = AnimationController(
+              vsync: this, duration: Duration(milliseconds: 10000));
+          _colorTween = ColorTween(begin: Colors.grey.withOpacity(0.5), end: Colors.transparent)
+              .animate(_animationController!);
           changeColors();
           loading = false;
         } else {
