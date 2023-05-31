@@ -1040,7 +1040,7 @@ class _HomeState extends State<Home>
                                               style:
                                                   CustomWidget(context: context)
                                                       .CustomSizedTextStyle(
-                                                          14.0,
+                                                          10.0,
                                                           Theme.of(context)
                                                               .hintColor,
                                                           FontWeight.w500,
