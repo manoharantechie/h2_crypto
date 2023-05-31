@@ -77,7 +77,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).accentColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
             child: SingleChildScrollView(
               child: Stack(
@@ -201,7 +201,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                           color: CustomTheme.of(context)
-                                              .buttonColor,
+                                              .shadowColor,
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(5.0))),
                                       padding: const EdgeInsets.only(
@@ -238,10 +238,10 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                           FontWeight.w500,
                                           'FontRegular'),
                                   iconColor: AppColors.borderColor,
-                                  buttonColor:
-                                      CustomTheme.of(context).buttonColor,
+                                  shadowColor:
+                                      CustomTheme.of(context).shadowColor,
                                   splashColor:
-                                      CustomTheme.of(context).buttonColor,
+                                      CustomTheme.of(context).shadowColor,
                                   onPressed: () {
                                     FocusScope.of(context).unfocus();
 

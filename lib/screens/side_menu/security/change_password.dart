@@ -86,7 +86,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   colors: [
                     CustomTheme.of(context).primaryColor,
                     CustomTheme.of(context).backgroundColor,
-                    CustomTheme.of(context).accentColor,
+                    CustomTheme.of(context).dialogBackgroundColor,
                   ])),
           child: Stack(
             children: [
@@ -395,7 +395,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                },
                                child: Container(
                                    decoration: BoxDecoration(
-                                     color:  CustomTheme.of(context).buttonColor,
+                                     color:  CustomTheme.of(context).shadowColor,
                                      borderRadius:
                                      BorderRadius.all(Radius.circular(5.0)),
                                    ),

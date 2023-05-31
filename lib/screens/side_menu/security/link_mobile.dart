@@ -125,7 +125,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).accentColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
             child: SingleChildScrollView(
               controller: controller,
@@ -369,7 +369,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color:
-                                            CustomTheme.of(context).buttonColor,
+                                            CustomTheme.of(context).shadowColor,
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5.0))),
                                     padding: const EdgeInsets.only(
@@ -422,7 +422,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                             //       style: CustomWidget(context: context)
                             //           .CustomSizedTextStyle(
                             //           14.0,
-                            //           Theme.of(context).buttonColor,
+                            //           Theme.of(context).shadowColor,
                             //           FontWeight.w500,
                             //           'FontRegular'),
                             //       textAlign: TextAlign.center,
@@ -534,10 +534,10 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                                         FontWeight.w500,
                                         'FontRegular'),
                                 iconColor: AppColors.borderColor,
-                                buttonColor:
-                                    CustomTheme.of(context).buttonColor,
+                                shadowColor:
+                                    CustomTheme.of(context).shadowColor,
                                 splashColor:
-                                    CustomTheme.of(context).buttonColor,
+                                    CustomTheme.of(context).shadowColor,
                                 onPressed: () {
                                   FocusScope.of(context).unfocus();
 

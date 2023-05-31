@@ -104,7 +104,7 @@ class _BankScreenState extends State<BankScreen> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).accentColor,
+              CustomTheme.of(context).dialogBackgroundColor,
             ])),
         child: Padding(
           padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
@@ -142,7 +142,7 @@ class _BankScreenState extends State<BankScreen> {
                             colors: [
                           CustomTheme.of(context).primaryColor,
                           CustomTheme.of(context).backgroundColor,
-                          CustomTheme.of(context).accentColor,
+                          CustomTheme.of(context).dialogBackgroundColor,
                         ])),
                     width: MediaQuery.of(context).size.width,
                     child: SingleChildScrollView(
@@ -226,7 +226,7 @@ class _BankScreenState extends State<BankScreen> {
                                       Container(
                                         height: 0.5,
                                         color:
-                                            CustomTheme.of(context).buttonColor,
+                                            CustomTheme.of(context).shadowColor,
                                       ),
                                       const SizedBox(
                                         height: 5.0,
@@ -401,7 +401,7 @@ class _BankScreenState extends State<BankScreen> {
                                       Container(
                                         height: 0.5,
                                         color:
-                                            CustomTheme.of(context).buttonColor,
+                                            CustomTheme.of(context).shadowColor,
                                       ),
                                       const SizedBox(
                                         height: 5.0,
@@ -585,20 +585,20 @@ class _BankScreenState extends State<BankScreen> {
                       style: CustomWidget(context: context)
                           .CustomSizedTextStyle(
                               16.0,
-                              Theme.of(context).buttonColor,
+                              Theme.of(context).shadowColor,
                               FontWeight.bold,
                               'FontRegular'),
                     ),
                     Container(
                         margin: EdgeInsets.only(top: 7.0, bottom: 10.0),
                         height: 2.0,
-                        color: CustomTheme.of(context).buttonColor),
+                        color: CustomTheme.of(context).shadowColor),
                     Text(
                       "Do you want to Delete bank details?",
                       style: CustomWidget(context: context)
                           .CustomSizedTextStyle(
                               16.0,
-                              Theme.of(context).buttonColor,
+                              Theme.of(context).shadowColor,
                               FontWeight.w500,
                               'FontRegular'),
                     ),
@@ -617,8 +617,8 @@ class _BankScreenState extends State<BankScreen> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
-                                      CustomTheme.of(context).buttonColor,
-                                      CustomTheme.of(context).buttonColor
+                                      CustomTheme.of(context).shadowColor,
+                                      CustomTheme.of(context).shadowColor
                                     ],
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,
@@ -658,8 +658,8 @@ class _BankScreenState extends State<BankScreen> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                     colors: [
-                                      CustomTheme.of(context).buttonColor,
-                                      CustomTheme.of(context).buttonColor,
+                                      CustomTheme.of(context).shadowColor,
+                                      CustomTheme.of(context).shadowColor,
                                     ],
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,

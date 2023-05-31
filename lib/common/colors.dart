@@ -8,7 +8,7 @@ class AppColors {
   static const Color whiteColor =  Color(0xFFFFFFFF);
   static const Color blackColor =  Color(0xFF000000);
   static const Color borderColor =  Color(0xFF3b6ce9);
-  static const Color buttonColor =  Color(0xFFfd0528);
+  static const Color shadowColor =  Color(0xFFfd0528);
   static const Color textColor =  Color(0xFF8B9CAE);
   static const Color hintColor =  Color(0xFFa6a79d);
   static const Color dashtextColor =  Color(0xFF404659);

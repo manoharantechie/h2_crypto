@@ -8,7 +8,7 @@ class ButtonCustom extends StatelessWidget {
   final String icon;
   final TextStyle textStyle;
   final Color iconColor;
-  final Color buttonColor;
+  final Color shadowColor;
   final Color splashColor;
   final double paddng;
 
@@ -22,7 +22,7 @@ class ButtonCustom extends StatelessWidget {
       required this.icon,
       required this.textStyle,
       required this.iconColor,
-      required this.buttonColor,
+      required this.shadowColor,
       required this.splashColor,
       required this.onPressed,
       required this.paddng})
@@ -34,7 +34,7 @@ class ButtonCustom extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(left: 5.0, right: 5.0),
       child: RawMaterialButton(
-        fillColor: buttonColor,
+        fillColor: shadowColor,
         onPressed: onPressed,
         splashColor: splashColor,
         child: Padding(

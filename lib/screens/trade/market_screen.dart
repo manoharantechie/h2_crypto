@@ -165,7 +165,7 @@ class _MarketSceen1State extends State<MarketSceen>
                   colors: [
                 CustomTheme.of(context).primaryColor,
                 CustomTheme.of(context).backgroundColor,
-                CustomTheme.of(context).accentColor,
+                CustomTheme.of(context).dialogBackgroundColor,
               ])),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.9,
@@ -202,7 +202,7 @@ class _MarketSceen1State extends State<MarketSceen>
               colors: [
             CustomTheme.of(context).primaryColor,
             CustomTheme.of(context).backgroundColor,
-            CustomTheme.of(context).accentColor,
+            CustomTheme.of(context).dialogBackgroundColor,
           ])),
       child: SingleChildScrollView(
         child: Padding(
@@ -251,8 +251,8 @@ class _MarketSceen1State extends State<MarketSceen>
                                           begin: Alignment.bottomLeft,
                                           end: Alignment.bottomRight,
                                           colors: [
-                                            CustomTheme.of(context).buttonColor,
-                                            CustomTheme.of(context).buttonColor,
+                                            CustomTheme.of(context).shadowColor,
+                                            CustomTheme.of(context).shadowColor,
                                           ],
                                         )
                                       : LinearGradient(

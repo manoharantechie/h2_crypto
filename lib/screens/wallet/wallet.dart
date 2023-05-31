@@ -53,7 +53,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).accentColor,
+              CustomTheme.of(context).dialogBackgroundColor,
             ])),
         child: loading
             ? CustomWidget(context: context).loadingIndicator(
@@ -284,7 +284,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             colors: [
                           CustomTheme.of(context).primaryColor,
                           CustomTheme.of(context).backgroundColor,
-                          CustomTheme.of(context).accentColor,
+                          CustomTheme.of(context).dialogBackgroundColor,
                         ])),
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.only(

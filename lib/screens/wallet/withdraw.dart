@@ -98,7 +98,7 @@ class _WithDrawState extends State<WithDraw> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).accentColor,
+              CustomTheme.of(context).dialogBackgroundColor,
             ])),
         child: Padding(
             padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
@@ -109,7 +109,7 @@ class _WithDrawState extends State<WithDraw> {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.19,
                   decoration: BoxDecoration(
-                    color: CustomTheme.of(context).buttonColor.withOpacity(0.2),
+                    color: CustomTheme.of(context).shadowColor.withOpacity(0.2),
                     borderRadius: BorderRadius.all(
                       Radius.circular(5.0),
                     ),
@@ -189,7 +189,7 @@ class _WithDrawState extends State<WithDraw> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5.0),
                                 color: CustomTheme.of(context)
-                                    .buttonColor
+                                    .shadowColor
                                     .withOpacity(0.2),
                               ),
                               child: Theme(
@@ -249,7 +249,7 @@ class _WithDrawState extends State<WithDraw> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5.0),
                               color:  CustomTheme.of(context)
-                                  .buttonColor
+                                  .shadowColor
                                   .withOpacity(0.2),
                             ),
                             child: Center(
@@ -306,7 +306,7 @@ class _WithDrawState extends State<WithDraw> {
                            height: 45.0,
                            decoration: BoxDecoration(
                                color: CustomTheme.of(context)
-                                   .buttonColor
+                                   .shadowColor
                                    .withOpacity(0.2),
                                borderRadius: BorderRadius.circular(5.0)),
                            padding: EdgeInsets.only(left: 10.0,right: 10.0),
@@ -336,7 +336,7 @@ class _WithDrawState extends State<WithDraw> {
                             padding: EdgeInsets.fromLTRB(10.0, 5, 10.0, 0),
                             decoration: BoxDecoration(
                               color: CustomTheme.of(context)
-                                  .buttonColor
+                                  .shadowColor
                                   .withOpacity(0.2),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(5.0),
@@ -400,7 +400,7 @@ class _WithDrawState extends State<WithDraw> {
                             padding: EdgeInsets.fromLTRB(10.0, 5, 10.0, 5),
                             decoration: BoxDecoration(
                               color: CustomTheme.of(context)
-                                  .buttonColor
+                                  .shadowColor
                                   .withOpacity(0.2),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(5.0),
@@ -604,9 +604,9 @@ class _WithDrawState extends State<WithDraw> {
                                       Theme.of(context).splashColor,
                                       FontWeight.w500,
                                       'FontRegular'),
-                              iconColor: CustomTheme.of(context).buttonColor,
-                              buttonColor: CustomTheme.of(context).buttonColor,
-                              splashColor: CustomTheme.of(context).buttonColor,
+                              iconColor: CustomTheme.of(context).shadowColor,
+                              shadowColor: CustomTheme.of(context).shadowColor,
+                              splashColor: CustomTheme.of(context).shadowColor,
                               onPressed: () {
                                 setState(() {
 
@@ -889,8 +889,7 @@ class _WithDrawState extends State<WithDraw> {
       if (loginData.status!) {
         setState(() {
           loading = false;
-          CustomWidget(context: context)
-              .custombar("H2Crypto", loginData.message.toString(), true);
+          CustomWidget(context: context).custombar("H2Crypto", loginData.message.toString(), true);
           amountController.clear();
           addressController.clear();
           getCoinList();
@@ -903,8 +902,7 @@ class _WithDrawState extends State<WithDraw> {
       } else {
         setState(() {
           loading = false;
-          CustomWidget(context: context)
-              .custombar("H2Crypto", loginData.message.toString(), false);
+          CustomWidget(context: context).custombar("H2Crypto", loginData.message.toString(), false);
         });
       }
     }).catchError((Object error) {

@@ -122,7 +122,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         .backgroundColor,
                     CustomTheme
                         .of(context)
-                        .accentColor,
+                        .dialogBackgroundColor,
                   ])),
           child: loading
               ? CustomWidget(context: context).loadingIndicator(
@@ -151,7 +151,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         borderRadius: BorderRadius.circular(5.0),
                         color: CustomTheme
                             .of(context)
-                            .buttonColor
+                            .shadowColor
                             .withOpacity(0.2),
                       ),
                       child: Theme(
@@ -274,7 +274,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         12.0,
                         Theme
                             .of(context)
-                            .buttonColor,
+                            .shadowColor,
                         FontWeight.w400,
                         'FontRegular'),
                   ),
@@ -292,7 +292,7 @@ class _DepositAddressState extends State<DepositScreen> {
           decoration: BoxDecoration(
             color: CustomTheme
                 .of(context)
-                .buttonColor
+                .shadowColor
                 .withOpacity(0.2),
             borderRadius: BorderRadius.all(
               Radius.circular(5.0),
@@ -333,7 +333,7 @@ class _DepositAddressState extends State<DepositScreen> {
                   Icons.copy,
                   color: Theme
                       .of(context)
-                      .buttonColor,
+                      .shadowColor,
                   size: 22.0,
                 ),
               )
@@ -410,7 +410,7 @@ class _DepositAddressState extends State<DepositScreen> {
             decoration: BoxDecoration(
               color: CustomTheme
                   .of(context)
-                  .buttonColor
+                  .shadowColor
                   .withOpacity(0.2),
               borderRadius: BorderRadius.all(
                 Radius.circular(5.0),
@@ -440,7 +440,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                 12.0,
                                 Theme
                                     .of(context)
-                                    .buttonColor,
+                                    .shadowColor,
                                 FontWeight.w400,
                                 'FontRegular')),
                       ],
@@ -458,7 +458,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         Icons.copy,
                         color: Theme
                             .of(context)
-                            .buttonColor,
+                            .shadowColor,
                         size: 15.0,
                       ),
                     )
@@ -487,7 +487,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                 12.0,
                                 Theme
                                     .of(context)
-                                    .buttonColor,
+                                    .shadowColor,
                                 FontWeight.w400,
                                 'FontRegular')),
                       ],
@@ -506,7 +506,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         Icons.copy,
                         color: Theme
                             .of(context)
-                            .buttonColor,
+                            .shadowColor,
                         size: 15.0,
                       ),
                     )
@@ -535,7 +535,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                 12.0,
                                 Theme
                                     .of(context)
-                                    .buttonColor,
+                                    .shadowColor,
                                 FontWeight.w400,
                                 'FontRegular')),
                       ],
@@ -555,7 +555,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         Icons.copy,
                         color: Theme
                             .of(context)
-                            .buttonColor,
+                            .shadowColor,
                         size: 15.0,
                       ),
                     )
@@ -584,7 +584,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                 12.0,
                                 Theme
                                     .of(context)
-                                    .buttonColor,
+                                    .shadowColor,
                                 FontWeight.w400,
                                 'FontRegular')),
                       ],
@@ -604,7 +604,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         Icons.copy,
                         color: Theme
                             .of(context)
-                            .buttonColor,
+                            .shadowColor,
                         size: 15.0,
                       ),
                     )
@@ -634,7 +634,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                 12.0,
                                 Theme
                                     .of(context)
-                                    .buttonColor,
+                                    .shadowColor,
                                 FontWeight.w400,
                                 'FontRegular')),
                       ],
@@ -654,7 +654,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         Icons.copy,
                         color: Theme
                             .of(context)
-                            .buttonColor,
+                            .shadowColor,
                         size: 15.0,
                       ),
                     )
@@ -683,7 +683,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                 12.0,
                                 Theme
                                     .of(context)
-                                    .buttonColor,
+                                    .shadowColor,
                                 FontWeight.w400,
                                 'FontRegular')),
                       ],
@@ -703,7 +703,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         Icons.copy,
                         color: Theme
                             .of(context)
-                            .buttonColor,
+                            .shadowColor,
                         size: 15.0,
                       ),
                     )
@@ -732,7 +732,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                 12.0,
                                 Theme
                                     .of(context)
-                                    .buttonColor,
+                                    .shadowColor,
                                 FontWeight.w400,
                                 'FontRegular')),
                       ],
@@ -752,7 +752,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         Icons.copy,
                         color: Theme
                             .of(context)
-                            .buttonColor,
+                            .shadowColor,
                         size: 15.0,
                       ),
                     )
@@ -781,7 +781,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                 12.0,
                                 Theme
                                     .of(context)
-                                    .buttonColor,
+                                    .shadowColor,
                                 FontWeight.w400,
                                 'FontRegular')),
                       ],
@@ -801,7 +801,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         Icons.copy,
                         color: Theme
                             .of(context)
-                            .buttonColor,
+                            .shadowColor,
                         size: 15.0,
                       ),
                     )

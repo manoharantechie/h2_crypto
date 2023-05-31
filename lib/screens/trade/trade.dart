@@ -368,7 +368,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).accentColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
             child: Stack(
               children: [
@@ -412,7 +412,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                         border: Border.all(
                                             color: spotOption
                                                 ? CustomTheme.of(context)
-                                                    .buttonColor
+                                                    .shadowColor
                                                 : CustomTheme.of(context)
                                                     .splashColor
                                                     .withOpacity(0.5),
@@ -469,7 +469,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                         border: Border.all(
                                             color: marginOption
                                                 ? CustomTheme.of(context)
-                                                    .buttonColor
+                                                    .shadowColor
                                                 : CustomTheme.of(context)
                                                     .splashColor
                                                     .withOpacity(0.5),
@@ -883,7 +883,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                 .primaryColor,
                                             CustomTheme.of(context)
                                                 .backgroundColor,
-                                            CustomTheme.of(context).accentColor,
+                                            CustomTheme.of(context).dialogBackgroundColor,
                                           ])),
                                       child: Center(
                                         child: Text(
@@ -983,7 +983,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                 .primaryColor,
                                             CustomTheme.of(context)
                                                 .backgroundColor,
-                                            CustomTheme.of(context).accentColor,
+                                            CustomTheme.of(context).dialogBackgroundColor,
                                           ])),
                                       child: Center(
                                         child: Text(
@@ -1015,7 +1015,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                             colors: [
                           CustomTheme.of(context).primaryColor,
                           CustomTheme.of(context).backgroundColor,
-                          CustomTheme.of(context).accentColor,
+                          CustomTheme.of(context).dialogBackgroundColor,
                         ])),
                     child: Center(
                       child: Text(
@@ -1246,7 +1246,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                               .primaryColor,
                           CustomTheme.of(context)
                               .backgroundColor,
-                          CustomTheme.of(context).accentColor,
+                          CustomTheme.of(context).dialogBackgroundColor,
                         ])),
                 child: Center(
                   child: Text(
@@ -1346,7 +1346,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                 .primaryColor,
                             CustomTheme.of(context)
                                 .backgroundColor,
-                            CustomTheme.of(context).accentColor,
+                            CustomTheme.of(context).dialogBackgroundColor,
                           ])),
                   child: Center(
                     child: Text(
@@ -1378,7 +1378,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                   colors: [
                     CustomTheme.of(context).primaryColor,
                     CustomTheme.of(context).backgroundColor,
-                    CustomTheme.of(context).accentColor,
+                    CustomTheme.of(context).dialogBackgroundColor,
                   ])),
           child: Center(
             child: Text(

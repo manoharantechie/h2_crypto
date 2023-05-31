@@ -126,7 +126,7 @@ class _KYCPageState extends State<KYCPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: CustomTheme.of(context).primaryColor,
-            accentColor: CustomTheme.of(context).primaryColor,
+            dialogBackgroundColor: CustomTheme.of(context).primaryColor,
             colorScheme: ColorScheme.light(
               primary: CustomTheme.of(context).primaryColor,
             ),
@@ -159,7 +159,7 @@ class _KYCPageState extends State<KYCPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: CustomTheme.of(context).primaryColor,
-            accentColor: CustomTheme.of(context).primaryColor,
+            dialogBackgroundColor: CustomTheme.of(context).primaryColor,
             colorScheme: ColorScheme.light(
               primary: CustomTheme.of(context).primaryColor,
             ),
@@ -226,7 +226,7 @@ class _KYCPageState extends State<KYCPage> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).accentColor,
+              CustomTheme.of(context).dialogBackgroundColor,
             ])),
         child: Stack(
           children: [
@@ -1394,9 +1394,9 @@ class _KYCPageState extends State<KYCPage> {
                                 Theme.of(context).splashColor,
                                 FontWeight.w500,
                                 'FontRegular'),
-                            iconColor: CustomTheme.of(context).buttonColor,
-                            buttonColor: CustomTheme.of(context).buttonColor,
-                            splashColor: CustomTheme.of(context).buttonColor,
+                            iconColor: CustomTheme.of(context).shadowColor,
+                            shadowColor: CustomTheme.of(context).shadowColor,
+                            splashColor: CustomTheme.of(context).shadowColor,
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 if (AadharImg == "img64") {
@@ -1513,7 +1513,7 @@ class _KYCPageState extends State<KYCPage> {
                                       FontWeight.w500,
                                       'FontRegular'),
                               iconColor: AppColors.appColor,
-                              buttonColor: AppColors.appColor,
+                              shadowColor: AppColors.appColor,
                               splashColor: AppColors.appColor,
                               onPressed: () {
                                 setState(() {
@@ -1540,7 +1540,7 @@ class _KYCPageState extends State<KYCPage> {
                                       FontWeight.w500,
                                       'FontRegular'),
                               iconColor: AppColors.appColor,
-                              buttonColor: AppColors.appColor,
+                              shadowColor: AppColors.appColor,
                               splashColor: AppColors.appColor,
                               onPressed: () {
                                 setState(() {
