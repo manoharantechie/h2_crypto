@@ -9,6 +9,7 @@ import 'package:h2_crypto/data/api_utils.dart';
 import 'package:h2_crypto/data/crypt_model/user_details_model.dart';
 import 'package:h2_crypto/screens/basic/login.dart';
 import 'package:h2_crypto/screens/bank/bank_screen.dart';
+import 'package:h2_crypto/screens/side_menu/others/support_list.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -369,35 +370,44 @@ class _SideMenuState extends State<SideMenu> {
                         const SizedBox(
                           height: 20.0,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/sidemenu/support.svg',
-                                  height: 20.0,
-                                ),
-                                const SizedBox(
-                                  width: 10.0,
-                                ),
-                                Text(
-                                  AppLocalizations.instance.text("loc_cu_support"),
-                                  style: CustomWidget(context: context)
-                                      .CustomSizedTextStyle(
-                                      16.0,
-                                      Theme.of(context).splashColor,
-                                      FontWeight.normal,
-                                      'FontRegular'),
-                                ),
-                              ],
-                            ),
-                            SvgPicture.asset(
-                              'assets/sidemenu/arrow.svg',
-                              color: CustomTheme.of(context).splashColor,
-                              height: 20.0,
-                            ),
-                          ],
+                        InkWell(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SupportTicketList(),
+                                ));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/sidemenu/support.svg',
+                                    height: 20.0,
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    AppLocalizations.instance.text("loc_cu_support"),
+                                    style: CustomWidget(context: context)
+                                        .CustomSizedTextStyle(
+                                        16.0,
+                                        Theme.of(context).splashColor,
+                                        FontWeight.normal,
+                                        'FontRegular'),
+                                  ),
+                                ],
+                              ),
+                              SvgPicture.asset(
+                                'assets/sidemenu/arrow.svg',
+                                color: CustomTheme.of(context).splashColor,
+                                height: 20.0,
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(
                           height: 20.0,
