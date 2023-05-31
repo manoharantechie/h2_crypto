@@ -170,7 +170,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   var dt = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
 
                   var dfinals = dt.toUtc().toString();
-                  final DateTime timead = DateTime.parse(dfinals);
+                   DateTime timead = DateTime.parse(dfinals);
                   dates = timeago.format(timead);
                 }
 
