@@ -161,10 +161,15 @@ class _SupportTicketListState extends State<SupportTicketList> {
                           return Column(
                             children: [
                               InkWell(
-                                onTap:(){
-                                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChatScreen(ticket_id:ticketList[index].ticketId.toString(),)));
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => ChatScreen(
+                                            ticket_id: ticketList[index]
+                                                .ticketId
+                                                .toString(),
+                                          )));
                                 },
-                                 child: Container(
+                                child: Container(
                                   margin: EdgeInsets.only(
                                       left: 10.0, right: 10.0, top: 5.0),
                                   width: MediaQuery.of(context).size.width,
@@ -329,23 +334,24 @@ class _SupportTicketListState extends State<SupportTicketList> {
             return Container(
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0)),
                   gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       // Add one stop for each color
                       // Values should increase from 0.0 to 1.0
                       stops: [
-                    0.1,
-                    0.5,
-                    0.9,
-                  ],
+                        0.1,
+                        0.5,
+                        0.9,
+                      ],
                       colors: [
-                    CustomTheme.of(context).primaryColor,
-                    CustomTheme.of(context).backgroundColor,
-                    Theme.of(context).dialogBackgroundColor,
-                  ])),
+                        CustomTheme.of(context).primaryColor,
+                        CustomTheme.of(context).backgroundColor,
+                        Theme.of(context).dialogBackgroundColor,
+                      ])),
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
@@ -378,7 +384,7 @@ class _SupportTicketListState extends State<SupportTicketList> {
                               textAlign: TextAlign.center,
                             ),
                             InkWell(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.pop(context);
                                 subjectController.clear();
                                 messageController.clear();
@@ -391,7 +397,10 @@ class _SupportTicketListState extends State<SupportTicketList> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: Icon(Icons.close,color: CustomTheme.of(context).splashColor,size: 15.0),
+                                  child: Icon(Icons.close,
+                                      color:
+                                          CustomTheme.of(context).splashColor,
+                                      size: 15.0),
                                 ),
                               ),
                             )
@@ -425,8 +434,10 @@ class _SupportTicketListState extends State<SupportTicketList> {
                           //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@#0-9!_.$]')),
                           // ],
                           textStyle: CustomWidget(context: context)
-                              .CustomTextStyle(CustomTheme.of(context).splashColor,
-                                  FontWeight.w400, 'FontRegular'),
+                              .CustomTextStyle(
+                                  CustomTheme.of(context).splashColor,
+                                  FontWeight.w400,
+                                  'FontRegular'),
                           radius: 5.0,
                           focusNode: subjectFocus,
                           controller: subjectController,
@@ -477,50 +488,64 @@ class _SupportTicketListState extends State<SupportTicketList> {
                           decoration: InputDecoration(
                             hintStyle: CustomWidget(context: context)
                                 .CustomTextStyle(
-                                Theme.of(context)
-                                    .splashColor
-                                    .withOpacity(0.5),
-                                FontWeight.w300,
-                                'FontRegular'),
+                                    Theme.of(context)
+                                        .splashColor
+                                        .withOpacity(0.5),
+                                    FontWeight.w300,
+                                    'FontRegular'),
                             border: OutlineInputBorder(
-                              borderRadius:  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: CustomTheme.of(context)
-                                  .splashColor
-                                  .withOpacity(0.5), width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(
+                                  color: CustomTheme.of(context)
+                                      .splashColor
+                                      .withOpacity(0.5),
+                                  width: 1.0),
                             ),
-                            disabledBorder:  OutlineInputBorder(
-                              borderRadius:  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: CustomTheme.of(context)
-                                  .splashColor
-                                  .withOpacity(0.5), width: 1.0),
+                            disabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(
+                                  color: CustomTheme.of(context)
+                                      .splashColor
+                                      .withOpacity(0.5),
+                                  width: 1.0),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius:  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: CustomTheme.of(context)
-                                  .splashColor
-                                  .withOpacity(0.5), width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(
+                                  color: CustomTheme.of(context)
+                                      .splashColor
+                                      .withOpacity(0.5),
+                                  width: 1.0),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius:  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide:
-                              BorderSide(color: CustomTheme.of(context)
-                                  .splashColor
-                                  .withOpacity(0.5), width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(
+                                  color: CustomTheme.of(context)
+                                      .splashColor
+                                      .withOpacity(0.5),
+                                  width: 1.0),
                             ),
-                            errorBorder:  OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.red, width: 1.0),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 1.0),
                             ),
                             fillColor: CustomTheme.of(context)
                                 .backgroundColor
                                 .withOpacity(0.5),
                             hintText:
-                            AppLocalizations.instance.text("loc_message"),
+                                AppLocalizations.instance.text("loc_message"),
                             counterText: "",
                           ),
-                          style: CustomWidget(context: context)
-                              .CustomTextStyle(Theme.of(context).splashColor,
-                                  FontWeight.w400, 'FontRegular'),
+                          style: CustomWidget(context: context).CustomTextStyle(
+                              Theme.of(context).splashColor,
+                              FontWeight.w400,
+                              'FontRegular'),
                           focusNode: messageFocus,
                           controller: messageController,
                           enabled: true,
