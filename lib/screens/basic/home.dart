@@ -49,12 +49,8 @@ class _HomeState extends State<Home>
   bool unSelected = true;
 
   late Widget screen = Container();
-  late Widget _page2;
-  late Widget _page3;
   bool loading = false;
-  late Widget _page4;
-  late Widget _page5;
-  late TabController _tabController;
+
   List<Widget> bottomPage = [];
   bool dashView = false;
   int slideIndex = 0;
