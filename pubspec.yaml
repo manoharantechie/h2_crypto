@@ -45,6 +45,7 @@ dependencies:
   socket_io_client: 2.0.0-beta.4-nullsafety.0
   modal_bottom_sheet: ^3.0.0-pre
   k_chart:
+  intl:
   flutter_html: ^3.0.0-alpha.5
   timeago: ^3.3.0
   image_picker:

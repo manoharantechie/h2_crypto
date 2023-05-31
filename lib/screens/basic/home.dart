@@ -16,6 +16,7 @@ import 'package:h2_crypto/data/crypt_model/user_wallet_balance_model.dart';
 import 'package:h2_crypto/screens/basic/side_menu.dart';
 
 import 'package:h2_crypto/screens/side_menu/others/notify_screen.dart';
+import 'package:h2_crypto/screens/side_menu/others/support_list.dart';
 import 'package:h2_crypto/screens/trade/market_screen.dart';
 import 'package:h2_crypto/screens/trade/trade.dart';
 import 'package:h2_crypto/screens/wallet/transaction_history.dart';
@@ -481,7 +482,7 @@ class _HomeState extends State<Home>
                     Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: indicators(bannerList.length, slideIndex)),
-                    const SizedBox(
+                    /*const SizedBox(
                       height: 10.0,
                     ),
                     Row(
@@ -508,7 +509,7 @@ class _HomeState extends State<Home>
                           'assets/others/print.svg',
                         ),
                       ],
-                    ),
+                    ),*/
                     const SizedBox(
                       height: 10.0,
                     ),
@@ -578,7 +579,7 @@ class _HomeState extends State<Home>
                                                   style: CustomWidget(
                                                           context: context)
                                                       .CustomSizedTextStyle(
-                                                          14.0,
+                                                          12.0,
                                                           double.parse(data
                                                                       .toString()) >=
                                                                   0
@@ -681,6 +682,12 @@ class _HomeState extends State<Home>
                                 onSelectItem(2);
                               } else if (index == 2) {
                                 onSelectItem(1);
+                              }else{
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SupportTicketList(),
+                                    ));
                               }
                             },
                             child: Container(
@@ -1029,7 +1036,7 @@ class _HomeState extends State<Home>
                                                 top: 8.0,
                                                 bottom: 8.0),
                                             child: Text(
-                                              data.toStringAsFixed(2),
+                                              data.toStringAsFixed(2)+"%",
                                               style:
                                                   CustomWidget(context: context)
                                                       .CustomSizedTextStyle(

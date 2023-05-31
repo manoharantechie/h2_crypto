@@ -1,4 +1,6 @@
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:h2_crypto/data/api_utils.dart';
 import 'package:h2_crypto/data/crypt_model/bank_model.dart';
@@ -34,6 +36,14 @@ class _WithDrawState extends State<WithDraw> {
   TextEditingController addressController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   FocusNode searchFocus = FocusNode();
+  ScanResult? scanResult;
+  var _autoEnableFlash = false;
+  var _selectedCamera = -1;
+  var _useAutoFocus = true;
+  var _aspectTolerance = 0.00;
+  final _flashOnController = TextEditingController(text: 'Flash on');
+  final _flashOffController = TextEditingController(text: 'Flash off');
+  final _cancelController = TextEditingController(text: 'Cancel');
   ScrollController controller = ScrollController();
 
   int indexVal = 0;
@@ -98,14 +108,14 @@ class _WithDrawState extends State<WithDraw> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).dialogBackgroundColor,
+              Theme.of(context).dialogBackgroundColor,
             ])),
         child: Padding(
             padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
             child: Stack(
               children: [
                 Container(
-                  padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                  padding: EdgeInsets.only(top: 6.0, bottom: 15.0),
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.19,
                   decoration: BoxDecoration(
@@ -363,29 +373,15 @@ class _WithDrawState extends State<WithDraw> {
                                 SizedBox(
                                   height: 10.0,
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                                      child: SvgPicture.asset(
-                                        'assets/images/Retina_scan.svg',
-                                        height: 10.0,
-                                        width: 10.0,
-                                        allowDrawingOutsideViewBox: true,
-                                        color:
-                                            CustomTheme.of(context).hintColor,
-                                      ),
-                                    ),
-                                    SvgPicture.asset(
-                                      'assets/images/location.svg',
-                                      height: 10.0,
-                                      width: 10.0,
-                                      allowDrawingOutsideViewBox: true,
-                                      color: CustomTheme.of(context).hintColor,
-                                    ),
-                                  ],
+                                InkWell(
+                                  onTap: (){
+                                    _scan();
+                                  },
+                                  child: Icon(
+                                    Icons.qr_code_scanner,
+                                    color: CustomTheme.of(context).hintColor,
+                                    size: 25.0,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 10.0,
@@ -864,6 +860,46 @@ class _WithDrawState extends State<WithDraw> {
         });
   }
 
+  Future<void> _scan() async {
+    try {
+      final result = await BarcodeScanner.scan(
+        options: ScanOptions(
+          strings: {
+            'cancel': _cancelController.text,
+            'flash_on': _flashOnController.text,
+            'flash_off': _flashOffController.text,
+          },
+          useCamera: _selectedCamera,
+          autoEnableFlash: _autoEnableFlash,
+          android: AndroidOptions(
+            aspectTolerance: _aspectTolerance,
+            useAutoFocus: _useAutoFocus,
+          ),
+        ),
+      );
+      setState(() {
+        scanResult = result;
+        var str = scanResult!.rawContent.toString();
+        if(str.contains(":")){
+          var parts = str.split(':');
+          addressController.text=parts[1].trim().toString();
+        }else{
+          addressController.text=scanResult!.rawContent.toString();
+        }
+
+      });
+    } on PlatformException catch (e) {
+      setState(() {
+        scanResult = ScanResult(
+          type: ResultType.Error,
+          rawContent: e.code == BarcodeScanner.cameraAccessDenied
+              ? 'The user did not grant the camera permission!'
+              : 'Unknown error: $e',
+        );
+      });
+    }
+  }
+
   getBankList() {
     apiUtils.getBankDetails().then((BankListModel loginData) {
       if (loginData.success!) {
@@ -889,7 +925,8 @@ class _WithDrawState extends State<WithDraw> {
       if (loginData.status!) {
         setState(() {
           loading = false;
-          CustomWidget(context: context).custombar("H2Crypto", loginData.message.toString(), true);
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), true);
           amountController.clear();
           addressController.clear();
           getCoinList();
@@ -902,7 +939,8 @@ class _WithDrawState extends State<WithDraw> {
       } else {
         setState(() {
           loading = false;
-          CustomWidget(context: context).custombar("H2Crypto", loginData.message.toString(), false);
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), false);
         });
       }
     }).catchError((Object error) {

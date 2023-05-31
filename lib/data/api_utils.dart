@@ -8,6 +8,7 @@ import 'package:h2_crypto/data/crypt_model/country_code.dart';
 import 'package:h2_crypto/data/crypt_model/history_model.dart';
 import 'package:h2_crypto/data/crypt_model/individual_user_details.dart';
 import 'package:h2_crypto/data/crypt_model/login_model.dart';
+import 'package:h2_crypto/data/crypt_model/message_data.dart';
 import 'package:h2_crypto/data/crypt_model/quote_details_model.dart';
 import 'package:h2_crypto/data/crypt_model/support_ticket_model.dart';
 import 'package:h2_crypto/data/crypt_model/user_details_model.dart';
@@ -60,7 +61,10 @@ class APIUtils {
   static const String bankListUrl = 'api/list-bank';
   static const String addBankUrl = 'api/add-bank';
   static const String coinWithUrl = '/api/withdraw-asset';
+  static const String createTicketUrl = '/api/create-ticket';
   static const String supportListUrl = '/api/ticket-view';
+  static const String messageListUrl = '/api/get-message';
+  static const String sendNewMessageUrl = '/api/send-message';
 
   Future<CommonModel> doVerifyRegister(
       String first_name,
@@ -582,6 +586,27 @@ class APIUtils {
     return CommonModel.fromJson(json.decode(response.body));
   }
 
+  Future<CommonModel> doCreateTicket(
+    String subject,
+    String message,
+  ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var bankData = {
+      "subject": subject,
+      "message": message,
+    };
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + createTicketUrl,
+        ),
+        body: bankData,
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
   Future<SupportTicketListData> fetchSupportTicketList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
@@ -595,4 +620,46 @@ class APIUtils {
         });
     return SupportTicketListData.fromJson(json.decode(response.body));
   }
+
+  Future<GetMessageData> fetchMessageList(
+      String ticket_id,
+      ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var bankData = {
+      "ticket_id": ticket_id,
+    };
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + messageListUrl,
+        ),
+        body: bankData,
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return GetMessageData.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> doSendMessage(
+      String ticket_id,
+      String message,
+      ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var bankData = {
+      "ticket_id": ticket_id,
+      "message": message,
+    };
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + sendNewMessageUrl,
+        ),
+        body: bankData,
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+
 }

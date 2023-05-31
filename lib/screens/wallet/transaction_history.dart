@@ -70,7 +70,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).dialogBackgroundColor,
+              Theme.of(context).dialogBackgroundColor,
             ])),
         child: Stack(
           children: [
@@ -156,7 +156,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ),
                 transHistory.length > 0
                     ?     Container(
-                  height: MediaQuery.of(context).size.height * 0.76,
+                  height: MediaQuery.of(context).size.height * 0.74,
                   child: ListView.builder(
                       itemCount: transHistory.length,
                       shrinkWrap: true,
@@ -447,7 +447,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                           colors: [
                             CustomTheme.of(context).primaryColor,
                             CustomTheme.of(context).backgroundColor,
-                            CustomTheme.of(context).dialogBackgroundColor,
+                            Theme.of(context).dialogBackgroundColor,
                           ])),
                   child: Center(
                     child: Text(

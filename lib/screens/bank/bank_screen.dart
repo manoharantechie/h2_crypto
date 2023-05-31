@@ -80,7 +80,7 @@ class _BankScreenState extends State<BankScreen> {
                 ),
               ),
             ),
-          )
+          ),
         ],
         title: Text(
           "Bank Details",

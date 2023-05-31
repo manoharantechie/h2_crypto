@@ -52,8 +52,8 @@ class _SellTradeScreenState extends State<TradeScreen>
   bool loanErr = false;
 
   late TabController _tabController, tradeTabController;
-  bool spotOption = true;
-  bool marginOption = false;
+  bool spotOption = false;
+  bool marginOption = true;
 
   TextEditingController coinController = TextEditingController();
   TextEditingController priceController = TextEditingController();
@@ -83,6 +83,7 @@ class _SellTradeScreenState extends State<TradeScreen>
 
   String balance = "0.00";
   String escrow = "0.00";
+  String val = "";
   String totalBalance = "0.00";
 
   String totalAmount = "0.00";
@@ -128,13 +129,18 @@ class _SellTradeScreenState extends State<TradeScreen>
   int _remainingTime = 10; //initial time in seconds
   late Timer _timer;
   bool quote = false;
+  AnimationController? _animationController;
+  Animation? _colorTween;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     selectedTime = chartTime.first;
-
+    _animationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 10000));
+    _colorTween = ColorTween(begin: Colors.grey.withOpacity(0.5), end: Colors.transparent)
+        .animate(_animationController!);
     selectedMarginType = marginType.first;
 
     _tabController = TabController(vsync: this, length: 2);
@@ -173,6 +179,18 @@ class _SellTradeScreenState extends State<TradeScreen>
     });
   }
 
+  Future changeColors() async {
+    while (true) {
+      await new Future.delayed(const Duration(seconds: 2), () {
+        if (_animationController!.status == AnimationStatus.completed) {
+          _animationController!.reverse();
+        } else {
+          _animationController!.forward();
+        }
+      });
+    }
+  }
+
   socketConnection() {}
 
   socketData() {
@@ -200,7 +218,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                       "ticker.sfox." + QuickselectPair!.symbol!.toLowerCase()) {
                 if (marginOption) {
                   var m = decode["payload"]["last"];
-                  QuicklivePrice = m.toString();
+                  /*QuicklivePrice = m.toString();*/
                 } else {
                   var m = decode["payload"]["last"];
                   livePrice = m.toString();
@@ -368,7 +386,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).dialogBackgroundColor,
+                  Theme.of(context).dialogBackgroundColor,
                 ])),
             child: Stack(
               children: [
@@ -388,6 +406,63 @@ class _SellTradeScreenState extends State<TradeScreen>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Flexible(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      buySell = true;
+                                      selectPair = tradePair[0];
+                                      openOrders = [];
+                                      _currentSliderValue = 0;
+                                      tleverageVal = "1";
+                                      totalAmount = "0.0";
+                                      spotOption = false;
+                                      marginOption = true;
+
+                                      priceController.clear();
+                                      amountController.clear();
+                                      getCoinList();
+                                      enableTrade = false;
+                                      selectedTime = chartTime.first;
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: marginOption
+                                                ? CustomTheme.of(context)
+                                                .shadowColor
+                                                : CustomTheme.of(context)
+                                                .splashColor
+                                                .withOpacity(0.5),
+                                            width: marginOption ? 1.5 : 0.5)),
+                                    child: Center(
+                                        child: Padding(
+                                          padding: marginOption
+                                              ? EdgeInsets.only(
+                                              top: 6.0, bottom: 6.0)
+                                              : EdgeInsets.only(
+                                              top: 7.0, bottom: 7.0),
+                                          child: Text(
+                                            AppLocalizations.instance
+                                                .text("loc_quick_buy_sell"),
+                                            style: CustomWidget(context: context)
+                                                .CustomSizedTextStyle(
+                                                13.0,
+                                                marginOption
+                                                    ? CustomTheme.of(context)
+                                                    .splashColor
+                                                    : CustomTheme.of(context)
+                                                    .hintColor
+                                                    .withOpacity(0.5),
+                                                FontWeight.w500,
+                                                'FontRegular'),
+                                          ),
+                                        )),
+                                  ),
+                                ),
+                                flex: 1,
+                              ),
                               Flexible(
                                 child: GestureDetector(
                                   onTap: () {
@@ -444,63 +519,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                 ),
                                 flex: 1,
                               ),
-                              Flexible(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      buySell = true;
-                                      selectPair = tradePair[0];
-                                      openOrders = [];
-                                      _currentSliderValue = 0;
-                                      tleverageVal = "1";
-                                      totalAmount = "0.0";
-                                      spotOption = false;
-                                      marginOption = true;
 
-                                      priceController.clear();
-                                      amountController.clear();
-                                      getCoinList();
-                                      enableTrade = false;
-                                      selectedTime = chartTime.first;
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: marginOption
-                                                ? CustomTheme.of(context)
-                                                    .shadowColor
-                                                : CustomTheme.of(context)
-                                                    .splashColor
-                                                    .withOpacity(0.5),
-                                            width: marginOption ? 1.5 : 0.5)),
-                                    child: Center(
-                                        child: Padding(
-                                      padding: marginOption
-                                          ? EdgeInsets.only(
-                                              top: 6.0, bottom: 6.0)
-                                          : EdgeInsets.only(
-                                              top: 7.0, bottom: 7.0),
-                                      child: Text(
-                                        AppLocalizations.instance
-                                            .text("loc_quick_buy_sell"),
-                                        style: CustomWidget(context: context)
-                                            .CustomSizedTextStyle(
-                                                13.0,
-                                                marginOption
-                                                    ? CustomTheme.of(context)
-                                                        .splashColor
-                                                    : CustomTheme.of(context)
-                                                        .hintColor
-                                                        .withOpacity(0.5),
-                                                FontWeight.w500,
-                                                'FontRegular'),
-                                      ),
-                                    )),
-                                  ),
-                                ),
-                                flex: 1,
-                              ),
                             ]),
                       ),
 
@@ -638,63 +657,143 @@ class _SellTradeScreenState extends State<TradeScreen>
           const SizedBox(
             height: 15.0,
           ),
-          Column(
+          AnimatedBuilder(
+            animation: _colorTween!,
+            builder: (context, child) => Container(
+              color: quote?_colorTween!.value:Colors.transparent,
+              child: Column(
+                children: [
+                  quote
+                      ?marginOption ?Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Total "+ (buySell ?  firstCoin:secondCoin),
+                        style: CustomWidget(context: context).CustomSizedTextStyle(
+                            12.0,
+                            Theme.of(context).splashColor,
+                            FontWeight.bold,
+                            'FontRegular'),
+                      ),
+                      Text(
+                        quickAmountController.text.isEmpty?"0.00":quickAmountController.text,
+                        style: CustomWidget(context: context).CustomSizedTextStyle(
+                            11.5,
+                            Theme.of(context).splashColor,
+                            FontWeight.w500,
+                            'FontRegular'),
+                      ),
+                    ],
+                  ):Container():Container(),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  marginOption
+                      ?quote?Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Live Price",
+                        style: CustomWidget(context: context).CustomSizedTextStyle(
+                            12.0,
+                            Theme.of(context).splashColor,
+                            FontWeight.bold,
+                            'FontRegular'),
+                      ),
+                      Text(
+                         QuicklivePrice +
+                                " " +
+                                (buySell ? secondCoin : firstCoin),
+                        style: CustomWidget(context: context).CustomSizedTextStyle(
+                            11.5,
+                            Theme.of(context).splashColor,
+                            FontWeight.w500,
+                            'FontRegular'),
+                      ),
+                    ],
+                  ):Container():Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Live Price",
+                        style: CustomWidget(context: context).CustomSizedTextStyle(
+                            12.0,
+                            Theme.of(context).splashColor,
+                            FontWeight.bold,
+                            'FontRegular'),
+                      ),
+                      Text(
+                         livePrice + " " + (buySell ? secondCoin : firstCoin),
+                        style: CustomWidget(context: context).CustomSizedTextStyle(
+                            11.5,
+                            Theme.of(context).splashColor,
+                            FontWeight.w500,
+                            'FontRegular'),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  quote
+                      ?marginOption ?Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Total "+ (buySell ?  secondCoin:firstCoin),
+                        style: CustomWidget(context: context).CustomSizedTextStyle(
+                            12.0,
+                            Theme.of(context).splashColor,
+                            FontWeight.bold,
+                            'FontRegular'),
+                      ),
+                      Text(
+                        totalAmount,
+                        style: CustomWidget(context: context).CustomSizedTextStyle(
+                            11.5,
+                            Theme.of(context).splashColor,
+                            FontWeight.w500,
+                            'FontRegular'),
+                      ),
+                    ],
+                  ):Container():Container(),
+
+
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 5.0,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Live Price",
-                    style: CustomWidget(context: context).CustomSizedTextStyle(
-                        12.0,
-                        Theme.of(context).splashColor,
-                        FontWeight.bold,
-                        'FontRegular'),
-                  ),
-                  Text(
-                    marginOption
-                        ? QuicklivePrice +
-                            " " +
-                            (buySell ? secondCoin : firstCoin)
-                        : livePrice + " " + (buySell ? secondCoin : firstCoin),
-                    style: CustomWidget(context: context).CustomSizedTextStyle(
-                        11.5,
-                        Theme.of(context).splashColor,
-                        FontWeight.w500,
-                        'FontRegular'),
-                  ),
-                ],
+              Text(
+                "Available",
+                style: CustomWidget(context: context).CustomSizedTextStyle(
+                    12.0,
+                    Theme.of(context).hintColor.withOpacity(0.5),
+                    FontWeight.w500,
+                    'FontRegular'),
               ),
-              SizedBox(
-                height: 5.0,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Available",
-                    style: CustomWidget(context: context).CustomSizedTextStyle(
-                        12.0,
-                        Theme.of(context).hintColor.withOpacity(0.5),
-                        FontWeight.w500,
-                        'FontRegular'),
-                  ),
-                  Text(
-                    balance + " " + ((buySell ? secondCoin : firstCoin)),
-                    style: CustomWidget(context: context).CustomSizedTextStyle(
-                        11.5,
-                        Theme.of(context).splashColor,
-                        FontWeight.w500,
-                        'FontRegular'),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 5.0,
+              Text(
+                balance + " " + ((buySell ? secondCoin : firstCoin)),
+                style: CustomWidget(context: context).CustomSizedTextStyle(
+                    11.5,
+                    Theme.of(context).splashColor,
+                    FontWeight.w500,
+                    'FontRegular'),
               ),
             ],
+          ),
+          SizedBox(
+            height: 5.0,
           ),
           const SizedBox(
             height: 10.0,
@@ -883,7 +982,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                 .primaryColor,
                                             CustomTheme.of(context)
                                                 .backgroundColor,
-                                            CustomTheme.of(context).dialogBackgroundColor,
+                                            Theme.of(context).dialogBackgroundColor,
                                           ])),
                                       child: Center(
                                         child: Text(
@@ -983,7 +1082,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                                 .primaryColor,
                                             CustomTheme.of(context)
                                                 .backgroundColor,
-                                            CustomTheme.of(context).dialogBackgroundColor,
+                                            Theme.of(context).dialogBackgroundColor,
                                           ])),
                                       child: Center(
                                         child: Text(
@@ -1015,7 +1114,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                             colors: [
                           CustomTheme.of(context).primaryColor,
                           CustomTheme.of(context).backgroundColor,
-                          CustomTheme.of(context).dialogBackgroundColor,
+                          Theme.of(context).dialogBackgroundColor,
                         ])),
                     child: Center(
                       child: Text(
@@ -1246,7 +1345,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                               .primaryColor,
                           CustomTheme.of(context)
                               .backgroundColor,
-                          CustomTheme.of(context).dialogBackgroundColor,
+                          Theme.of(context).dialogBackgroundColor,
                         ])),
                 child: Center(
                   child: Text(
@@ -1346,7 +1445,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                 .primaryColor,
                             CustomTheme.of(context)
                                 .backgroundColor,
-                            CustomTheme.of(context).dialogBackgroundColor,
+                            Theme.of(context).dialogBackgroundColor,
                           ])),
                   child: Center(
                     child: Text(
@@ -1378,7 +1477,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                   colors: [
                     CustomTheme.of(context).primaryColor,
                     CustomTheme.of(context).backgroundColor,
-                    CustomTheme.of(context).dialogBackgroundColor,
+                    Theme.of(context).dialogBackgroundColor,
                   ])),
           child: Center(
             child: Text(
@@ -2119,10 +2218,80 @@ class _SellTradeScreenState extends State<TradeScreen>
         SizedBox(
           height: 15.0,
         ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: 35.0,
+          padding: EdgeInsets.fromLTRB(5, 0.0, 5, 0.0),
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: CustomTheme.of(context).hintColor.withOpacity(0.5),
+                width: 1.0),
+            borderRadius: BorderRadius.circular(5.0),
+            color: Colors.transparent,
+          ),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: CustomTheme.of(context).backgroundColor,
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton(
+                menuMaxHeight: MediaQuery.of(context).size.height * 0.7,
+                items:chartTime
+                    .map((value) => DropdownMenuItem(
+                  child: Text(
+                    value.toString(),
+                    style: CustomWidget(context: context)
+                        .CustomSizedTextStyle(
+                        10.0,
+                        Theme.of(context).errorColor,
+                        FontWeight.w500,
+                        'FontRegular'),
+                  ),
+                  value: value,
+                ))
+                    .toList(),
+                onChanged: (value) async {
+                  setState(() {
+                    selectedTime = value.toString();
+                    if (selectedTime == "Limit Order") {
+                      enableTrade = false;
+                      _currentSliderValue = 0;
+                      tleverageVal = "1";
+                      priceController.clear();
+                      amountController.clear();
+                      totalAmount = "0.00";
+                    } else if (selectedTime == "Market Order") {
+                      priceController.clear();
+                      _currentSliderValue = 0;
+                      tleverageVal = "1";
+                      amountController.clear();
+                      totalAmount = "0.00";
+                      enableTrade = true;
+                    }
+                  });
+                },
+                hint: Text(
+                  "Select Category",
+                  style: CustomWidget(context: context).CustomSizedTextStyle(
+                      12.0,
+                      Theme.of(context).errorColor,
+                      FontWeight.w500,
+                      'FontRegular'),
+                ),
+                isExpanded: true,
+                value: selectedTime,
+                icon: const Icon(
+                  Icons.arrow_drop_down,
+                  // color: AppColors.otherTextColor,
+                ),
+              ),
+            ),
+          ),
+        ),
         SizedBox(
           height: 20.0,
         ),
-        Container(
+        !enableTrade?Container(
           padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
           decoration: BoxDecoration(
             border: Border.all(
@@ -2356,7 +2525,7 @@ class _SellTradeScreenState extends State<TradeScreen>
               ),
             ],
           ),
-        ),
+        ):Container(),
         enableTrade
             ? Container()
             : const SizedBox(
@@ -2445,7 +2614,8 @@ class _SellTradeScreenState extends State<TradeScreen>
                   },
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(bottom: 8.0),
-                      hintText: "Quantity",
+                      hintText: enableTrade
+                          ?buySell?"Buy Total":"Amount":"Quantity",
                       hintStyle: CustomWidget(context: context)
                           .CustomSizedTextStyle(
                               12.0,
@@ -3035,19 +3205,21 @@ class _SellTradeScreenState extends State<TradeScreen>
                       totalAmount = "0.00";
 
                       if (quickAmountController.text.isNotEmpty) {
-                        double amount =
+                        tradeAmount = quickAmountController.text;
+                       /* double amount =
                             double.parse(quickAmountController.text);
                         if (amount >= 0) {
                           tradeAmount = quickAmountController.text;
 
                           totalAmount = (double.parse(
                                       quickAmountController.text.toString()) *
-                                  double.parse(livePrice))
-                              .toStringAsFixed(4);
+                                  double.parse(QuicklivePrice))
+                              .toStringAsFixed(3);
+                          print("totalAmount"+totalAmount);
                         } else {
                           tradeAmount = quickAmountController.text;
                           totalAmount = "0.000";
-                        }
+                        }*/
                       } else {
                         tradeAmount = quickAmountController.text;
                         totalAmount = "0.000";
@@ -3096,7 +3268,7 @@ class _SellTradeScreenState extends State<TradeScreen>
         Container(
           child: Row(
             children: [
-              Flexible(
+              /*Flexible(
                 child: InkWell(
                   onTap: () {
                     setState(() {
@@ -3140,11 +3312,12 @@ class _SellTradeScreenState extends State<TradeScreen>
               ),
               const SizedBox(
                 width: 5.0,
-              ),
+              ),*/
               Flexible(
                 child: InkWell(
                   onTap: () {
                     setState(() {
+                      val="25%";
                       if (double.parse(QuicklivePrice) > 0) {
                         double perce = ((double.parse(balance) * 25) /
                                 double.parse(livePrice)) /
@@ -3166,7 +3339,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
                       color:
-                          Theme.of(context).bottomAppBarColor.withOpacity(0.5),
+                       val=="25%"?Theme.of(context).shadowColor:Theme.of(context).bottomAppBarColor.withOpacity(0.5),
                     ),
                     child: Center(
                       child: Text(
@@ -3190,10 +3363,12 @@ class _SellTradeScreenState extends State<TradeScreen>
                 child: InkWell(
                   onTap: () {
                     setState(() {
+                      val="50%";
                       if (double.parse(QuicklivePrice) > 0) {
                         double perce = ((double.parse(balance) * 50) /
                                 double.parse(livePrice)) /
                             100;
+
 
                         quickAmountController.text =
                             double.parse(perce.toString()).toStringAsFixed(4);
@@ -3211,7 +3386,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
                       color:
-                          Theme.of(context).bottomAppBarColor.withOpacity(0.5),
+                      val=="50%"?Theme.of(context).shadowColor:Theme.of(context).bottomAppBarColor.withOpacity(0.5),
                     ),
                     child: Center(
                       child: Text(
@@ -3235,6 +3410,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                 child: InkWell(
                   onTap: () {
                     setState(() {
+                      val="75%";
                       if (double.parse(QuicklivePrice) > 0) {
                         double perce = ((double.parse(balance) * 75) /
                                 double.parse(livePrice)) /
@@ -3256,7 +3432,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
                       color:
-                          Theme.of(context).bottomAppBarColor.withOpacity(0.5),
+                      val=="75%"?Theme.of(context).shadowColor:Theme.of(context).bottomAppBarColor.withOpacity(0.5),
                     ),
                     child: Center(
                       child: Text(
@@ -3280,6 +3456,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                 child: InkWell(
                   onTap: () {
                     setState(() {
+                      val="100%";
                       if (double.parse(QuicklivePrice) > 0) {
                         double perce = ((double.parse(balance) * 100) /
                                 double.parse(livePrice)) /
@@ -3301,7 +3478,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.0),
                       color:
-                          Theme.of(context).bottomAppBarColor.withOpacity(0.5),
+                      val=="100%"?Theme.of(context).shadowColor:Theme.of(context).bottomAppBarColor.withOpacity(0.5),
                     ),
                     child: Center(
                       child: Text(
@@ -3371,7 +3548,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                               tradeAmount +
                               " " +
                               QuickfirstCoin
-                      : "Get Quote",
+                      : buySell?"Buy Preview".toUpperCase():"Sell Preview".toUpperCase(),
                   style: CustomWidget(context: context).CustomSizedTextStyle(
                       14.0,
                       Theme.of(context).splashColor,
@@ -4349,7 +4526,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                 : "0.00",
             priceController.text.toString(),
             "",
-            true)
+            enableTrade?false:true)
         .then((dynamic loginData) {
       setState(() {
         List<dynamic> listData = loginData;
@@ -4382,10 +4559,12 @@ class _SellTradeScreenState extends State<TradeScreen>
       setState(() {
         if (loginData.success!) {
           quoteID = loginData.result!.quoteId.toString();
+          QuicklivePrice=loginData.result!.buyPrice.toString();
+          totalAmount = loginData.result!.amount.toString();
           _remainingTime = 10;
           quote = true;
           _startTimer();
-
+          changeColors();
           loading = false;
         } else {
           loading = false;
