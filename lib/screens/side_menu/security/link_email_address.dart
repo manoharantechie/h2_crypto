@@ -77,7 +77,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  Theme.of(context).dialogBackgroundColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
             child: SingleChildScrollView(
               child: Stack(
@@ -238,7 +238,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                           FontWeight.w500,
                                           'FontRegular'),
                                   iconColor: AppColors.borderColor,
-                                  buttonColor:
+                                  shadowColor:
                                       CustomTheme.of(context).shadowColor,
                                   splashColor:
                                       CustomTheme.of(context).shadowColor,

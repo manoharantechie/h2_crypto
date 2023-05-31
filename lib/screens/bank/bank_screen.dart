@@ -104,7 +104,7 @@ class _BankScreenState extends State<BankScreen> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              Theme.of(context).dialogBackgroundColor,
+              CustomTheme.of(context).dialogBackgroundColor,
             ])),
         child: Padding(
           padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
@@ -142,7 +142,7 @@ class _BankScreenState extends State<BankScreen> {
                             colors: [
                           CustomTheme.of(context).primaryColor,
                           CustomTheme.of(context).backgroundColor,
-                          Theme.of(context).dialogBackgroundColor,
+                          CustomTheme.of(context).dialogBackgroundColor,
                         ])),
                     width: MediaQuery.of(context).size.width,
                     child: SingleChildScrollView(

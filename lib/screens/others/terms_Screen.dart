@@ -78,7 +78,7 @@ class _TermsConditionState extends State<TermsCondition> {
                 colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  Theme.of(context).dialogBackgroundColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
         child: SingleChildScrollView(
           child: Container(

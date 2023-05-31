@@ -206,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  Theme.of(context).dialogBackgroundColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
             child: SingleChildScrollView(
               controller: controller,
@@ -356,7 +356,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     FontWeight.w500,
                                     'FontRegular'),
                             iconColor: AppColors.borderColor,
-                            buttonColor: CustomTheme.of(context).shadowColor,
+                            shadowColor: CustomTheme.of(context).shadowColor,
                             splashColor: CustomTheme.of(context).shadowColor,
                             onPressed: () {
                                 setState(() {

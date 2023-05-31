@@ -126,7 +126,7 @@ class _KYCPageState extends State<KYCPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: CustomTheme.of(context).primaryColor,
-            shadowColor: CustomTheme.of(context).primaryColor,
+            dialogBackgroundColor: CustomTheme.of(context).primaryColor,
             colorScheme: ColorScheme.light(
               primary: CustomTheme.of(context).primaryColor,
             ),
@@ -159,7 +159,7 @@ class _KYCPageState extends State<KYCPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: CustomTheme.of(context).primaryColor,
-            shadowColor: CustomTheme.of(context).primaryColor,
+            dialogBackgroundColor: CustomTheme.of(context).primaryColor,
             colorScheme: ColorScheme.light(
               primary: CustomTheme.of(context).primaryColor,
             ),
@@ -1395,7 +1395,7 @@ class _KYCPageState extends State<KYCPage> {
                                 FontWeight.w500,
                                 'FontRegular'),
                             iconColor: CustomTheme.of(context).shadowColor,
-                            buttonColor: CustomTheme.of(context).shadowColor,
+                            shadowColor: CustomTheme.of(context).shadowColor,
                             splashColor: CustomTheme.of(context).shadowColor,
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
@@ -1513,7 +1513,7 @@ class _KYCPageState extends State<KYCPage> {
                                       FontWeight.w500,
                                       'FontRegular'),
                               iconColor: AppColors.appColor,
-                              buttonColor: AppColors.appColor,
+                              shadowColor: AppColors.appColor,
                               splashColor: AppColors.appColor,
                               onPressed: () {
                                 setState(() {
@@ -1540,7 +1540,7 @@ class _KYCPageState extends State<KYCPage> {
                                       FontWeight.w500,
                                       'FontRegular'),
                               iconColor: AppColors.appColor,
-                              buttonColor: AppColors.appColor,
+                              shadowColor: AppColors.appColor,
                               splashColor: AppColors.appColor,
                               onPressed: () {
                                 setState(() {

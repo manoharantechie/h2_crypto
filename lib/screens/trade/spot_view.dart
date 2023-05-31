@@ -81,7 +81,7 @@ class _SpotViewState extends State<SpotView> {
                 colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  Theme.of(context).dialogBackgroundColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
         child: SingleChildScrollView (
             child: Column(

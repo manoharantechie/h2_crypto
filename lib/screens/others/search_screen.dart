@@ -84,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       colors: [
                     CustomTheme.of(context).primaryColor,
                     CustomTheme.of(context).backgroundColor,
-                    Theme.of(context).dialogBackgroundColor,
+                    CustomTheme.of(context).dialogBackgroundColor,
                   ])),
               child: loading
                   ? CustomWidget(context: context).loadingIndicator(

@@ -155,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  Theme.of(context).dialogBackgroundColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
             child: SingleChildScrollView(
               controller: controller,
@@ -395,7 +395,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     FontWeight.w500,
                                     'FontRegular'),
                             iconColor: CustomTheme.of(context).shadowColor,
-                            buttonColor: CustomTheme.of(context).shadowColor,
+                            shadowColor: CustomTheme.of(context).shadowColor,
                             splashColor: CustomTheme.of(context).shadowColor,
                             onPressed: () {
                               setState(() {

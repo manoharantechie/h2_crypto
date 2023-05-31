@@ -130,7 +130,6 @@ class _HomeState extends State<Home>
                   double open = double.parse(ss.payload.open.toString());
                   double close = double.parse(ss.payload.last.toString());
                   double data = ((close - open) / open) * 100;
-
                   tradePairList[m].hrExchange = data.toString();
                   tradePairList[m].currentPrice =
                       double.parse(ss.payload.last.toString()).toString();
@@ -176,53 +175,6 @@ class _HomeState extends State<Home>
             ? AppBar(
                 backgroundColor: CustomTheme.of(context).primaryColor,
                 elevation: 0.0,
-                // title: InkWell(
-                //   onTap: () {
-                //     Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) =>
-                //               SearchScreen(),
-                //         ));
-                //   },
-                //   child: Container(
-                //     width: MediaQuery.of(context).size.width,
-                //     height: 40.0,
-                //     decoration: BoxDecoration(
-                //         color:
-                //             CustomTheme.of(context).shadowColor.withOpacity(0.2),
-                //         borderRadius: BorderRadius.circular(5.0),
-                //         border: Border.all(
-                //             color: CustomTheme.of(context)
-                //                 .shadowColor
-                //                 .withOpacity(0.5),
-                //             width: 0.2)),
-                //     child: Row(
-                //       children: [
-                //         const SizedBox(
-                //           width: 5.0,
-                //         ),
-                //         Icon(
-                //           Icons.search_rounded,
-                //           color: CustomTheme.of(context).shadowColor,
-                //           size: 15.0,
-                //         ),
-                //         const SizedBox(
-                //           width: 10.0,
-                //         ),
-                //         Text(
-                //           AppLocalizations.instance.text('loc_search'),
-                //           style: CustomWidget(context: context)
-                //               .CustomSizedTextStyle(
-                //                   13.0,
-                //                   Theme.of(context).shadowColor,
-                //                   FontWeight.w300,
-                //                   'FontRegular'),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
                 title: Image.asset(
                   'assets/icon/logo.png',
                   height: 35.0,
@@ -280,7 +232,7 @@ class _HomeState extends State<Home>
                   colors: [
                 CustomTheme.of(context).primaryColor,
                 CustomTheme.of(context).backgroundColor,
-                Theme.of(context).dialogBackgroundColor,
+                CustomTheme.of(context).dialogBackgroundColor,
               ])),
           child: Stack(
             children: [
@@ -532,7 +484,7 @@ class _HomeState extends State<Home>
                     const SizedBox(
                       height: 10.0,
                     ),
-                   /* Row(
+                    Row(
                       children: [
                         SvgPicture.asset(
                           'assets/others/speaker.svg',
@@ -559,7 +511,7 @@ class _HomeState extends State<Home>
                     ),
                     const SizedBox(
                       height: 10.0,
-                    ),*/
+                    ),
                     marketList.isNotEmpty
                         ? Container(
                             height: 85,

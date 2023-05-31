@@ -99,7 +99,7 @@ class _SideMenuState extends State<SideMenu> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              Theme.of(context).dialogBackgroundColor,
+              CustomTheme.of(context).dialogBackgroundColor,
             ])),
         child:Stack(
           children: [

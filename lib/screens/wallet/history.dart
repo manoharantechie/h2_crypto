@@ -118,7 +118,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
                 // Add one stop for each color
                 // Values should increase from 0.0 to 1.0
                 stops: [0.1, 0.5, 0.9,],
-                colors: [CustomTheme.of(context).primaryColor,CustomTheme.of(context).backgroundColor, Theme.of(context).dialogBackgroundColor,])),
+                colors: [CustomTheme.of(context).primaryColor,CustomTheme.of(context).backgroundColor, CustomTheme.of(context).dialogBackgroundColor,])),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(

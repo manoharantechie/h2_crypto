@@ -86,7 +86,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   colors: [
                     CustomTheme.of(context).primaryColor,
                     CustomTheme.of(context).backgroundColor,
-                    Theme.of(context).dialogBackgroundColor,
+                    CustomTheme.of(context).dialogBackgroundColor,
                   ])),
           child: Stack(
             children: [

@@ -90,7 +90,7 @@ class _TransferScreenState extends State<TransferScreen> {
                 colors: [
               CustomTheme.of(context).primaryColor,
               CustomTheme.of(context).backgroundColor,
-              Theme.of(context).dialogBackgroundColor,
+              CustomTheme.of(context).dialogBackgroundColor,
             ])),
         child: SafeArea(
           child: SingleChildScrollView(
@@ -596,7 +596,7 @@ class _TransferScreenState extends State<TransferScreen> {
                           FontWeight.w500,
                           'FontRegular'),
                       iconColor: CustomTheme.of(context).shadowColor,
-                      buttonColor: CustomTheme.of(context).shadowColor,
+                      shadowColor: CustomTheme.of(context).shadowColor,
                       splashColor: CustomTheme.of(context).shadowColor,
                       onPressed: () {
                         // Navigator.push(

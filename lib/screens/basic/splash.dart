@@ -143,7 +143,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  Theme.of(context).dialogBackgroundColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
             child: Center(
                 child: Column(

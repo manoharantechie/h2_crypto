@@ -125,7 +125,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                     colors: [
                   CustomTheme.of(context).primaryColor,
                   CustomTheme.of(context).backgroundColor,
-                  Theme.of(context).dialogBackgroundColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
                 ])),
             child: SingleChildScrollView(
               controller: controller,
@@ -534,7 +534,7 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
                                         FontWeight.w500,
                                         'FontRegular'),
                                 iconColor: AppColors.borderColor,
-                                buttonColor:
+                                shadowColor:
                                     CustomTheme.of(context).shadowColor,
                                 splashColor:
                                     CustomTheme.of(context).shadowColor,
