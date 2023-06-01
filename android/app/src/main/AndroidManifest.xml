@@ -10,7 +10,7 @@
 
     <uses-permission android:name="android.permission.CAMERA"/>
    <application
-        android:label="H2Crypto"
+        android:label="H2cryptO"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

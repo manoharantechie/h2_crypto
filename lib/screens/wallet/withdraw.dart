@@ -56,7 +56,15 @@ class _WithDrawState extends State<WithDraw> {
     super.initState();
 
     coinList = widget.coinList;
-    selectedCoin = coinList[int.parse(widget.id)];
+
+    for(int m=0;m<coinList.length;m++)
+      {
+        if(coinList[m].name.toString()==widget.id)
+          {
+            selectedCoin = coinList[m];
+          }
+      }
+
     print(coinList[int.parse(widget.id)].type);
   }
 

@@ -24,6 +24,7 @@ class _TradeChartScreenState extends State<TradeChartScreen> {
   void initState() {
     super.initState();
 
+    print('https://h2crypto.exchange/trading-chart/'+widget.pair);
     webcontroller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
@@ -36,20 +37,16 @@ class _TradeChartScreenState extends State<TradeChartScreen> {
           onPageFinished: (String url) {},
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith( Uri.dataFromString(
-                'https://h2crypto.exchange/trading-chart/'+widget.pair,
-                mimeType: 'text/html')
-                .toString(),)) {
+            if (request.url.startsWith('https://h2crypto.exchange/trading-chart/'+widget.pair,)) {
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
           },
         ),
       )
-      ..loadRequest(Uri.parse( Uri.dataFromString(
-          'https://h2crypto.exchange/trading-chart/'+widget.pair,
-          mimeType: 'text/html')
-          .toString(),));
+      ..loadRequest(Uri.parse('https://h2crypto.exchange/trading-chart/'+widget.pair,));
+
+
 
   }
 

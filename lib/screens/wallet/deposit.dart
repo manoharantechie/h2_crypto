@@ -49,9 +49,17 @@ class _DepositAddressState extends State<DepositScreen> {
     super.initState();
     loading = true;
     coinList = widget.coinList;
-    selectedCoin = coinList[int.parse(widget.id)];
+    searchCoinList=widget.coinList;
+    for(int m=0;m<coinList.length;m++)
+    {
+      if(coinList[m].name.toString()==widget.id)
+      {
+        selectedCoin = coinList[m];
+      }
+    }
     type = selectedCoin!.type.toString();
     print(type);
+
     getDetails();
     getFiatDetails();
   }
@@ -140,6 +148,7 @@ class _DepositAddressState extends State<DepositScreen> {
                   InkWell(
                     onTap: () {
                       showSheeet(context);
+
                     },
                     child: Container(
                       width: MediaQuery
@@ -208,9 +217,9 @@ class _DepositAddressState extends State<DepositScreen> {
                   const SizedBox(
                     height: 20.0,
                   ),
-                  type.toString() == "Type.COIN"
-                      ? cryptoDeposit()
-                      : fiatDeposit()
+                  type.toString().toLowerCase() == "fiat"
+                      ? fiatDeposit()
+                      : cryptoDeposit()
                 ],
               ),
             ),
@@ -305,7 +314,7 @@ class _DepositAddressState extends State<DepositScreen> {
               Flexible(
                 child: Text(address==""?"Address not generated":address,
                     style: CustomWidget(context: context).CustomSizedTextStyle(
-                        12.0,
+                        14.0,
                         Theme
                             .of(context)
                             .hintColor,
@@ -313,7 +322,7 @@ class _DepositAddressState extends State<DepositScreen> {
                         'FontRegular')),
               ),
               SizedBox(
-                width: 30.0,
+                width: 20.0,
               ),
               InkWell(
                 onTap: () {
@@ -865,7 +874,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                 });
                               },
                               onChanged: (value) {
-                                setState(() {
+                                setStates(() {
                                   coinList = [];
 
                                   for (int m = 0;
@@ -961,7 +970,7 @@ class _DepositAddressState extends State<DepositScreen> {
                               child: InkWell(
                                 onTap: () {
                                   Navigator.pop(context);
-                                  setState(() {
+                                  setStates(() {
                                     searchController.clear();
                                     coinList.addAll(searchCoinList);
                                   });
@@ -994,14 +1003,14 @@ class _DepositAddressState extends State<DepositScreen> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        setState(() {
+                                        setStates(() {
                                           selectedCoin = coinList[index];
                                           indexVal = 0;
 
                                           type =
                                               coinList[index].type.toString();
                                           print(type);
-                                          if (type == "Type.COIN") {
+                                          if (type != "fiat") {
                                             loading = true;
 
                                             address="";

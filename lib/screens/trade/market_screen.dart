@@ -432,7 +432,7 @@ class _MarketSceen1State extends State<MarketSceen>
                                         .toStringAsFixed(4),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
-                                            15.0,
+                                            13.0,
                                             double.parse(data.toString()) >= 0
                                                 ? Theme.of(context)
                                                     .indicatorColor
@@ -479,7 +479,7 @@ class _MarketSceen1State extends State<MarketSceen>
                                   data.toStringAsFixed(2)+"%",
                                   style: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                          12.0,
+                                          10.0,
                                           Theme.of(context).hintColor,
                                           FontWeight.w500,
                                           'FontRegular'),

@@ -183,7 +183,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       onEditingComplete: () {
                         setState(() {
                           searchFocus.unfocus();
-                          coinList = searchPair;
+
                         });
                       },
                       onChanged: (value) {
@@ -548,28 +548,39 @@ class _WalletScreenState extends State<WalletScreen> {
                                                             ),
                                                           ),
                                                           onTap: () {
+                                                            FocusScope.of(context).unfocus();
+                                                            setState(() {
+                                                              searchController.clear();
+                                                            });
+
                                                             Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
                                                                   builder: (context) =>
                                                                       DepositScreen(
-                                                                          id: index
+                                                                          id:  coinList[index]
+                                                                              .name
                                                                               .toString(),
-                                                                      coinList:coinList,),
+                                                                      coinList:searchPair,),
                                                                 ));
                                                           },
                                                         ),
                                                         InkWell(
                                                           onTap: () {
+                                                            FocusScope.of(context).unfocus();
+                                                         setState(() {
+                                                           searchController.clear();
+                                                         });
                                                             Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
                                                                   builder:
                                                                       (context) =>
                                                                            WithDraw(
-                                                                             id: index
+                                                                             id: coinList[index]
+                                                                                 .name
                                                                                  .toString(),
-                                                                             coinList:coinList,
+                                                                             coinList:searchPair,
                                                                            ),
                                                                 ));
                                                           },

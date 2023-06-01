@@ -69,7 +69,7 @@ class _HomeState extends State<Home>
     "assets/sidemenu/support.svg"
   ];
 
-  void onSelectItem(int index) async {
+  onSelectItem(int index) {
     setState(() {
       selectIndex = index;
       if (index == 0) {
@@ -77,6 +77,7 @@ class _HomeState extends State<Home>
       } else {
         dashView = false;
         currentIndex = index;
+        selectIndex = index;
         screen = bottomPage[index - 1];
       }
     });
@@ -107,8 +108,6 @@ class _HomeState extends State<Home>
 
     getCoinList();
     getPairList();
-
-
   }
 
   socketData() {
@@ -239,86 +238,244 @@ class _HomeState extends State<Home>
           ),
         ),
         //
-        // bottomNavigationBar: SizedBox(
-        //     height: 70.0,
-        //     child: Container(
-        //       decoration: BoxDecoration(
-        //         color: CustomTheme.of(context).shadowColor,
-        //       ),
-        //       child: Container(
-        //         margin: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
-        //         decoration: BoxDecoration(
-        //           color: CustomTheme.of(context).shadowColor,
-        //         ),
-        //         child: BottomNavigationBar(
-        //           elevation: 0.0,
-        //
-        //           type: BottomNavigationBarType.fixed,
-        //           //
-        //           items: bottomItems(),
-        //           currentIndex: currentIndex,
-        //           showSelectedLabels: true,
-        //           backgroundColor:currentIndex==selectIndex? CustomTheme.of(context).shadowColor: CustomTheme.of(context).bottomAppBarColor,
-        //           selectedLabelStyle: !unSelected
-        //               ? CustomWidget(context: context).CustomSizedTextStyle(
-        //                   12.0,
-        //                   Theme.of(context).splashColor.withOpacity(0.5),
-        //                   FontWeight.normal,
-        //                   'FontRegular')
-        //               : CustomWidget(context: context).CustomSizedTextStyle(
-        //                   12.0,
-        //                   Theme.of(context).splashColor,
-        //                   FontWeight.normal,
-        //                   'FontRegular'),
-        //           selectedItemColor: CustomTheme.of(context).splashColor,
-        //           unselectedItemColor:
-        //               CustomTheme.of(context).splashColor.withOpacity(0.5),
-        //           showUnselectedLabels: true,
-        //           onTap: (index) {
-        //             setState(() {
-        //               onSelectItem(index);
-        //               currentIndex = index;
-        //               selectIndex=index;
-        //             });
-        //           },
-        //         ),
-        //       ),
-        //     )),
-        bottomNavigationBar: BottomNav(
-          index: currentIndex,
-          selectedIndex: selectIndex,
-          elevation: 10.0,
-          color: CustomTheme.of(context).bottomAppBarColor,
-          iconStyle: IconStyle(
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-            onSelectColor: CustomTheme.of(context).splashColor,
-            size: 25.0,
-          ),
-          bgStyle: BgStyle(
-            color: CustomTheme.of(context).bottomAppBarColor.withOpacity(0.5),
-            onSelectColor: CustomTheme.of(context).shadowColor,
-          ),
-          labelStyle: LabelStyle(
-            visible: true,
-            textStyle: CustomWidget(context: context).CustomTextStyle(
-                Theme.of(context).splashColor.withOpacity(0.5),
-                FontWeight.normal,
-                'FontRegular'),
-            onSelectTextStyle: CustomWidget(context: context).CustomTextStyle(
-                Theme.of(context).splashColor,
-                FontWeight.normal,
-                'FontRegular'),
-          ),
-          onTap: (i) {
-            setState(() {
-              onSelectItem(i);
-              currentIndex = i;
-            });
-          },
-          items: _bottomItems,
-        ),
+        bottomNavigationBar: bottomBar(),
+        // bottomNavigationBar: BottomNav(
+        //   index: currentIndex,
+        //   selectedIndex: selectIndex,
+        //   elevation: 10.0,
+        //   color: CustomTheme.of(context).bottomAppBarColor,
+        //   iconStyle: IconStyle(
+        //     color: CustomTheme.of(context).splashColor.withOpacity(0.5),
+        //     onSelectColor: CustomTheme.of(context).splashColor,
+        //     size: 25.0,
+        //   ),
+        //   bgStyle: BgStyle(
+        //     color: CustomTheme.of(context).bottomAppBarColor.withOpacity(0.5),
+        //     onSelectColor: CustomTheme.of(context).shadowColor,
+        //   ),
+        //   labelStyle: LabelStyle(
+        //     visible: true,
+        //     textStyle: CustomWidget(context: context).CustomTextStyle(
+        //         Theme.of(context).splashColor.withOpacity(0.5),
+        //         FontWeight.normal,
+        //         'FontRegular'),
+        //     onSelectTextStyle: CustomWidget(context: context).CustomTextStyle(
+        //         Theme.of(context).splashColor,
+        //         FontWeight.normal,
+        //         'FontRegular'),
+        //   ),
+        //   onTap: (i) {
+        //     setState(() {
+        //       onSelectItem(i);
+        //       currentIndex = i;
+        //       selectIndex = i;
+        //     });
+        //   },
+        //   items: _bottomItems,
+        // ),
       ),
     );
+  }
+
+  Widget bottomBar() {
+    return Container(
+        height: 80,
+        width: MediaQuery.of(context).size.width,
+        color: CustomTheme.of(context).bottomAppBarColor,
+        child: Stack(
+          children: [
+            Container(
+              height: 80,
+              width: MediaQuery.of(context).size.width,
+              color: Theme.of(context).bottomAppBarColor,
+              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 0;
+                        dashView=true;
+                        onSelectItem(0);
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/bottom/home.svg',
+                            color: currentIndex == 0
+                                ? Theme.of(context).splashColor
+                                : Theme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5)),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Text( AppLocalizations.instance.text('loc_side_home').toUpperCase(),
+                            textAlign: TextAlign.center,
+                            style: CustomWidget(context: context)
+                                .CustomTextStyle(
+                                    currentIndex == 0
+                                        ? Theme.of(context).splashColor
+                                        : Theme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                    FontWeight.normal,
+                                    'FontRegular')),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 1;
+                        dashView=false;
+                        onSelectItem(1);
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/bottom/market.svg',
+                            color: currentIndex == 1
+                                ? Theme.of(context).splashColor
+                                : Theme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5)),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                            AppLocalizations.instance.text('loc_markets').toUpperCase(),
+                          textAlign: TextAlign.center,
+                            style: CustomWidget(context: context)
+                                .CustomTextStyle(
+                                currentIndex == 1
+                                    ? Theme.of(context).splashColor
+                                    : Theme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5),
+                                FontWeight.normal,
+                                'FontRegular')
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 2;
+                        onSelectItem(2);
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/bottom/trade.svg',
+                            color: currentIndex == 2
+                                ? Theme.of(context).splashColor
+                                : Theme.of(context)
+                                .splashColor
+                                .withOpacity(0.5)),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          AppLocalizations.instance.text('loc_side_trade').toUpperCase(),
+                          textAlign: TextAlign.center,
+                          style: CustomWidget(context: context)
+                              .CustomTextStyle(
+                              currentIndex == 2
+                                  ? Theme.of(context).splashColor
+                                  : Theme.of(context)
+                                  .splashColor
+                                  .withOpacity(0.5),
+                              FontWeight.normal,
+                              'FontRegular'
+
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 3;
+                        onSelectItem(3);
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/bottom/future.svg',
+                            color: currentIndex == 3
+                                ? Theme.of(context).splashColor
+                                : Theme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5)),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          AppLocalizations.instance.text('loc_side_future').toUpperCase(),
+                          textAlign: TextAlign.center,
+                            style: CustomWidget(context: context)
+                                .CustomTextStyle(
+                                currentIndex == 3
+                                    ? Theme.of(context).splashColor
+                                    : Theme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5),
+                                FontWeight.normal,
+                                'FontRegular'
+
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 4;
+                        onSelectItem(4);
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/bottom/wallet.svg',
+                            color: currentIndex == 4
+                                ? Theme.of(context).splashColor
+                                : Theme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5)),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          AppLocalizations.instance.text('loc_side_assets').toUpperCase(),
+                          textAlign: TextAlign.center,
+                          style: CustomWidget(context: context)
+                              .CustomTextStyle(
+                              currentIndex == 4
+                                  ? Theme.of(context).splashColor
+                                  : Theme.of(context)
+                                  .splashColor
+                                  .withOpacity(0.5),
+                              FontWeight.normal,
+                              'FontRegular'),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 
   showSuccesssAlertDialog() {
@@ -677,7 +834,7 @@ class _HomeState extends State<Home>
                                 onSelectItem(2);
                               } else if (index == 2) {
                                 onSelectItem(1);
-                              }else{
+                              } else {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -749,8 +906,8 @@ class _HomeState extends State<Home>
                         Column(
                           children: [
                             InkWell(
-                              onTap: (){
-
+                              onTap: () {
+                                onSelectItem(1);
                               },
                               child: Text(
                                 "See All",
@@ -912,7 +1069,7 @@ class _HomeState extends State<Home>
 
                     tradePairList.length > 0
                         ? ListView.builder(
-                            itemCount: 10,
+                            itemCount: tradePairList.length,
                             shrinkWrap: true,
                             controller: controller,
                             itemBuilder: (BuildContext context, int index) {
@@ -1031,7 +1188,7 @@ class _HomeState extends State<Home>
                                                 top: 8.0,
                                                 bottom: 8.0),
                                             child: Text(
-                                              data.toStringAsFixed(2)+"%",
+                                              data.toStringAsFixed(2) + "%",
                                               style:
                                                   CustomWidget(context: context)
                                                       .CustomSizedTextStyle(
@@ -1181,115 +1338,5 @@ class _HomeState extends State<Home>
       new BottomNavItem("assets/bottom/wallet.svg", label: "loc_side_assets"),
     ];
     return bottomItems;
-  }
-
-  List<BottomNavigationBarItem> bottomItems() {
-    return [
-      BottomNavigationBarItem(
-        icon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/home.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        activeIcon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/home.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        label: AppLocalizations.instance.text("loc_side_home"),
-      ),
-      BottomNavigationBarItem(
-        icon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/market.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        activeIcon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/market.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        label: AppLocalizations.instance.text("loc_markets"),
-      ),
-      BottomNavigationBarItem(
-        icon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/trade.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        activeIcon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/trade.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        label: AppLocalizations.instance.text("loc_side_trade"),
-      ),
-      BottomNavigationBarItem(
-        icon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/future.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        activeIcon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/future.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        label: AppLocalizations.instance.text("loc_side_future"),
-      ),
-      BottomNavigationBarItem(
-        icon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/wallet.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        activeIcon: Padding(
-          child: SvgPicture.asset(
-            'assets/bottom/wallet.svg',
-            height: 22.0,
-            width: 22.0,
-            color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-          ),
-          padding: EdgeInsets.only(bottom: 8.0),
-        ),
-        label: AppLocalizations.instance.text("loc_side_assets"),
-      ),
-    ];
   }
 }
