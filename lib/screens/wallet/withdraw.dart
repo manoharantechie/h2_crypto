@@ -56,6 +56,7 @@ class _WithDrawState extends State<WithDraw> {
     super.initState();
 
     coinList = widget.coinList;
+    searchCoinList = widget.coinList;
 
     for(int m=0;m<coinList.length;m++)
       {
@@ -65,7 +66,7 @@ class _WithDrawState extends State<WithDraw> {
           }
       }
 
-    print(coinList[int.parse(widget.id)].type);
+
   }
 
   _getRequests() async {
@@ -119,13 +120,13 @@ class _WithDrawState extends State<WithDraw> {
               Theme.of(context).dialogBackgroundColor,
             ])),
         child: Padding(
-            padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
+            padding: EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
             child: Stack(
               children: [
                 Container(
-                  padding: EdgeInsets.only(top: 6.0, bottom: 15.0),
+                  padding: EdgeInsets.only(top: 6.0, bottom: 10.0),
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.19,
+                  height: MediaQuery.of(context).size.height * 0.20,
                   decoration: BoxDecoration(
                     color: CustomTheme.of(context).shadowColor.withOpacity(0.2),
                     borderRadius: BorderRadius.all(
@@ -191,7 +192,7 @@ class _WithDrawState extends State<WithDraw> {
                 ),
                 Container(
                     margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.2,
+                      top: MediaQuery.of(context).size.height * 0.21,
                     ),
                     child: SingleChildScrollView(
                       child: Column(
@@ -555,7 +556,7 @@ class _WithDrawState extends State<WithDraw> {
                             height: 10.0,
                           ),
                           Text(
-                            "H2Crypto’s API allows users to make market inquiries, trade automatically and perform various other tasks. You may find out more here",
+                            "H2cryptO’s API allows users to make market inquiries, trade automatically and perform various other tasks. You may find out more here",
                             style: CustomWidget(context: context)
                                 .CustomSizedTextStyle(
                                     12.0,
@@ -650,6 +651,7 @@ class _WithDrawState extends State<WithDraw> {
     );
   }
 
+
   showSheeet(BuildContext contexts) {
     return showModalBottomSheet(
         context: contexts,
@@ -658,9 +660,17 @@ class _WithDrawState extends State<WithDraw> {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setStates) {
               return Container(
-                height: MediaQuery.of(context).size.height * 0.9,
-                width: MediaQuery.of(context).size.width,
-                color: Theme.of(context).primaryColor,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.9,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                color: Theme
+                    .of(context)
+                    .primaryColor,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -674,7 +684,10 @@ class _WithDrawState extends State<WithDraw> {
                           child: Container(
                             height: 45.0,
                             padding: EdgeInsets.only(left: 20.0),
-                            width: MediaQuery.of(context).size.width * 0.8,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width * 0.8,
                             child: TextField(
                               controller: searchController,
                               focusNode: searchFocus,
@@ -685,26 +698,26 @@ class _WithDrawState extends State<WithDraw> {
                                 });
                               },
                               onChanged: (value) {
-                                setState(() {
+                                setStates(() {
                                   coinList = [];
 
                                   for (int m = 0;
-                                      m < searchCoinList.length;
-                                      m++) {
+                                  m < searchCoinList.length;
+                                  m++) {
                                     if (searchCoinList[m]
-                                            .symbol
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(value
-                                                .toString()
-                                                .toLowerCase()) ||
+                                        .symbol
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(value
+                                        .toString()
+                                        .toLowerCase()) ||
                                         searchCoinList[m]
                                             .symbol
                                             .toString()
                                             .toLowerCase()
                                             .contains(value
-                                                .toString()
-                                                .toLowerCase())) {
+                                            .toString()
+                                            .toLowerCase())) {
                                       coinList.add(searchCoinList[m]);
                                     }
                                   }
@@ -716,54 +729,61 @@ class _WithDrawState extends State<WithDraw> {
                                 hintText: "Search",
                                 hintStyle: TextStyle(
                                     fontFamily: "FontRegular",
-                                    color: Theme.of(context).hintColor,
+                                    color: Theme
+                                        .of(context)
+                                        .hintColor,
                                     fontSize: 14.0,
                                     fontWeight: FontWeight.w400),
                                 filled: true,
-                                fillColor: CustomTheme.of(context)
+                                fillColor: CustomTheme
+                                    .of(context)
                                     .backgroundColor
                                     .withOpacity(0.5),
                                 border: OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(5.0)),
+                                  BorderRadius.all(Radius.circular(5.0)),
                                   borderSide: BorderSide(
-                                      color: CustomTheme.of(context)
+                                      color: CustomTheme
+                                          .of(context)
                                           .splashColor
                                           .withOpacity(0.5),
                                       width: 1.0),
                                 ),
                                 disabledBorder: OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(5.0)),
+                                  BorderRadius.all(Radius.circular(5.0)),
                                   borderSide: BorderSide(
-                                      color: CustomTheme.of(context)
+                                      color: CustomTheme
+                                          .of(context)
                                           .splashColor
                                           .withOpacity(0.5),
                                       width: 1.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(5.0)),
+                                  BorderRadius.all(Radius.circular(5.0)),
                                   borderSide: BorderSide(
-                                      color: CustomTheme.of(context)
+                                      color: CustomTheme
+                                          .of(context)
                                           .splashColor
                                           .withOpacity(0.5),
                                       width: 1.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(5.0)),
+                                  BorderRadius.all(Radius.circular(5.0)),
                                   borderSide: BorderSide(
-                                      color: CustomTheme.of(context)
+                                      color: CustomTheme
+                                          .of(context)
                                           .splashColor
                                           .withOpacity(0.5),
                                       width: 1.0),
                                 ),
                                 errorBorder: const OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
+                                  BorderRadius.all(Radius.circular(5)),
                                   borderSide:
-                                      BorderSide(color: Colors.red, width: 0.0),
+                                  BorderSide(color: Colors.red, width: 0.0),
                                 ),
                               ),
                             ),
@@ -772,19 +792,21 @@ class _WithDrawState extends State<WithDraw> {
                         Container(
                           child: Align(
                               child: InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                              setState(() {
-                                searchController.clear();
-                                coinList.addAll(searchCoinList);
-                              });
-                            },
-                            child: Icon(
-                              Icons.close,
-                              size: 20.0,
-                              color: Theme.of(context).hintColor,
-                            ),
-                          )),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  setStates(() {
+                                    searchController.clear();
+                                    coinList.addAll(searchCoinList);
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  size: 20.0,
+                                  color: Theme
+                                      .of(context)
+                                      .hintColor,
+                                ),
+                              )),
                         ),
                         const SizedBox(
                           width: 10.0,
@@ -796,70 +818,77 @@ class _WithDrawState extends State<WithDraw> {
                     ),
                     Expanded(
                         child: Padding(
-                      padding: EdgeInsets.only(top: 15.0),
-                      child: ListView.builder(
-                          controller: controller,
-                          itemCount: coinList.length,
-                          itemBuilder: ((BuildContext context, int index) {
-                            return Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedCoin = coinList[index];
-                                      indexVal = 0;
+                          padding: EdgeInsets.only(top: 15.0),
+                          child: ListView.builder(
+                              controller: controller,
+                              itemCount: coinList.length,
+                              itemBuilder: ((BuildContext context, int index) {
+                                return Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          selectedCoin = coinList[index];
+                                          indexVal = 0;
 
-                                      print(selectedCoin!.type);
-                                      Navigator.pop(context);
-                                    });
-                                  },
-                                  child: Row(
-                                    children: [
-                                      const SizedBox(
-                                        width: 20.0,
-                                      ),
-                                      Container(
-                                        height: 25.0,
-                                        width: 25.0,
-                                        child: SvgPicture.network(
-                                          coinList[index].image.toString(),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10.0,
-                                      ),
-                                      Text(
-                                        coinList[index]
-                                            .symbol
-                                            .toString()
-                                            .toUpperCase(),
-                                        style: CustomWidget(context: context)
-                                            .CustomSizedTextStyle(
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      child: Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 20.0,
+                                          ),
+                                          Container(
+                                            height: 25.0,
+                                            width: 25.0,
+                                            child: SvgPicture.network(
+                                              coinList[index].image.toString(),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10.0,
+                                          ),
+                                          Text(
+                                            coinList[index]
+                                                .symbol
+                                                .toString()
+                                                .toUpperCase(),
+                                            style: CustomWidget(
+                                                context: context)
+                                                .CustomSizedTextStyle(
                                                 16.0,
-                                                Theme.of(context).splashColor,
+                                                Theme
+                                                    .of(context)
+                                                    .splashColor,
                                                 FontWeight.w500,
                                                 'FontRegular'),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 5.0,
-                                ),
-                                Container(
-                                  height: 1.0,
-                                  width: MediaQuery.of(context).size.width,
-                                  color:
-                                      CustomTheme.of(context).backgroundColor,
-                                ),
-                                const SizedBox(
-                                  height: 5.0,
-                                ),
-                              ],
-                            );
-                          })),
-                    )),
+                                    ),
+                                    const SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Container(
+                                      height: 1.0,
+                                      width: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .width,
+                                      color:
+                                      CustomTheme
+                                          .of(context)
+                                          .backgroundColor,
+                                    ),
+                                    const SizedBox(
+                                      height: 5.0,
+                                    ),
+                                  ],
+                                );
+                              })),
+                        )),
                   ],
                 ),
               );
@@ -867,6 +896,223 @@ class _WithDrawState extends State<WithDraw> {
           );
         });
   }
+  // showSheeet(BuildContext contexts) {
+  //   return showModalBottomSheet(
+  //       context: contexts,
+  //       isScrollControlled: true,
+  //       builder: (context) {
+  //         return StatefulBuilder(
+  //           builder: (BuildContext context, StateSetter setStates) {
+  //             return Container(
+  //               height: MediaQuery.of(context).size.height * 0.9,
+  //               width: MediaQuery.of(context).size.width,
+  //               color: Theme.of(context).primaryColor,
+  //               child: Column(
+  //                 children: <Widget>[
+  //                   SizedBox(
+  //                     height: 20.0,
+  //                   ),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                     children: [
+  //                       Padding(
+  //                         padding: EdgeInsets.only(top: 10.0),
+  //                         child: Container(
+  //                           height: 45.0,
+  //                           padding: EdgeInsets.only(left: 20.0),
+  //                           width: MediaQuery.of(context).size.width * 0.8,
+  //                           child: TextField(
+  //                             controller: searchController,
+  //                             focusNode: searchFocus,
+  //                             enabled: true,
+  //                             onEditingComplete: () {
+  //                               setState(() {
+  //                                 searchFocus.unfocus();
+  //                               });
+  //                             },
+  //                             onChanged: (value) {
+  //                               setState(() {
+  //                                 coinList = [];
+  //
+  //                                 for (int m = 0;
+  //                                     m < searchCoinList.length;
+  //                                     m++) {
+  //                                   if (searchCoinList[m]
+  //                                           .symbol
+  //                                           .toString()
+  //                                           .toLowerCase()
+  //                                           .contains(value
+  //                                               .toString()
+  //                                               .toLowerCase()) ||
+  //                                       searchCoinList[m]
+  //                                           .symbol
+  //                                           .toString()
+  //                                           .toLowerCase()
+  //                                           .contains(value
+  //                                               .toString()
+  //                                               .toLowerCase())) {
+  //                                     coinList.add(searchCoinList[m]);
+  //                                   }
+  //                                 }
+  //                               });
+  //                             },
+  //                             decoration: InputDecoration(
+  //                               contentPadding: const EdgeInsets.only(
+  //                                   left: 12, right: 0, top: 8, bottom: 8),
+  //                               hintText: "Search",
+  //                               hintStyle: TextStyle(
+  //                                   fontFamily: "FontRegular",
+  //                                   color: Theme.of(context).hintColor,
+  //                                   fontSize: 14.0,
+  //                                   fontWeight: FontWeight.w400),
+  //                               filled: true,
+  //                               fillColor: CustomTheme.of(context)
+  //                                   .backgroundColor
+  //                                   .withOpacity(0.5),
+  //                               border: OutlineInputBorder(
+  //                                 borderRadius:
+  //                                     BorderRadius.all(Radius.circular(5.0)),
+  //                                 borderSide: BorderSide(
+  //                                     color: CustomTheme.of(context)
+  //                                         .splashColor
+  //                                         .withOpacity(0.5),
+  //                                     width: 1.0),
+  //                               ),
+  //                               disabledBorder: OutlineInputBorder(
+  //                                 borderRadius:
+  //                                     BorderRadius.all(Radius.circular(5.0)),
+  //                                 borderSide: BorderSide(
+  //                                     color: CustomTheme.of(context)
+  //                                         .splashColor
+  //                                         .withOpacity(0.5),
+  //                                     width: 1.0),
+  //                               ),
+  //                               enabledBorder: OutlineInputBorder(
+  //                                 borderRadius:
+  //                                     BorderRadius.all(Radius.circular(5.0)),
+  //                                 borderSide: BorderSide(
+  //                                     color: CustomTheme.of(context)
+  //                                         .splashColor
+  //                                         .withOpacity(0.5),
+  //                                     width: 1.0),
+  //                               ),
+  //                               focusedBorder: OutlineInputBorder(
+  //                                 borderRadius:
+  //                                     BorderRadius.all(Radius.circular(5.0)),
+  //                                 borderSide: BorderSide(
+  //                                     color: CustomTheme.of(context)
+  //                                         .splashColor
+  //                                         .withOpacity(0.5),
+  //                                     width: 1.0),
+  //                               ),
+  //                               errorBorder: const OutlineInputBorder(
+  //                                 borderRadius:
+  //                                     BorderRadius.all(Radius.circular(5)),
+  //                                 borderSide:
+  //                                     BorderSide(color: Colors.red, width: 0.0),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       Container(
+  //                         child: Align(
+  //                             child: InkWell(
+  //                           onTap: () {
+  //                             Navigator.pop(context);
+  //                             setState(() {
+  //                               searchController.clear();
+  //                               coinList.addAll(searchCoinList);
+  //                             });
+  //                           },
+  //                           child: Icon(
+  //                             Icons.close,
+  //                             size: 20.0,
+  //                             color: Theme.of(context).hintColor,
+  //                           ),
+  //                         )),
+  //                       ),
+  //                       const SizedBox(
+  //                         width: 10.0,
+  //                       )
+  //                     ],
+  //                   ),
+  //                   const SizedBox(
+  //                     height: 15.0,
+  //                   ),
+  //                   Expanded(
+  //                       child: Padding(
+  //                     padding: EdgeInsets.only(top: 15.0),
+  //                     child: ListView.builder(
+  //                         controller: controller,
+  //                         itemCount: coinList.length,
+  //                         itemBuilder: ((BuildContext context, int index) {
+  //                           return Column(
+  //                             children: [
+  //                               InkWell(
+  //                                 onTap: () {
+  //                                   setState(() {
+  //                                     selectedCoin = coinList[index];
+  //                                     indexVal = 0;
+  //
+  //                                     print(selectedCoin!.type);
+  //                                     Navigator.pop(context);
+  //                                   });
+  //                                 },
+  //                                 child: Row(
+  //                                   children: [
+  //                                     const SizedBox(
+  //                                       width: 20.0,
+  //                                     ),
+  //                                     Container(
+  //                                       height: 25.0,
+  //                                       width: 25.0,
+  //                                       child: SvgPicture.network(
+  //                                         coinList[index].image.toString(),
+  //                                         fit: BoxFit.cover,
+  //                                       ),
+  //                                     ),
+  //                                     const SizedBox(
+  //                                       width: 10.0,
+  //                                     ),
+  //                                     Text(
+  //                                       coinList[index]
+  //                                           .symbol
+  //                                           .toString()
+  //                                           .toUpperCase(),
+  //                                       style: CustomWidget(context: context)
+  //                                           .CustomSizedTextStyle(
+  //                                               16.0,
+  //                                               Theme.of(context).splashColor,
+  //                                               FontWeight.w500,
+  //                                               'FontRegular'),
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                               const SizedBox(
+  //                                 height: 5.0,
+  //                               ),
+  //                               Container(
+  //                                 height: 1.0,
+  //                                 width: MediaQuery.of(context).size.width,
+  //                                 color:
+  //                                     CustomTheme.of(context).backgroundColor,
+  //                               ),
+  //                               const SizedBox(
+  //                                 height: 5.0,
+  //                               ),
+  //                             ],
+  //                           );
+  //                         })),
+  //                   )),
+  //                 ],
+  //               ),
+  //             );
+  //           },
+  //         );
+  //       });
+  // }
 
   Future<void> _scan() async {
     try {

@@ -24,7 +24,7 @@ class _TradeChartScreenState extends State<TradeChartScreen> {
   void initState() {
     super.initState();
 
-    print('https://h2crypto.exchange/trading-chart/'+widget.pair);
+
     webcontroller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))

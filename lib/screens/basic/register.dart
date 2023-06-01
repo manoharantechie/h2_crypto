@@ -22,6 +22,7 @@ import 'package:h2_crypto/data/crypt_model/common_model.dart';
 import 'package:h2_crypto/screens/basic/login.dart';
 import 'package:h2_crypto/screens/others/terms_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -345,30 +346,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     TextSpan(
                                       text: AppLocalizations.instance
                                           .text("loc_policy"),
-                                      recognizer: TapGestureRecognizer()..onTap = () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>  TermsCondition(
-                                                title: false, content: false,
-                                              ),
-                                            ));
+                                      recognizer: TapGestureRecognizer()..onTap = () async{
+                                        const url = 'https://h2crypto.exchange/page/termsofservice';
+                                        await launchUrl(
+                                          Uri.parse(url),
+                                          mode: LaunchMode.inAppWebView,
+
+                                        );
                                       },
                                       style: TextStyle(
                                           color: Theme.of(context).shadowColor,
                                           fontWeight: FontWeight.w400),
                                     ),
                                     TextSpan(
+                                      text: " and ",
+                                      recognizer: TapGestureRecognizer()..onTap = () {
+
+                                      },
+                                      style: TextStyle(
+                                          color: Theme.of(context).splashColor,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    TextSpan(
                                       text: "\n"+AppLocalizations.instance
                                           .text("loc_terms"),
-                                      recognizer: TapGestureRecognizer()..onTap = () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>  TermsCondition(
-                                                title: true, content: true,
-                                              ),
-                                            ));
+                                      recognizer: TapGestureRecognizer()..onTap = () async{
+                                        const url = 'https://h2crypto.exchange/page/privacypolicy';
+                                        await launchUrl(
+                                          Uri.parse(url),
+                                          mode: LaunchMode.inAppWebView,
+
+                                        );
                                       },
                                       style: TextStyle(
                                           color: Theme.of(context).shadowColor,

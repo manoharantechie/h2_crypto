@@ -220,30 +220,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icon/language.svg',
-                              height: 20.0,
-                              color: CustomTheme.of(context).splashColor,
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            Text(
-                              "English",
-                              style: CustomWidget(context: context)
-                                  .CustomTextStyle(
-                                      Theme.of(context).splashColor,
-                                      FontWeight.w400,
-                                      'FontRegular'),
-                            ),
-                          ],
-                        ),
+
                         const SizedBox(
                           height: 50.0,
+                        ),
+                         Container(
+                           width: MediaQuery.of(context).size.width,
+                           child: Center(
+                             child:  SvgPicture.asset(
+                               'assets/icon/n_logo.svg',
+                               height: MediaQuery.of(context).size.height * 0.2,
+                               width: MediaQuery.of(context).size.width*0.7,
+                             ),
+                           ),
+                         ),
+                        const SizedBox(
+                          height: 30.0,
                         ),
                         Text(
                           AppLocalizations.instance.text("loc_sign_in_text"),

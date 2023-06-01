@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../../../common/custom_widget.dart';
 import '../../../common/localization/localizations.dart';
 import '../../../common/theme/custom_theme.dart';
@@ -9,8 +10,8 @@ import '../../../data/api_utils.dart';
 
 
 class TermsCondition extends StatefulWidget {
-  final bool title;
-  final bool content;
+  final String title;
+  final String content;
   const TermsCondition({Key? key, required this.title, required this.content}) : super(key: key);
   @override
   State<TermsCondition> createState() => _TermsConditionState();
@@ -18,27 +19,50 @@ class TermsCondition extends StatefulWidget {
 
 class _TermsConditionState extends State<TermsCondition> {
 
-  bool loading = false;
+  late final WebViewController webcontroller;
 
-  String data="";
-  APIUtils apiUtils = APIUtils();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    loading=true;
+
+
+    webcontroller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor( Color(0xFF242B48))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith(widget.content,)) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.content,));
+
+
 
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomTheme.of(context).backgroundColor,
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
 
         elevation: 0.0,
         title: Text(
-           widget.title ? AppLocalizations.instance.text("loc_terms"): AppLocalizations.instance.text("loc_policy"),
+            AppLocalizations.instance.text(widget.title),
           // textAlign: TextAlign.center,
           style: CustomWidget(context: context).CustomSizedTextStyle(
               17.0,
@@ -60,36 +84,8 @@ class _TermsConditionState extends State<TermsCondition> {
             )),
         centerTitle: true,
       ),
-      body: Container(
-        margin: EdgeInsets.only(left: 0, right: 0, bottom: 0.0),
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                // Add one stop for each color
-                // Values should increase from 0.0 to 1.0
-                stops: [
-                  0.1,
-                  0.5,
-                  0.9,
-                ],
-                colors: [
-                  CustomTheme.of(context).primaryColor,
-                  CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).dialogBackgroundColor,
-                ])),
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 10.0),
-            child:loading?CustomWidget(context: context).loadingIndicator( CustomTheme.of(context).splashColor,): Html(
-              data: data,
-            ),
-          ),
-        ),
-      ),
-    );
+      body:  WebViewWidget(controller: webcontroller),);
+
   }
 
 }

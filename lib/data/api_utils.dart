@@ -5,6 +5,7 @@ import 'package:h2_crypto/data/crypt_model/asset_details_model.dart';
 import 'package:h2_crypto/data/crypt_model/assets_list_model.dart';
 import 'package:h2_crypto/data/crypt_model/check_quote_model.dart';
 import 'package:h2_crypto/data/crypt_model/country_code.dart';
+import 'package:h2_crypto/data/crypt_model/deposit_details_model.dart';
 import 'package:h2_crypto/data/crypt_model/history_model.dart';
 import 'package:h2_crypto/data/crypt_model/individual_user_details.dart';
 import 'package:h2_crypto/data/crypt_model/login_model.dart';
@@ -24,7 +25,7 @@ class APIUtils {
   /*static const baseURL = 'http://43.205.10.212';*/
   /* static const baseURL = 'http://43.205.149.22';*/
 
-  static const crypto_baseURL = 'http://h2crypto.exchange/';
+  static const crypto_baseURL = 'https://h2crypto.exchange/';
   static const crypto_baseURL_Sfox = 'https://api.sfox.com/';
 
   Socket? socketChat;
@@ -53,7 +54,7 @@ class APIUtils {
   static const String getOpenOrdersURL = 'v1/orders';
   static const String stopLimitUrl = 'api/post-trade';
   static const String userInfoUrl = 'api/userdetails';
-  static const String depositInfoUrl = 'v1/user/deposit/address/';
+  static const String depositInfoUrl = 'api/asset-details';
   static const String getQuoteInfoUrl = 'api/check-quote';
   static const String cancelTradeUrl = 'api/cancel-trade';
   static const String tranHisUrl = 'api/transaction-histroy';
@@ -406,15 +407,19 @@ class APIUtils {
     return UserDetailsModel.fromJson(json.decode(response.body));
   }
 
-  Future<dynamic> getDepositDetails(String coin) async {
+  Future<DepositDetailsModel> getDepositDetails(String coin) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
+    var tradeData = {
+      "asset": coin.toUpperCase(),
+    };
     final response = await http
-        .get(Uri.parse(crypto_baseURL_Sfox + depositInfoUrl + coin), headers: {
-      "authorization": "Bearer " + preferences.getString("sfox").toString()
+        .post(Uri.parse(crypto_baseURL + depositInfoUrl),body: tradeData, headers: {
+      "authorization": "Bearer " + preferences.getString("token").toString()
     });
 
-    return json.decode(response.body);
+
+    return DepositDetailsModel.fromJson(json.decode(response.body));
   }
 
   Future<QuoteDetailsModel> getQuoteDetails(

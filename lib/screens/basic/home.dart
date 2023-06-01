@@ -280,6 +280,7 @@ class _HomeState extends State<Home>
   Widget bottomBar() {
     return Container(
         height: 80,
+        padding: EdgeInsets.only(left: 5.0, right: 5.0),
         width: MediaQuery.of(context).size.width,
         color: CustomTheme.of(context).bottomAppBarColor,
         child: Stack(
@@ -296,7 +297,7 @@ class _HomeState extends State<Home>
                     onTap: () {
                       setState(() {
                         currentIndex = 0;
-                        dashView=true;
+                        dashView = true;
                         onSelectItem(0);
                       });
                     },
@@ -304,6 +305,8 @@ class _HomeState extends State<Home>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset('assets/bottom/home.svg',
+                            height: 20.0,
+                            width: 20.0,
                             color: currentIndex == 0
                                 ? Theme.of(context).splashColor
                                 : Theme.of(context)
@@ -312,10 +315,14 @@ class _HomeState extends State<Home>
                         const SizedBox(
                           height: 10.0,
                         ),
-                        Text( AppLocalizations.instance.text('loc_side_home').toUpperCase(),
+                        Text(
+                            AppLocalizations.instance
+                                .text('loc_side_home')
+                                .toUpperCase(),
                             textAlign: TextAlign.center,
                             style: CustomWidget(context: context)
-                                .CustomTextStyle(
+                                .CustomSizedTextStyle(
+                                    12.0,
                                     currentIndex == 0
                                         ? Theme.of(context).splashColor
                                         : Theme.of(context)
@@ -330,7 +337,7 @@ class _HomeState extends State<Home>
                     onTap: () {
                       setState(() {
                         currentIndex = 1;
-                        dashView=false;
+                        dashView = false;
                         onSelectItem(1);
                       });
                     },
@@ -338,6 +345,8 @@ class _HomeState extends State<Home>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset('assets/bottom/market.svg',
+                            height: 20.0,
+                            width: 20.0,
                             color: currentIndex == 1
                                 ? Theme.of(context).splashColor
                                 : Theme.of(context)
@@ -347,18 +356,20 @@ class _HomeState extends State<Home>
                           height: 10.0,
                         ),
                         Text(
-                            AppLocalizations.instance.text('loc_markets').toUpperCase(),
-                          textAlign: TextAlign.center,
+                            AppLocalizations.instance
+                                .text('loc_markets')
+                                .toUpperCase(),
+                            textAlign: TextAlign.center,
                             style: CustomWidget(context: context)
-                                .CustomTextStyle(
-                                currentIndex == 1
-                                    ? Theme.of(context).splashColor
-                                    : Theme.of(context)
-                                    .splashColor
-                                    .withOpacity(0.5),
-                                FontWeight.normal,
-                                'FontRegular')
-                        ),
+                                .CustomSizedTextStyle(
+                                    12.0,
+                                    currentIndex == 1
+                                        ? Theme.of(context).splashColor
+                                        : Theme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                    FontWeight.normal,
+                                    'FontRegular')),
                       ],
                     ),
                   ),
@@ -373,28 +384,31 @@ class _HomeState extends State<Home>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset('assets/bottom/trade.svg',
+                            height: 20.0,
+                            width: 20.0,
                             color: currentIndex == 2
                                 ? Theme.of(context).splashColor
                                 : Theme.of(context)
-                                .splashColor
-                                .withOpacity(0.5)),
+                                    .splashColor
+                                    .withOpacity(0.5)),
                         const SizedBox(
                           height: 10.0,
                         ),
                         Text(
-                          AppLocalizations.instance.text('loc_side_trade').toUpperCase(),
+                          AppLocalizations.instance
+                              .text('loc_side_trade')
+                              .toUpperCase(),
                           textAlign: TextAlign.center,
                           style: CustomWidget(context: context)
-                              .CustomTextStyle(
-                              currentIndex == 2
-                                  ? Theme.of(context).splashColor
-                                  : Theme.of(context)
-                                  .splashColor
-                                  .withOpacity(0.5),
-                              FontWeight.normal,
-                              'FontRegular'
-
-                          ),
+                              .CustomSizedTextStyle(
+                                  12.0,
+                                  currentIndex == 2
+                                      ? Theme.of(context).splashColor
+                                      : Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                  FontWeight.normal,
+                                  'FontRegular'),
                         ),
                       ],
                     ),
@@ -410,6 +424,8 @@ class _HomeState extends State<Home>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset('assets/bottom/future.svg',
+                            height: 20.0,
+                            width: 20.0,
                             color: currentIndex == 3
                                 ? Theme.of(context).splashColor
                                 : Theme.of(context)
@@ -419,19 +435,20 @@ class _HomeState extends State<Home>
                           height: 10.0,
                         ),
                         Text(
-                          AppLocalizations.instance.text('loc_side_future').toUpperCase(),
+                          AppLocalizations.instance
+                              .text('loc_side_future')
+                              .toUpperCase(),
                           textAlign: TextAlign.center,
-                            style: CustomWidget(context: context)
-                                .CustomTextStyle(
-                                currentIndex == 3
-                                    ? Theme.of(context).splashColor
-                                    : Theme.of(context)
-                                    .splashColor
-                                    .withOpacity(0.5),
-                                FontWeight.normal,
-                                'FontRegular'
-
-                          ),
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                                  12.0,
+                                  currentIndex == 3
+                                      ? Theme.of(context).splashColor
+                                      : Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                  FontWeight.normal,
+                                  'FontRegular'),
                         ),
                       ],
                     ),
@@ -447,6 +464,8 @@ class _HomeState extends State<Home>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset('assets/bottom/wallet.svg',
+                            height: 20.0,
+                            width: 20.0,
                             color: currentIndex == 4
                                 ? Theme.of(context).splashColor
                                 : Theme.of(context)
@@ -456,17 +475,20 @@ class _HomeState extends State<Home>
                           height: 10.0,
                         ),
                         Text(
-                          AppLocalizations.instance.text('loc_side_assets').toUpperCase(),
+                          AppLocalizations.instance
+                              .text('loc_side_assets')
+                              .toUpperCase(),
                           textAlign: TextAlign.center,
                           style: CustomWidget(context: context)
-                              .CustomTextStyle(
-                              currentIndex == 4
-                                  ? Theme.of(context).splashColor
-                                  : Theme.of(context)
-                                  .splashColor
-                                  .withOpacity(0.5),
-                              FontWeight.normal,
-                              'FontRegular'),
+                              .CustomSizedTextStyle(
+                                  12.0,
+                                  currentIndex == 4
+                                      ? Theme.of(context).splashColor
+                                      : Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                  FontWeight.normal,
+                                  'FontRegular'),
                         ),
                       ],
                     ),
@@ -627,7 +649,6 @@ class _HomeState extends State<Home>
                     const SizedBox(
                       height: 10.0,
                     ),
-
                     const SizedBox(
                       height: 10.0,
                     ),
@@ -804,7 +825,6 @@ class _HomeState extends State<Home>
                     const SizedBox(
                       height: 20.0,
                     ),
-
                     Container(
                       child: GridView.builder(
                         padding: EdgeInsets.zero,
@@ -933,140 +953,9 @@ class _HomeState extends State<Home>
                         )
                       ],
                     ),
-
                     SizedBox(
                       height: 20.0,
                     ),
-
-                    // coinList.length > 0
-                    //     ? Container(
-                    //     width: MediaQuery.of(context).size.width,
-                    //     child: SingleChildScrollView(
-                    //         controller: controller,
-                    //         child: Column(
-                    //           children: [
-                    //             SingleChildScrollView(
-                    //               child: ListView.builder(
-                    //                 itemCount: 5,
-                    //                 shrinkWrap: true,
-                    //                 controller: controller,
-                    //                 itemBuilder: (BuildContext context, int index) {
-                    //                   return Column(
-                    //                     children: [
-                    //                       Container(
-                    //                         padding: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0, top: 15.0),
-                    //                         decoration: BoxDecoration(
-                    //                             border: Border.all(width: 1.0,color: CustomTheme.of(context).splashColor.withOpacity(0.5),),
-                    //                             borderRadius: BorderRadius.circular(10.0)
-                    //                         ),
-                    //                         child: Row(
-                    //                           mainAxisAlignment:
-                    //                           MainAxisAlignment.spaceBetween,
-                    //                           children: [
-                    //                             Row(
-                    //                               mainAxisAlignment:
-                    //                               MainAxisAlignment
-                    //                                   .spaceEvenly,
-                    //                               crossAxisAlignment:
-                    //                               CrossAxisAlignment.center,
-                    //                               children: [
-                    //                                 Container(
-                    //                                   height: 40.0,
-                    //                                   width: 40.0,
-                    //                                   decoration: BoxDecoration(
-                    //                                     borderRadius:
-                    //                                     BorderRadius.circular(
-                    //                                         5.0),
-                    //                                     color: CustomTheme.of(
-                    //                                         context)
-                    //                                         .cardColor,
-                    //                                   ),
-                    //                                   padding:
-                    //                                   EdgeInsets.all(5.0),
-                    //                                   child: SvgPicture.network(
-                    //                                     coinList[index]
-                    //                                         .image
-                    //                                         .toString(),
-                    //                                     fit: BoxFit.cover,
-                    //                                   ),
-                    //                                 ),
-                    //                                 const SizedBox(
-                    //                                   width: 15.0,
-                    //                                 ),
-                    //                                 Column(
-                    //                                   crossAxisAlignment:
-                    //                                   CrossAxisAlignment
-                    //                                       .start,
-                    //                                   children: [
-                    //                                     Text(
-                    //                                       coinList[index]
-                    //                                           .name
-                    //                                           .toString(),
-                    //                                       style: CustomWidget(
-                    //                                           context:
-                    //                                           context)
-                    //                                           .CustomTextStyle(
-                    //                                           Theme.of(
-                    //                                               context)
-                    //                                               .splashColor,
-                    //                                           FontWeight.w400,
-                    //                                           'FontRegular'),
-                    //                                       softWrap: true,
-                    //                                       overflow: TextOverflow
-                    //                                           .ellipsis,
-                    //                                     ),
-                    //                                     const SizedBox(
-                    //                                       width: 10.0,
-                    //                                     ),
-                    //                                     Text(
-                    //                                       "( " +
-                    //                                           coinList[index]
-                    //                                               .symbol
-                    //                                               .toString()
-                    //                                               .toUpperCase() +
-                    //                                           " )",
-                    //                                       style: CustomWidget(
-                    //                                           context:
-                    //                                           context)
-                    //                                           .CustomTextStyle(
-                    //                                           Theme.of(
-                    //                                               context)
-                    //                                               .splashColor,
-                    //                                           FontWeight
-                    //                                               .normal,
-                    //                                           'FontRegular'),
-                    //                                     ),
-                    //                                   ],
-                    //                                 )
-                    //                               ],
-                    //                             ),
-                    //                             Text(
-                    //                               coinList[index]
-                    //                                   .balance
-                    //                                   .toString(),
-                    //                               style: CustomWidget(
-                    //                                   context: context)
-                    //                                   .CustomTextStyle(
-                    //                                   Theme.of(context)
-                    //                                       .splashColor,
-                    //                                   FontWeight.w400,
-                    //                                   'FontRegular'),
-                    //                             ),
-                    //                           ],
-                    //                         ),
-                    //                       ),
-                    //                       const SizedBox(
-                    //                         height: 15.0,
-                    //                       ),
-                    //
-                    //                     ],
-                    //                   );
-                    //                 },
-                    //               ),
-                    //             )
-                    //           ],
-                    //         )))
-
                     tradePairList.length > 0
                         ? ListView.builder(
                             itemCount: tradePairList.length,
@@ -1130,11 +1019,27 @@ class _HomeState extends State<Home>
                                           child: Column(
                                             children: [
                                               Text(
-                                                double.parse(
+                                                tradePairList[index]
+                                                                .cointwoDecimal
+                                                                .toString() ==
+                                                            null ||
                                                         tradePairList[index]
-                                                            .currentPrice
-                                                            .toString())
-                                                    .toStringAsFixed(4),
+                                                                .cointwoDecimal
+                                                                .toString() ==
+                                                            "null"
+                                                    ? double.parse(
+                                                            tradePairList[index]
+                                                                .currentPrice
+                                                                .toString())
+                                                        .toStringAsFixed(2)
+                                                    : double.parse(
+                                                            tradePairList[index]
+                                                                .currentPrice
+                                                                .toString())
+                                                        .toStringAsFixed(int.parse(
+                                                            tradePairList[index]
+                                                                .cointwoDecimal
+                                                                .toString())),
                                                 style: CustomWidget(
                                                         context: context)
                                                     .CustomSizedTextStyle(
@@ -1152,21 +1057,6 @@ class _HomeState extends State<Home>
                                               const SizedBox(
                                                 height: 5.0,
                                               ),
-                                              // Text(
-                                              //   "\$ " +
-                                              //       double.parse(marketList[index]
-                                              //               .tick!['lastPrice']
-                                              //               .toString())
-                                              //           .toStringAsFixed(8),
-                                              //   style: CustomWidget(context: context)
-                                              //       .CustomSizedTextStyle(
-                                              //           12.0,
-                                              //           Theme.of(context)
-                                              //               .hintColor
-                                              //               .withOpacity(0.5),
-                                              //           FontWeight.w500,
-                                              //           'FontRegular'),
-                                              // ),
                                             ],
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -1237,7 +1127,6 @@ class _HomeState extends State<Home>
                               ),
                             ),
                           ),
-
                     SizedBox(
                       height: 20.0,
                     ),

@@ -70,8 +70,7 @@ class _MarketSceen1State extends State<MarketSceen>
         if (data != null || data != "null") {
           var decode = jsonDecode(data);
 
-        if(mounted)
-          {
+          if (mounted) {
             setState(() {
               NewSocketData ss = NewSocketData.fromJson(decode);
               for (int m = 0; m < tradePairList.length; m++) {
@@ -419,17 +418,32 @@ class _MarketSceen1State extends State<MarketSceen>
                                 ],
                               ),
                             ),
-                            flex: 2,
+                            flex: 3,
                           ),
                           Flexible(
                             child: Container(
                               child: Column(
                                 children: [
                                   Text(
-                                    double.parse(tradePairList[index]
-                                            .currentPrice
-                                            .toString())
-                                        .toStringAsFixed(4),
+                                    tradePairList[index]
+                                                    .cointwoDecimal
+                                                    .toString() ==
+                                                null ||
+                                            tradePairList[index]
+                                                    .cointwoDecimal
+                                                    .toString() ==
+                                                "null"
+                                        ? double.parse(tradePairList[index]
+                                                .currentPrice
+                                                .toString())
+                                            .toStringAsFixed(4)
+                                        : double.parse(tradePairList[index]
+                                                .currentPrice
+                                                .toString())
+                                            .toStringAsFixed(int.parse(
+                                                tradePairList[index]
+                                                    .cointwoDecimal
+                                                    .toString())),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
                                             13.0,
@@ -464,7 +478,7 @@ class _MarketSceen1State extends State<MarketSceen>
                               ),
                               width: MediaQuery.of(context).size.width,
                             ),
-                            flex: 2,
+                            flex: 3,
                           ),
                           Flexible(
                             child: Container(
@@ -476,7 +490,7 @@ class _MarketSceen1State extends State<MarketSceen>
                                     top: 8.0,
                                     bottom: 8.0),
                                 child: Text(
-                                  data.toStringAsFixed(2)+"%",
+                                  data.toStringAsFixed(2) + "%",
                                   style: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
                                           10.0,
@@ -491,7 +505,7 @@ class _MarketSceen1State extends State<MarketSceen>
                                     borderRadius: BorderRadius.circular(5.0)),
                               )),
                             ),
-                            flex: 1,
+                            flex: 2,
                           ),
                         ],
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -522,12 +536,10 @@ class _MarketSceen1State extends State<MarketSceen>
 
           tradePairListAll = loginData.result!;
 
-
           for (int m = 0; m < tradePairListAll.length; m++) {
             arrData.add("ticker.sfox." + tradePairListAll[m].symbol.toString());
             marketAseetList.add(tradePairListAll[m].marketAsset.toString());
           }
-
 
           marketAseetList = marketAseetList.toSet().toList();
           selectedmarketAseet = marketAseetList.first;
@@ -538,8 +550,6 @@ class _MarketSceen1State extends State<MarketSceen>
               tradePairList.add(tradePairListAll[m]);
             }
           }
-
-
 
           var messageJSON = {
             "type": "subscribe",

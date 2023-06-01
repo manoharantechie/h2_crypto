@@ -64,15 +64,6 @@ class _SplashScreenState extends State<SplashScreen> {
       }
 
       onLoad();
-      // if (exp == null || exp == "null") {
-      //   onLoad();
-      // } else {
-      //   if (expTime != int.parse(exp)) {
-      //     getRefresh();
-      //   } else {
-      //     onLoad();
-      //   }
-      // }
     });
   }
 
@@ -104,23 +95,6 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  // getRefresh() {
-  //   apiUtils.getRefreshToken().then((RefreshTokenModel loginData) {
-  //     if (loginData.statusCode.toString() == "200") {
-  //       setState(() {
-  //         storeData(loginData.data!.accessToken!.token.toString(),
-  //             loginData.data!.accessToken!.exp.toString());
-  //         onLoad();
-  //       });
-  //     } else {
-  //       setState(() {});
-  //     }
-  //   }).catchError((Object error) {
-  //     print("Mano");
-  //     print(error);
-  //     setState(() {});
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -153,9 +127,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 const SizedBox(
                   height: 10.0,
                 ),
-                Image.asset(
-                  'assets/icon/logo.png',
-                  height: MediaQuery.of(context).size.height * 0.15,
+                SvgPicture.asset(
+                  'assets/icon/n_logo.svg',
+                  height: MediaQuery.of(context).size.height * 0.25,
                   width: MediaQuery.of(context).size.width*0.7,
                 ),
                 const SizedBox(

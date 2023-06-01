@@ -902,7 +902,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                           ? SizedBox(
                               height: !buyOption
                                   ? MediaQuery.of(context).size.height * 0.34
-                                  : MediaQuery.of(context).size.height * 0.17,
+                                  : MediaQuery.of(context).size.height * 0.20,
                               child: sellData.length > 0
                                   ? ListView.builder(
                                       controller: controller,
@@ -2221,7 +2221,7 @@ class _SellTradeScreenState extends State<TradeScreen>
         ),
         Container(
           width: MediaQuery.of(context).size.width,
-          height: 35.0,
+          height: 38.0,
           padding: EdgeInsets.fromLTRB(5, 0.0, 5, 0.0),
           decoration: BoxDecoration(
             border: Border.all(
@@ -2290,7 +2290,7 @@ class _SellTradeScreenState extends State<TradeScreen>
           ),
         ),
         SizedBox(
-          height: 20.0,
+          height: 25.0,
         ),
         !enableTrade?Container(
           padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
@@ -2530,10 +2530,10 @@ class _SellTradeScreenState extends State<TradeScreen>
         enableTrade
             ? Container()
             : const SizedBox(
-                height: 5.0,
+                height: 7.0,
               ),
         SizedBox(
-          height: 15.0,
+          height: 25.0,
         ),
         Container(
           padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
@@ -2802,6 +2802,7 @@ class _SellTradeScreenState extends State<TradeScreen>
             ],
           ),
         ),
+        const SizedBox(height: 20.0,),
         Container(
           child: SliderTheme(
             data: SliderThemeData(
@@ -2970,6 +2971,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                   ),
           ),
         ),
+        const SizedBox(height: 15.0,),
         Container(
           padding: EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
           decoration: BoxDecoration(

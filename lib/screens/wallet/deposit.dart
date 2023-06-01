@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:h2_crypto/common/custom_widget.dart';
 import 'package:h2_crypto/data/api_utils.dart';
+import 'package:h2_crypto/data/crypt_model/deposit_details_model.dart';
 import 'package:h2_crypto/data/crypt_model/user_wallet_balance_model.dart';
 
 import '../../../common/localization/localizations.dart';
@@ -355,7 +356,7 @@ class _DepositAddressState extends State<DepositScreen> {
         Column(
           children: [
             Text(
-              "H2Crypto’s API allows users to make market inquiries, trade automatically and perform various other tasks. You may find out more here ",
+              "H2cryptO’s API allows users to make market inquiries, trade automatically and perform various other tasks. You may find out more here ",
               style: CustomWidget(context: context).CustomSizedTextStyle(
                   12.0,
                   Theme
@@ -1003,7 +1004,7 @@ class _DepositAddressState extends State<DepositScreen> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        setStates(() {
+                                        setState(() {
                                           selectedCoin = coinList[index];
                                           indexVal = 0;
 
@@ -1083,19 +1084,22 @@ class _DepositAddressState extends State<DepositScreen> {
   }
 
   getDetails() {
+    print(selectedCoin!.symbol.toString());
     apiUtils
         .getDepositDetails(selectedCoin!.symbol.toString())
-        .then((dynamic loginData) {
+        .then((DepositDetailsModel loginData) {
       setState(() {
         loading = false;
-        var listData = loginData;
-        if(listData.toString()=="{}")
-          {
 
+        if(loginData.success)
+          {
+            address=loginData.result.address.toString();
           }
         else
           {
-            address = listData[selectedCoin!.symbol.toString()][0]["address"];
+            address="";
+            CustomWidget(context: context)
+                .custombar("H2cryptO", loginData.message.toString(), false);
           }
 
       });

@@ -134,6 +134,7 @@ class CustomWidget {
       fontFamily: family,
       color: color,
       fontWeight: weight,
+      fontSize: 13.0
     );
   }
 
