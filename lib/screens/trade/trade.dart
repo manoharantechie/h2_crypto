@@ -143,7 +143,10 @@ class _SellTradeScreenState extends State<TradeScreen>
     tradeTabController = TabController(vsync: this, length: 3);
     selectedDecimal = _decimal.first;
     loading = true;
-
+    _animationController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 10000));
+    _colorTween = ColorTween(begin: Colors.grey.withOpacity(0.5), end: Colors.transparent)
+        .animate(_animationController!);
     getData();
 
     channelOpenOrder = IOWebSocketChannel.connect(
@@ -418,6 +421,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                       priceController.clear();
                                       amountController.clear();
                                       getCoinList();
+                                      val="";
                                       enableTrade = false;
                                       selectedTime = chartTime.first;
                                     });
