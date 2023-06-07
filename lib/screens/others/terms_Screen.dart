@@ -20,6 +20,7 @@ class TermsCondition extends StatefulWidget {
 class _TermsConditionState extends State<TermsCondition> {
 
   late final WebViewController webcontroller;
+  bool loading=true;
 
   @override
   void initState() {
@@ -35,7 +36,11 @@ class _TermsConditionState extends State<TermsCondition> {
             // Update loading bar.
           },
           onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
+          onPageFinished: (String url) {
+            setState(() {
+              loading=false;
+            });
+          },
 
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
@@ -84,7 +89,16 @@ class _TermsConditionState extends State<TermsCondition> {
             )),
         centerTitle: true,
       ),
-      body:  WebViewWidget(controller: webcontroller),);
+      body:  Stack(
+        children: [
+          WebViewWidget(controller: webcontroller),
+          loading
+              ? CustomWidget(context: context).loadingIndicator(
+            CustomTheme.of(context).splashColor,
+          )
+              : Container()
+        ],
+      ),);
 
   }
 

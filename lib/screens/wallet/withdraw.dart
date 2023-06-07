@@ -64,6 +64,9 @@ class _WithDrawState extends State<WithDraw> {
           {
             selectedCoin = coinList[m];
           }
+        else {
+          selectedCoin=coinList.first;
+        }
       }
 
 

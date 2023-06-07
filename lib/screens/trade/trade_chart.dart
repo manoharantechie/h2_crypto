@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:h2_crypto/common/colors.dart';
 import 'package:h2_crypto/common/custom_widget.dart';
+import 'package:h2_crypto/common/theme/custom_theme.dart';
 
 
 import 'package:webview_flutter/webview_flutter.dart';
@@ -19,6 +20,7 @@ class _TradeChartScreenState extends State<TradeChartScreen> {
   bool loadingChart = false;
 
   late final WebViewController webcontroller;
+  bool loading=true;
 
   @override
   void initState() {
@@ -34,7 +36,11 @@ class _TradeChartScreenState extends State<TradeChartScreen> {
             // Update loading bar.
           },
           onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
+          onPageFinished: (String url) {
+            setState(() {
+              loading=false;
+            });
+          },
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://h2crypto.exchange/trading-chart/'+widget.pair,)) {
@@ -73,6 +79,15 @@ class _TradeChartScreenState extends State<TradeChartScreen> {
 
           ),
         ),
-        body:  WebViewWidget(controller: webcontroller),);
+        body:  Stack(
+          children: [
+            WebViewWidget(controller: webcontroller),
+            loading
+                ? CustomWidget(context: context).loadingIndicator(
+              CustomTheme.of(context).splashColor,
+            )
+                : Container()
+          ],
+        ),);
   }
 }
