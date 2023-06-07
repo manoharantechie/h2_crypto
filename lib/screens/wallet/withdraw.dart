@@ -79,7 +79,7 @@ class _WithDrawState extends State<WithDraw> {
     });
   }
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
         elevation: 0.0,
@@ -113,15 +113,15 @@ class _WithDrawState extends State<WithDraw> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: [
-              0.1,
-              0.5,
-              0.9,
-            ],
+                  0.1,
+                  0.5,
+                  0.9,
+                ],
                 colors: [
-              CustomTheme.of(context).primaryColor,
-              CustomTheme.of(context).backgroundColor,
-              Theme.of(context).dialogBackgroundColor,
-            ])),
+                  CustomTheme.of(context).primaryColor,
+                  CustomTheme.of(context).backgroundColor,
+                  Theme.of(context).dialogBackgroundColor,
+                ])),
         child: Padding(
             padding: EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
             child: Stack(
@@ -152,10 +152,10 @@ class _WithDrawState extends State<WithDraw> {
                         selectedCoin!.name.toString().toUpperCase(),
                         style: CustomWidget(context: context)
                             .CustomSizedTextStyle(
-                                14.0,
-                                Theme.of(context).splashColor,
-                                FontWeight.w400,
-                                'FontRegular'),
+                            14.0,
+                            Theme.of(context).splashColor,
+                            FontWeight.w400,
+                            'FontRegular'),
                       ),
                       const SizedBox(
                         height: 15.0,
@@ -164,19 +164,19 @@ class _WithDrawState extends State<WithDraw> {
                         "Available",
                         style: CustomWidget(context: context)
                             .CustomSizedTextStyle(
-                                12.0,
-                                Theme.of(context).splashColor.withOpacity(0.5),
-                                FontWeight.w400,
-                                'FontRegular'),
+                            12.0,
+                            Theme.of(context).splashColor.withOpacity(0.5),
+                            FontWeight.w400,
+                            'FontRegular'),
                       ),
                       Text(
                         selectedCoin!.balance.toString(),
                         style: CustomWidget(context: context)
                             .CustomSizedTextStyle(
-                                14.0,
-                                Theme.of(context).splashColor,
-                                FontWeight.w400,
-                                'FontRegular'),
+                            14.0,
+                            Theme.of(context).splashColor,
+                            FontWeight.w400,
+                            'FontRegular'),
                       ),
                       Container(
                         child: Row(
@@ -207,7 +207,7 @@ class _WithDrawState extends State<WithDraw> {
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               padding:
-                                  EdgeInsets.fromLTRB(12.0, 15.0, 12, 15.0),
+                              EdgeInsets.fromLTRB(12.0, 15.0, 12, 15.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5.0),
                                 color: CustomTheme.of(context)
@@ -217,11 +217,11 @@ class _WithDrawState extends State<WithDraw> {
                               child: Theme(
                                   data: Theme.of(context).copyWith(
                                     canvasColor:
-                                        CustomTheme.of(context).cardColor,
+                                    CustomTheme.of(context).cardColor,
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         selectedCoin!.symbol
@@ -229,10 +229,10 @@ class _WithDrawState extends State<WithDraw> {
                                             .toUpperCase(),
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
-                                                14.0,
-                                                Theme.of(context).splashColor,
-                                                FontWeight.w400,
-                                                'FontRegular'),
+                                            14.0,
+                                            Theme.of(context).splashColor,
+                                            FontWeight.w400,
+                                            'FontRegular'),
                                       ),
                                       Row(
                                         children: [
@@ -264,7 +264,7 @@ class _WithDrawState extends State<WithDraw> {
                           SizedBox(
                             height: 10.0,
                           ),
-                     selectedCoin!.type.toString()=="fiat"?   bankList.length>0?  Container(
+                          selectedCoin!.type.toString()=="fiat"?   bankList.length>0?  Container(
                             height: 45.0,
                             padding: const EdgeInsets.only(
                                 left: 10.0, right: 10.0, top: 0.0, bottom: 0.0),
@@ -315,42 +315,42 @@ class _WithDrawState extends State<WithDraw> {
                               ),
                             ),
                           ): Padding(
-                       padding: EdgeInsets.only(top:0.0, bottom: 0.0, ),
-                       child: InkWell(
-                         onTap: () {
-                           Navigator.of(context)
-                               .push(
-                             MaterialPageRoute(builder: (_) => AddBankScreen()),
-                           )
-                               .then((val) => val ? _getRequests() : null);
-                         },
-                         child: Container(
-                           height: 45.0,
-                           decoration: BoxDecoration(
-                               color: CustomTheme.of(context)
-                                   .shadowColor
-                                   .withOpacity(0.2),
-                               borderRadius: BorderRadius.circular(5.0)),
-                           padding: EdgeInsets.only(left: 10.0,right: 10.0),
-                           child: Row(
-                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                             children: [
+                            padding: EdgeInsets.only(top:0.0, bottom: 0.0, ),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(
+                                  MaterialPageRoute(builder: (_) => AddBankScreen()),
+                                )
+                                    .then((val) => val ? _getRequests() : null);
+                              },
+                              child: Container(
+                                height: 45.0,
+                                decoration: BoxDecoration(
+                                    color: CustomTheme.of(context)
+                                        .shadowColor
+                                        .withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(5.0)),
+                                padding: EdgeInsets.only(left: 10.0,right: 10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
 
-                               Text(
-                                 "Link A Bank Account",
-                                 style: CustomWidget(context: context).CustomSizedTextStyle(16.0,
-                                     Theme.of(context).splashColor, FontWeight.w500, 'FontRegular'),
-                               ),
+                                    Text(
+                                      "Link A Bank Account",
+                                      style: CustomWidget(context: context).CustomSizedTextStyle(16.0,
+                                          Theme.of(context).splashColor, FontWeight.w500, 'FontRegular'),
+                                    ),
 
-                               Icon(
-                                 Icons.add,
-                                 size: 20.0,
-                               )
-                             ],
-                           ),
-                         ),
-                       ),
-                     ):Container(),
+                                    Icon(
+                                      Icons.add,
+                                      size: 20.0,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ):Container(),
                           const SizedBox(
                             height: 10.0,
                           ),
@@ -433,8 +433,8 @@ class _WithDrawState extends State<WithDraw> {
                                     controller: amountController,
                                     textInputAction: TextInputAction.done,
                                     keyboardType:
-                                        TextInputType.numberWithOptions(
-                                            decimal: true),
+                                    TextInputType.numberWithOptions(
+                                        decimal: true),
                                   ),
 
                                 ),
@@ -454,12 +454,12 @@ class _WithDrawState extends State<WithDraw> {
                                         textAlign: TextAlign.center,
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
-                                                10.0,
-                                                Theme.of(context)
-                                                    .hintColor
-                                                    .withOpacity(0.5),
-                                                FontWeight.w400,
-                                                'FontRegular'),
+                                            10.0,
+                                            Theme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.5),
+                                            FontWeight.w400,
+                                            'FontRegular'),
                                       ),
                                     ),
                                   ],
@@ -479,24 +479,24 @@ class _WithDrawState extends State<WithDraw> {
                                 textAlign: TextAlign.center,
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
-                                        10.0,
-                                        Theme.of(context)
-                                            .hintColor
-                                            .withOpacity(0.5),
-                                        FontWeight.w400,
-                                        'FontRegular'),
+                                    10.0,
+                                    Theme.of(context)
+                                        .hintColor
+                                        .withOpacity(0.5),
+                                    FontWeight.w400,
+                                    'FontRegular'),
                               ),
                               Text(
                                 "Feel 15.52",
                                 textAlign: TextAlign.center,
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
-                                        10.0,
-                                        Theme.of(context)
-                                            .hintColor
-                                            .withOpacity(0.5),
-                                        FontWeight.w400,
-                                        'FontRegular'),
+                                    10.0,
+                                    Theme.of(context)
+                                        .hintColor
+                                        .withOpacity(0.5),
+                                    FontWeight.w400,
+                                    'FontRegular'),
                               ),
                             ],
                           ),
@@ -512,19 +512,19 @@ class _WithDrawState extends State<WithDraw> {
                             keyboardType: TextInputType.emailAddress,
                             style: CustomWidget(context: context)
                                 .CustomTextStyle(Theme.of(context).splashColor,
-                                    FontWeight.w400, 'FontRegular'),
+                                FontWeight.w400, 'FontRegular'),
                             decoration: InputDecoration(
                               contentPadding: const EdgeInsets.only(
                                   left: 12, right: 0, top: 2, bottom: 2),
                               hintText: "Cash withdrawal notes (optional)",
                               hintStyle: CustomWidget(context: context)
                                   .CustomSizedTextStyle(
-                                      12.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                  12.0,
+                                  Theme.of(context)
+                                      .splashColor
+                                      .withOpacity(0.5),
+                                  FontWeight.w300,
+                                  'FontRegular'),
                               filled: true,
                               fillColor: CustomTheme.of(context)
                                   .backgroundColor
@@ -562,12 +562,12 @@ class _WithDrawState extends State<WithDraw> {
                             "H2cryptO’s API allows users to make market inquiries, trade automatically and perform various other tasks. You may find out more here",
                             style: CustomWidget(context: context)
                                 .CustomSizedTextStyle(
-                                    12.0,
-                                    Theme.of(context)
-                                        .splashColor
-                                        .withOpacity(0.5),
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                12.0,
+                                Theme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5),
+                                FontWeight.w400,
+                                'FontRegular'),
                           ),
                           SizedBox(
                             height: 10.0,
@@ -576,12 +576,12 @@ class _WithDrawState extends State<WithDraw> {
                             "Each user may create up to 5 groups of API keys. The platform currently supports most mainstream currencies. For a full list of supported currencies, click here.",
                             style: CustomWidget(context: context)
                                 .CustomSizedTextStyle(
-                                    12.0,
-                                    Theme.of(context)
-                                        .splashColor
-                                        .withOpacity(0.5),
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                12.0,
+                                Theme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5),
+                                FontWeight.w400,
+                                'FontRegular'),
                           ),
                           SizedBox(
                             height: 10.0,
@@ -590,28 +590,28 @@ class _WithDrawState extends State<WithDraw> {
                             "Please keep your API key confidential to protect your account. For security reasons, we recommend you link your IP address with your API key. To link your API Key with multiple addresses, you may separate each of them with a comma such as 192.168.1.1, 192.168.1.2, 192.168.1.3. Each API key can be linked with up to 4 IP addresses.",
                             style: CustomWidget(context: context)
                                 .CustomSizedTextStyle(
-                                    12.0,
-                                    Theme.of(context)
-                                        .splashColor
-                                        .withOpacity(0.5),
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                12.0,
+                                Theme.of(context)
+                                    .splashColor
+                                    .withOpacity(0.5),
+                                FontWeight.w400,
+                                'FontRegular'),
                           ),
                           SizedBox(
                             height: 35.0,
                           ),
                           ButtonCustom(
                               text:
-                                  AppLocalizations.instance.text("loc_confirm"),
+                              AppLocalizations.instance.text("loc_confirm"),
                               iconEnable: false,
                               radius: 5.0,
                               icon: "",
                               textStyle: CustomWidget(context: context)
                                   .CustomSizedTextStyle(
-                                      13.0,
-                                      Theme.of(context).splashColor,
-                                      FontWeight.w500,
-                                      'FontRegular'),
+                                  13.0,
+                                  Theme.of(context).splashColor,
+                                  FontWeight.w500,
+                                  'FontRegular'),
                               iconColor: CustomTheme.of(context).shadowColor,
                               shadowColor: CustomTheme.of(context).shadowColor,
                               splashColor: CustomTheme.of(context).shadowColor,
@@ -619,24 +619,24 @@ class _WithDrawState extends State<WithDraw> {
                                 setState(() {
 
 
-                                      if(addressController.text.isEmpty)
-                                        {
+                                  if(addressController.text.isEmpty)
+                                  {
 
-                                          CustomWidget(context: context)
-                                              .custombar("H2Crypto", "Enter Withdraw Address", false);
-                                        }
-                                      else if(amountController.text.isEmpty)
-                                        {
-                                          CustomWidget(context: context)
-                                              .custombar("H2Crypto","Enter  Withdraw amount", false);
+                                    CustomWidget(context: context)
+                                        .custombar("H2Crypto", "Enter Withdraw Address", false);
+                                  }
+                                  else if(amountController.text.isEmpty)
+                                  {
+                                    CustomWidget(context: context)
+                                        .custombar("H2Crypto","Enter  Withdraw amount", false);
 
-                                        }
-                                      else
-                                        {
-                                          loading=true;
-                                          coinWithdraw();
+                                  }
+                                  else
+                                  {
+                                    loading=true;
+                                    coinWithdraw();
 
-                                        }
+                                  }
 
 
                                 });
@@ -651,7 +651,7 @@ class _WithDrawState extends State<WithDraw> {
               ],
             )),
       ),
-    );
+    ));
   }
 
 

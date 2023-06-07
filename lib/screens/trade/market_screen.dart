@@ -118,7 +118,7 @@ class _MarketSceen1State extends State<MarketSceen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
         backgroundColor: CustomTheme.of(context).primaryColor,
         appBar: AppBar(
           backgroundColor: CustomTheme.of(context).primaryColor,
@@ -157,30 +157,30 @@ class _MarketSceen1State extends State<MarketSceen>
                   // Add one stop for each color
                   // Values should increase from 0.0 to 1.0
                   stops: [
-                0.1,
-                0.5,
-                0.9,
-              ],
+                    0.1,
+                    0.5,
+                    0.9,
+                  ],
                   colors: [
-                CustomTheme.of(context).primaryColor,
-                CustomTheme.of(context).backgroundColor,
-                Theme.of(context).dialogBackgroundColor,
-              ])),
+                    CustomTheme.of(context).primaryColor,
+                    CustomTheme.of(context).backgroundColor,
+                    Theme.of(context).dialogBackgroundColor,
+                  ])),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.9,
             color: CustomTheme.of(context).primaryColor,
             child: loading
                 ? CustomWidget(context: context)
-                    .loadingIndicator(CustomTheme.of(context).splashColor)
+                .loadingIndicator(CustomTheme.of(context).splashColor)
                 : Column(
-                    children: [
-                      Expanded(
-                        child: favList(),
-                      )
-                    ],
-                  ),
+              children: [
+                Expanded(
+                  child: favList(),
+                )
+              ],
+            ),
           ),
-        ));
+        )));
   }
 
   Widget favList() {

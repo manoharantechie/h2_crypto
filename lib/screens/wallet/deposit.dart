@@ -66,7 +66,7 @@ class _DepositAddressState extends State<DepositScreen> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       appBar: AppBar(
         backgroundColor: CustomTheme
             .of(context)
@@ -225,7 +225,7 @@ class _DepositAddressState extends State<DepositScreen> {
               ),
             ),
           )),
-    );
+    ));
   }
 
   Widget cryptoDeposit() {

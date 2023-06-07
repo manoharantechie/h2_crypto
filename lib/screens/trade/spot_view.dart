@@ -18,7 +18,7 @@ class _SpotViewState extends State<SpotView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
         elevation: 0.0,
@@ -49,7 +49,7 @@ class _SpotViewState extends State<SpotView> {
         actions: <Widget>[
 
           Container(
-               padding: const EdgeInsets.fromLTRB(15.0,0.0,15.0,0.0),
+              padding: const EdgeInsets.fromLTRB(15.0,0.0,15.0,0.0),
               child: Center(
                 child: Text(
                   "D/W History",
@@ -263,7 +263,7 @@ class _SpotViewState extends State<SpotView> {
                         padding: EdgeInsets.fromLTRB(15.0,5.0,15.0,5.0),
                         decoration: BoxDecoration(
                           border: Border.all(width: 1.0, color: CustomTheme.of(context).shadowColor.withOpacity(0.5),),
-                            borderRadius: BorderRadius.all(Radius.circular(25.0), ),
+                          borderRadius: BorderRadius.all(Radius.circular(25.0), ),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -539,6 +539,6 @@ class _SpotViewState extends State<SpotView> {
             )
         ),
       ),
-    );
+    ));
   }
 }

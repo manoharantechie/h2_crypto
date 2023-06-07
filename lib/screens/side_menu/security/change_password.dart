@@ -46,7 +46,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       appBar: AppBar(
           backgroundColor: CustomTheme.of(context).primaryColor,
           elevation: 0.0,
@@ -90,347 +90,347 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ])),
           child: Stack(
             children: [
-             SingleChildScrollView(
-               child:  Column(
-                 children: [
+              SingleChildScrollView(
+                child:  Column(
+                  children: [
 
-                   Container(
-                     width:MediaQuery.of(context).size.width,
-                     padding: EdgeInsets.only(top: 15.0,bottom: 15.0),
-                     color: Color(0xFFFBC02D).withOpacity(0.3),
-                     child: Row(
-                       children: [
-                         const SizedBox(width: 20.0,),
-                         SvgPicture.asset('assets/images/info.svg',height: 24.0,color: Color(0xFFFAAD34),),
-                         const SizedBox(width: 10.0,),
-                         Flexible(child:  Text(
-                           AppLocalizations.instance.text("loc_changep_info"),
+                    Container(
+                      width:MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.only(top: 15.0,bottom: 15.0),
+                      color: Color(0xFFFBC02D).withOpacity(0.3),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 20.0,),
+                          SvgPicture.asset('assets/images/info.svg',height: 24.0,color: Color(0xFFFAAD34),),
+                          const SizedBox(width: 10.0,),
+                          Flexible(child:  Text(
+                            AppLocalizations.instance.text("loc_changep_info"),
 
-                           style: CustomWidget(context: context)
-                               .CustomSizedTextStyle(
-                               12.0,
-                               Theme.of(context).splashColor.withOpacity(0.5),
-                               FontWeight.w500,
-                               'FontRegular'),
-                           textAlign: TextAlign.start,
-                           softWrap: true,
-                         ),)
-                       ],
-                     ),
-                   ),
-                   Padding(
-                       padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                       child:  Form(
-                         key: formKey,
-                         child:Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                           mainAxisAlignment: MainAxisAlignment.start,
-                           children: [
-                             const SizedBox(
-                               height: 30,
-                             ),
-                             TextFormCustom(
-                               autovalidateMode: AutovalidateMode.onUserInteraction,
-                               obscureText: !_currentpasswordVisible,
-                               textInputAction: TextInputAction.done,
+                            style: CustomWidget(context: context)
+                                .CustomSizedTextStyle(
+                                12.0,
+                                Theme.of(context).splashColor.withOpacity(0.5),
+                                FontWeight.w500,
+                                'FontRegular'),
+                            textAlign: TextAlign.start,
+                            softWrap: true,
+                          ),)
+                        ],
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                        child:  Form(
+                          key: formKey,
+                          child:Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              TextFormCustom(
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                obscureText: !_currentpasswordVisible,
+                                textInputAction: TextInputAction.done,
 
-                               hintStyle: CustomWidget(context: context)
-                                   .CustomSizedTextStyle(
-                                   14.0, CustomTheme.of(context).splashColor
-                                   .withOpacity(0.5),
-                                   FontWeight.normal,
-                                   'FontRegular'),
-                               radius: 5.0,
-                               focusNode: currentpassWordNode,
-                               controller: currentpasswordController,
-                               enabled: true,
-                               fillColor:   CustomTheme.of(context).primaryColor,
-                               onChanged: () {},
-                               hintText: AppLocalizations.instance.text("loc_old_pass"),
-                               textChanged: (value) {},
-                               prefix: Icon(Icons.lock, color: CustomTheme.of(context).splashColor.withOpacity(0.5),size: 20.0,),
+                                hintStyle: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    14.0, CustomTheme.of(context).splashColor
+                                    .withOpacity(0.5),
+                                    FontWeight.normal,
+                                    'FontRegular'),
+                                radius: 5.0,
+                                focusNode: currentpassWordNode,
+                                controller: currentpasswordController,
+                                enabled: true,
+                                fillColor:   CustomTheme.of(context).primaryColor,
+                                onChanged: () {},
+                                hintText: AppLocalizations.instance.text("loc_old_pass"),
+                                textChanged: (value) {},
+                                prefix: Icon(Icons.lock, color: CustomTheme.of(context).splashColor.withOpacity(0.5),size: 20.0,),
 
-                               suffix: IconButton(
-                                 icon: Icon(
-                                   _currentpasswordVisible
-                                       ? Icons.visibility
-                                       : Icons.visibility_off,
-                                   color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-                                   size: 20.0,
-                                 ),
-                                 onPressed: () {
-                                   setState(() {
-                                     _currentpasswordVisible = !_currentpasswordVisible;
-                                   });
-                                 },
-                               ),
-                               validator: (value) {
-                                 if (value!.isEmpty) {
-                                   return "Please enter Old Password";
-                                 }
-                                 else if (!RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~.]).{8,}$")
-                                     .hasMatch(value)) {
-                                   return "Please enter valid Password";
-                                 }
-                                 else if(value.toString().length<8){
-                                   return "Please enter Valid Old Password";
-                                 }
+                                suffix: IconButton(
+                                  icon: Icon(
+                                    _currentpasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: CustomTheme.of(context).splashColor.withOpacity(0.5),
+                                    size: 20.0,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _currentpasswordVisible = !_currentpasswordVisible;
+                                    });
+                                  },
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please enter Old Password";
+                                  }
+                                  else if (!RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~.]).{8,}$")
+                                      .hasMatch(value)) {
+                                    return "Please enter valid Password";
+                                  }
+                                  else if(value.toString().length<8){
+                                    return "Please enter Valid Old Password";
+                                  }
 
-                                 return null;
-                               },
-                               textStyle:CustomWidget(context: context)
-                                   .CustomTextStyle(
-                                   CustomTheme.of(context).splashColor,
-                                   FontWeight.normal,
-                                   'FontRegular'),
-                               borderColor:  CustomTheme.of(context).splashColor,
-                               maxlines: 1,
-                               error: "Enter Valid Password",
-                               text: "",
-                               onEditComplete: () {
-                                 currentpassWordNode.unfocus();
-                                 FocusScope.of(context).requestFocus(passWordNode);
-                               },
-                               textColor: CustomTheme.of(context).splashColor,
-                               textInputType: TextInputType.visiblePassword,
-                             ),
+                                  return null;
+                                },
+                                textStyle:CustomWidget(context: context)
+                                    .CustomTextStyle(
+                                    CustomTheme.of(context).splashColor,
+                                    FontWeight.normal,
+                                    'FontRegular'),
+                                borderColor:  CustomTheme.of(context).splashColor,
+                                maxlines: 1,
+                                error: "Enter Valid Password",
+                                text: "",
+                                onEditComplete: () {
+                                  currentpassWordNode.unfocus();
+                                  FocusScope.of(context).requestFocus(passWordNode);
+                                },
+                                textColor: CustomTheme.of(context).splashColor,
+                                textInputType: TextInputType.visiblePassword,
+                              ),
 
-                             const SizedBox(
-                               height: 15.0,
-                             ),
-                             TextFormCustom(
-                               autovalidateMode: AutovalidateMode.onUserInteraction,
-                               obscureText: !_passwordVisible,
-                               textInputAction: TextInputAction.done,
+                              const SizedBox(
+                                height: 15.0,
+                              ),
+                              TextFormCustom(
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                obscureText: !_passwordVisible,
+                                textInputAction: TextInputAction.done,
 
-                               hintStyle: CustomWidget(context: context)
-                                   .CustomSizedTextStyle(
-                                   14.0, CustomTheme.of(context).splashColor
-                                   .withOpacity(0.5),
-                                   FontWeight.normal,
-                                   'FontRegular'),
-                               radius: 5.0,
-                               focusNode: passWordNode,
-                               controller: passwordController,
-                               enabled: true,
-                               fillColor:   CustomTheme.of(context).primaryColor,
-                               onChanged: () {},
+                                hintStyle: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    14.0, CustomTheme.of(context).splashColor
+                                    .withOpacity(0.5),
+                                    FontWeight.normal,
+                                    'FontRegular'),
+                                radius: 5.0,
+                                focusNode: passWordNode,
+                                controller: passwordController,
+                                enabled: true,
+                                fillColor:   CustomTheme.of(context).primaryColor,
+                                onChanged: () {},
 
-                               hintText:
-                               AppLocalizations.instance.text("loc_current_pass"),
-                               textChanged: (value) {},
-                               prefix: Icon(Icons.lock, color: CustomTheme.of(context).splashColor.withOpacity(0.5),size: 20.0,),
-                               suffix: IconButton(
-                                 icon: Icon(
-                                   _passwordVisible
-                                       ? Icons.visibility
-                                       : Icons.visibility_off,
-                                   color: CustomTheme.of(context).splashColor.withOpacity(0.5),
-                                   size: 20.0,
-                                 ),
-                                 onPressed: () {
-                                   setState(() {
-                                     _passwordVisible = !_passwordVisible;
-                                   });
-                                 },
-                               ),
-                               validator: (value) {
-                                 if (value!.isEmpty) {
-                                   return "Please enter New Password";
-                                 }
-                                 else if (!RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~.]).{8,}$")
-                                     .hasMatch(value)) {
-                                   return "Please enter valid New Password";
-                                 }
-                                 else if(value.length<8){
-                                   return "Please enter minimum 8 character Password";
-                                 }
-
-
-                                 return null;
-                               },
-                               textStyle:CustomWidget(context: context)
-                                   .CustomTextStyle(
-                                   CustomTheme.of(context).splashColor,
-                                   FontWeight.normal,
-                                   'FontRegular'),
-                               borderColor:  CustomTheme.of(context).splashColor,
-                               maxlines: 1,
-                               error: "Enter Valid Password",
-                               text: "",
-                               onEditComplete: () {
-                                 passWordNode.unfocus();
-                                 FocusScope.of(context)
-                                     .requestFocus(confirm_passWordNode);
-                               },
-                               textColor: CustomTheme.of(context).splashColor,
-                               textInputType: TextInputType.visiblePassword,
-                             ),
-                             const SizedBox(
-                               height: 15.0,
-                             ),
-                             TextFormCustom(
-                               autovalidateMode: AutovalidateMode.onUserInteraction,
-                               obscureText: !_confirmpasswordVisible,
-                               textInputAction: TextInputAction.done,
-                               hintStyle: CustomWidget(context: context)
-                                   .CustomSizedTextStyle(
-                                   14.0, CustomTheme.of(context).splashColor
-                                   .withOpacity(0.5),
-                                   FontWeight.normal,
-                                   'FontRegular'),
-                               radius: 5.0,
-                               focusNode: confirm_passWordNode,
-                               controller: confirmpasswordController,
-                               enabled: true,
-                               fillColor:   CustomTheme.of(context).primaryColor,
-                               onChanged: () {},
-                               hintText: AppLocalizations.instance.text("loc_new_pass"),
-                               textChanged: (value) {},
-                               prefix: Icon(Icons.lock, color: CustomTheme.of(context).splashColor.withOpacity(0.5),size: 20.0,),
-                               suffix: IconButton(
-                                 icon: Icon(
-                                   _confirmpasswordVisible
-                                       ? Icons.visibility
-                                       : Icons.visibility_off,
-                                   color:   CustomTheme.of(context).splashColor.withOpacity(0.5),
-                                   size: 20.0,
-                                 ),
-                                 onPressed: () {
-                                   setState(() {
-                                     _confirmpasswordVisible = !_confirmpasswordVisible;
-                                   });
-                                 },
-                               ),
-                               validator: (value) {
-                                 if (value!.isEmpty) {
-                                   return "Please enter Confirm Password";
-                                 }
-                                 else if (!RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~.]).{8,}$")
-                                     .hasMatch(value)) {
-                                   return "Please enter valid Password";
-                                 }
-                                 else if(value.length<8){
-                                   return "Please enter minimum 8 character Password";
-                                 }
-                                 return null;
-                               },
-                               textStyle:CustomWidget(context: context)
-                                   .CustomTextStyle(
-                                   CustomTheme.of(context).splashColor,
-                                   FontWeight.normal,
-                                   'FontRegular'),
-                               borderColor:  CustomTheme.of(context).splashColor,
-                               maxlines: 1,
-                               error: "Enter Valid Password",
-                               text: "",
-                               onEditComplete: () {
-                                 currentpassWordNode.unfocus();
-                               },
-                               textColor:  CustomTheme.of(context).splashColor,
-                               textInputType: TextInputType.visiblePassword,
-                             ),
-                             const SizedBox(
-                               height: 40.0,
-                             ),
-                             Container(
-                               padding: EdgeInsets.symmetric(horizontal: 10.0),
-                               width: MediaQuery.of(context).size.width,
-                               child:  Text(
-                                 "Note :".toUpperCase(),
-                                 textAlign: TextAlign.start,
-                                 style: CustomWidget(context: context)
-                                     .CustomSizedTextStyle(
-                                     14.0,
-                                     Theme.of(context)
-                                         .scaffoldBackgroundColor,
-                                     FontWeight.w600,
-                                     'FontRegular'),
-                               ),
-                             ),
-                             SizedBox(height: 10),
-                             Container(
-                               padding: EdgeInsets.symmetric(horizontal: 10.0),
-                               width: MediaQuery.of(context).size.width,
-                               child:  Text(
-                                 "To make your password more secure: (Minimum 8 characters,Use numbers,Use uppercase,Use lowercase and Use special characters)",
-                                 textAlign: TextAlign.start,
-                                 overflow: TextOverflow.visible,
-                                 style: CustomWidget(context: context)
-                                     .CustomSizedTextStyle(
-                                     13.0,
-                                     Theme.of(context)
-                                         .splashColor,
-                                     FontWeight.w500,
-                                     'FontRegular'),
-                               ),
-                             ),
-                             const SizedBox(
-                               height: 20.0,
-                             ),
-
-                             InkWell(
-                               onTap: () {
-                                 setState(() {
-                                   FocusScope.of(context).unfocus();
-                                   if (formKey.currentState!.validate()) {
-                                     setState(() {
-
-                                       if(passwordController.text.toString()==confirmpasswordController.text.toString())
-                                       {
+                                hintText:
+                                AppLocalizations.instance.text("loc_current_pass"),
+                                textChanged: (value) {},
+                                prefix: Icon(Icons.lock, color: CustomTheme.of(context).splashColor.withOpacity(0.5),size: 20.0,),
+                                suffix: IconButton(
+                                  icon: Icon(
+                                    _passwordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: CustomTheme.of(context).splashColor.withOpacity(0.5),
+                                    size: 20.0,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                    });
+                                  },
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please enter New Password";
+                                  }
+                                  else if (!RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~.]).{8,}$")
+                                      .hasMatch(value)) {
+                                    return "Please enter valid New Password";
+                                  }
+                                  else if(value.length<8){
+                                    return "Please enter minimum 8 character Password";
+                                  }
 
 
-                                       }
-                                       else
-                                       {
-                                         CustomWidget(context: context).  custombar("Change Password", "New Password and Confirm Password Mismatched", false);
+                                  return null;
+                                },
+                                textStyle:CustomWidget(context: context)
+                                    .CustomTextStyle(
+                                    CustomTheme.of(context).splashColor,
+                                    FontWeight.normal,
+                                    'FontRegular'),
+                                borderColor:  CustomTheme.of(context).splashColor,
+                                maxlines: 1,
+                                error: "Enter Valid Password",
+                                text: "",
+                                onEditComplete: () {
+                                  passWordNode.unfocus();
+                                  FocusScope.of(context)
+                                      .requestFocus(confirm_passWordNode);
+                                },
+                                textColor: CustomTheme.of(context).splashColor,
+                                textInputType: TextInputType.visiblePassword,
+                              ),
+                              const SizedBox(
+                                height: 15.0,
+                              ),
+                              TextFormCustom(
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                obscureText: !_confirmpasswordVisible,
+                                textInputAction: TextInputAction.done,
+                                hintStyle: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    14.0, CustomTheme.of(context).splashColor
+                                    .withOpacity(0.5),
+                                    FontWeight.normal,
+                                    'FontRegular'),
+                                radius: 5.0,
+                                focusNode: confirm_passWordNode,
+                                controller: confirmpasswordController,
+                                enabled: true,
+                                fillColor:   CustomTheme.of(context).primaryColor,
+                                onChanged: () {},
+                                hintText: AppLocalizations.instance.text("loc_new_pass"),
+                                textChanged: (value) {},
+                                prefix: Icon(Icons.lock, color: CustomTheme.of(context).splashColor.withOpacity(0.5),size: 20.0,),
+                                suffix: IconButton(
+                                  icon: Icon(
+                                    _confirmpasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color:   CustomTheme.of(context).splashColor.withOpacity(0.5),
+                                    size: 20.0,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _confirmpasswordVisible = !_confirmpasswordVisible;
+                                    });
+                                  },
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please enter Confirm Password";
+                                  }
+                                  else if (!RegExp(r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~.]).{8,}$")
+                                      .hasMatch(value)) {
+                                    return "Please enter valid Password";
+                                  }
+                                  else if(value.length<8){
+                                    return "Please enter minimum 8 character Password";
+                                  }
+                                  return null;
+                                },
+                                textStyle:CustomWidget(context: context)
+                                    .CustomTextStyle(
+                                    CustomTheme.of(context).splashColor,
+                                    FontWeight.normal,
+                                    'FontRegular'),
+                                borderColor:  CustomTheme.of(context).splashColor,
+                                maxlines: 1,
+                                error: "Enter Valid Password",
+                                text: "",
+                                onEditComplete: () {
+                                  currentpassWordNode.unfocus();
+                                },
+                                textColor:  CustomTheme.of(context).splashColor,
+                                textInputType: TextInputType.visiblePassword,
+                              ),
+                              const SizedBox(
+                                height: 40.0,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                width: MediaQuery.of(context).size.width,
+                                child:  Text(
+                                  "Note :".toUpperCase(),
+                                  textAlign: TextAlign.start,
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      14.0,
+                                      Theme.of(context)
+                                          .scaffoldBackgroundColor,
+                                      FontWeight.w600,
+                                      'FontRegular'),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                width: MediaQuery.of(context).size.width,
+                                child:  Text(
+                                  "To make your password more secure: (Minimum 8 characters,Use numbers,Use uppercase,Use lowercase and Use special characters)",
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.visible,
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      13.0,
+                                      Theme.of(context)
+                                          .splashColor,
+                                      FontWeight.w500,
+                                      'FontRegular'),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    FocusScope.of(context).unfocus();
+                                    if (formKey.currentState!.validate()) {
+                                      setState(() {
+
+                                        if(passwordController.text.toString()==confirmpasswordController.text.toString())
+                                        {
 
 
-                                       }
+                                        }
+                                        else
+                                        {
+                                          CustomWidget(context: context).  custombar("Change Password", "New Password and Confirm Password Mismatched", false);
 
-                                     });
-                                   }
 
-                                 });
-                               },
-                               child: Container(
-                                   decoration: BoxDecoration(
-                                     color:  CustomTheme.of(context).shadowColor,
-                                     borderRadius:
-                                     BorderRadius.all(Radius.circular(5.0)),
-                                   ),
-                                   padding:
-                                   const EdgeInsets.only(top: 13.0, bottom: 13.0),
-                                   child: Center(
-                                     child: Text(
-                                       AppLocalizations.instance.text("loc_submit"),
-                                       style:  CustomWidget(context: context)
-                                           .CustomTextStyle(
-                                           CustomTheme.of(context).splashColor,
-                                           FontWeight.w500,
-                                           'FontRegular'),
-                                     ),
-                                   )),
-                             ),
-                             const SizedBox(
-                               height: 30,
-                             ),
-                           ],
-                         ),
-                       )
-                   ),
+                                        }
 
-                 ],
-               ),
-             ),
+                                      });
+                                    }
+
+                                  });
+                                },
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color:  CustomTheme.of(context).shadowColor,
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(5.0)),
+                                    ),
+                                    padding:
+                                    const EdgeInsets.only(top: 13.0, bottom: 13.0),
+                                    child: Center(
+                                      child: Text(
+                                        AppLocalizations.instance.text("loc_submit"),
+                                        style:  CustomWidget(context: context)
+                                            .CustomTextStyle(
+                                            CustomTheme.of(context).splashColor,
+                                            FontWeight.w500,
+                                            'FontRegular'),
+                                      ),
+                                    )),
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                            ],
+                          ),
+                        )
+                    ),
+
+                  ],
+                ),
+              ),
 
               loading
                   ? CustomWidget(context: context)
-                      .loadingIndicator(CustomTheme.of(context).splashColor)
+                  .loadingIndicator(CustomTheme.of(context).splashColor)
                   : Container()
             ],
           )),
-    );
+    ));
   }
 
 }

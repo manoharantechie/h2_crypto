@@ -60,18 +60,18 @@ class _TermsConditionState extends State<TermsCondition> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       backgroundColor: CustomTheme.of(context).backgroundColor,
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
 
         elevation: 0.0,
         title: Text(
-            AppLocalizations.instance.text(widget.title),
+          AppLocalizations.instance.text(widget.title),
           // textAlign: TextAlign.center,
           style: CustomWidget(context: context).CustomSizedTextStyle(
-              17.0,
-              Theme.of(context).splashColor, FontWeight.w500, 'FontRegular',
+            17.0,
+            Theme.of(context).splashColor, FontWeight.w500, 'FontRegular',
           ),
         ),
         leading: Container(
@@ -98,8 +98,7 @@ class _TermsConditionState extends State<TermsCondition> {
           )
               : Container()
         ],
-      ),);
-
+      ),));
   }
 
 }

@@ -34,7 +34,7 @@ class _NotifyScreenState extends State<NotifyScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
         elevation: 0.0,
@@ -65,26 +65,8 @@ class _NotifyScreenState extends State<NotifyScreen> {
       ),
       body: Container(
 
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                // Add one stop for each color
-                // Values should increase from 0.0 to 1.0
-                stops: [
-                  0.1,
-                  0.5,
-                  0.9,
-                ],
-                colors: [
-                  CustomTheme.of(context).primaryColor,
-                  CustomTheme.of(context).backgroundColor,
-                  CustomTheme.of(context).dialogBackgroundColor,
-                ])),
-        child: Container(
           height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -101,18 +83,36 @@ class _NotifyScreenState extends State<NotifyScreen> {
                     CustomTheme.of(context).backgroundColor,
                     CustomTheme.of(context).dialogBackgroundColor,
                   ])),
-          child: Center(
-            child: Text(
-              " No records Found..!",
-              style: TextStyle(
-                fontFamily: "FontRegular",
-                color: CustomTheme.of(context).splashColor,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    // Add one stop for each color
+                    // Values should increase from 0.0 to 1.0
+                    stops: [
+                      0.1,
+                      0.5,
+                      0.9,
+                    ],
+                    colors: [
+                      CustomTheme.of(context).primaryColor,
+                      CustomTheme.of(context).backgroundColor,
+                      CustomTheme.of(context).dialogBackgroundColor,
+                    ])),
+            child: Center(
+              child: Text(
+                " No records Found..!",
+                style: TextStyle(
+                  fontFamily: "FontRegular",
+                  color: CustomTheme.of(context).splashColor,
+                ),
               ),
             ),
-          ),
-        )
+          )
       ),
-    );
+    ));
   }
 
   // getDetails() {

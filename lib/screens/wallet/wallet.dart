@@ -39,29 +39,29 @@ class _WalletScreenState extends State<WalletScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomCenter,
                 stops: [
-              0.1,
-              0.5,
-              0.8,
-            ],
+                  0.1,
+                  0.5,
+                  0.8,
+                ],
                 colors: [
-              CustomTheme.of(context).primaryColor,
-              CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).dialogBackgroundColor,
-            ])),
+                  CustomTheme.of(context).primaryColor,
+                  CustomTheme.of(context).backgroundColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
+                ])),
         child: loading
             ? CustomWidget(context: context).loadingIndicator(
-                CustomTheme.of(context).splashColor,
-              )
+          CustomTheme.of(context).splashColor,
+        )
             : assetsUI(),
       ),
-    );
+    ));
   }
 
   Widget assetsUI() {

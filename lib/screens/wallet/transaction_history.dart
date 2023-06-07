@@ -40,7 +40,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
         elevation: 0.0,
@@ -63,27 +63,27 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: [
-              0.1,
-              0.5,
-              0.9,
-            ],
+                  0.1,
+                  0.5,
+                  0.9,
+                ],
                 colors: [
-              CustomTheme.of(context).primaryColor,
-              CustomTheme.of(context).backgroundColor,
-              Theme.of(context).dialogBackgroundColor,
-            ])),
+                  CustomTheme.of(context).primaryColor,
+                  CustomTheme.of(context).backgroundColor,
+                  Theme.of(context).dialogBackgroundColor,
+                ])),
         child: Stack(
           children: [
             hisotryDetails(),
             loading
                 ? CustomWidget(context: context).loadingIndicator(
-                    CustomTheme.of(context).splashColor,
-                  )
+              CustomTheme.of(context).splashColor,
+            )
                 : Container()
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget hisotryDetails() {

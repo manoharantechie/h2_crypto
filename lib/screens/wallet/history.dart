@@ -37,7 +37,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
 
 
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
         elevation: 0.0,
@@ -349,7 +349,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
                               ),
                               ),
 
-                             Flexible(
+                              Flexible(
                                 child:
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -513,19 +513,19 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
                                 ),
 
                                 Container(
-                                    padding: EdgeInsets.fromLTRB(8.0,3.0,8.0,0.0),
-                                    child: InkWell(
-                                      onTap: (){
-                                        Navigator.pop(context);
-                                      },
-                                      child: SvgPicture.asset(
-                                        'assets/images/v_logo.svg',
-                                        height: 15.0,
-                                        width: 15.0,
-                                        allowDrawingOutsideViewBox: true,
-                                        // color: CustomTheme.of(context).splashColor,
-                                      ),
+                                  padding: EdgeInsets.fromLTRB(8.0,3.0,8.0,0.0),
+                                  child: InkWell(
+                                    onTap: (){
+                                      Navigator.pop(context);
+                                    },
+                                    child: SvgPicture.asset(
+                                      'assets/images/v_logo.svg',
+                                      height: 15.0,
+                                      width: 15.0,
+                                      allowDrawingOutsideViewBox: true,
+                                      // color: CustomTheme.of(context).splashColor,
                                     ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -694,7 +694,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
                               decoration: BoxDecoration(
                                   color: !fiatBtn ? CustomTheme.of(context).scaffoldBackgroundColor: CustomTheme.of(context).indicatorColor),
                               child: Text(
-                                 !fiatBtn ? "Sell" : "Buy",
+                                !fiatBtn ? "Sell" : "Buy",
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
                                     12.0,
@@ -951,7 +951,7 @@ class _FiatBuySellScreenState extends State<HistoryScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 
 

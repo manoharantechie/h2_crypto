@@ -59,35 +59,35 @@ class _TradeChartScreenState extends State<TradeChartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: AppBar(
+        elevation: 0.0,
         backgroundColor: Theme.of(context).backgroundColor,
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Theme.of(context).backgroundColor,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context, true),
-          ),
-          title: Text(
-           "Trade Chart",
-            style:CustomWidget(context: context)
-                .CustomSizedTextStyle(
-                 20.0,
-                Theme.of(context).splashColor,
-                FontWeight.w500,
-                'FontRegular'),
-
-          ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context, true),
         ),
-        body:  Stack(
-          children: [
-            WebViewWidget(controller: webcontroller),
-            loading
-                ? CustomWidget(context: context).loadingIndicator(
-              CustomTheme.of(context).splashColor,
-            )
-                : Container()
-          ],
-        ),);
+        title: Text(
+          "Trade Chart",
+          style:CustomWidget(context: context)
+              .CustomSizedTextStyle(
+              20.0,
+              Theme.of(context).splashColor,
+              FontWeight.w500,
+              'FontRegular'),
+
+        ),
+      ),
+      body:  Stack(
+        children: [
+          WebViewWidget(controller: webcontroller),
+          loading
+              ? CustomWidget(context: context).loadingIndicator(
+            CustomTheme.of(context).splashColor,
+          )
+              : Container()
+        ],
+      ),));
   }
 }

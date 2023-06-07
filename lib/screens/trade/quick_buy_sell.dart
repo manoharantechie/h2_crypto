@@ -22,7 +22,7 @@ class _QuickBuySellScreenState extends State<QuickBuySellScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
         elevation: 0.0,
@@ -268,8 +268,8 @@ class _QuickBuySellScreenState extends State<QuickBuySellScreen> {
                   Container(
                     padding: EdgeInsets.fromLTRB(5.0, 5.0, 10.0, 5.0),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).bottomAppBarColor.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(6.0)
+                        color: Theme.of(context).bottomAppBarColor.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(6.0)
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -667,6 +667,6 @@ class _QuickBuySellScreenState extends State<QuickBuySellScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

@@ -29,7 +29,7 @@ class _TransferScreenState extends State<TransferScreen> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
         elevation: 0.0,
@@ -83,15 +83,15 @@ class _TransferScreenState extends State<TransferScreen> {
                 // Add one stop for each color
                 // Values should increase from 0.0 to 1.0
                 stops: [
-              0.1,
-              0.5,
-              0.9,
-            ],
+                  0.1,
+                  0.5,
+                  0.9,
+                ],
                 colors: [
-              CustomTheme.of(context).primaryColor,
-              CustomTheme.of(context).backgroundColor,
-              CustomTheme.of(context).dialogBackgroundColor,
-            ])),
+                  CustomTheme.of(context).primaryColor,
+                  CustomTheme.of(context).backgroundColor,
+                  CustomTheme.of(context).dialogBackgroundColor,
+                ])),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -105,7 +105,7 @@ class _TransferScreenState extends State<TransferScreen> {
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color:
-                          CustomTheme.of(context).shadowColor.withOpacity(0.2),
+                      CustomTheme.of(context).shadowColor.withOpacity(0.2),
                       borderRadius: BorderRadius.all(
                         Radius.circular(5.0),
                       ),
@@ -195,9 +195,9 @@ class _TransferScreenState extends State<TransferScreen> {
                                   height: 45,
                                   decoration: BoxDecoration(
                                       color:
-                                          CustomTheme.of(context).shadowColor,
+                                      CustomTheme.of(context).shadowColor,
                                       borderRadius:
-                                          BorderRadius.circular(25.0)),
+                                      BorderRadius.circular(25.0)),
                                   padding: const EdgeInsets.all(10.0),
                                   child: SvgPicture.asset(
                                     'assets/images/transfer.svg',
@@ -233,10 +233,10 @@ class _TransferScreenState extends State<TransferScreen> {
                               children: [
                                 Container(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.24,
+                                  MediaQuery.of(context).size.width * 0.24,
                                   height: 30.0,
                                   padding:
-                                      EdgeInsets.fromLTRB(2.0, 0.0, 5, 0.0),
+                                  EdgeInsets.fromLTRB(2.0, 0.0, 5, 0.0),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         color: CustomTheme.of(context)
@@ -254,21 +254,21 @@ class _TransferScreenState extends State<TransferScreen> {
                                     child: DropdownButtonHideUnderline(
                                       child: DropdownButton(
                                         menuMaxHeight:
-                                            MediaQuery.of(context).size.height *
-                                                0.5,
+                                        MediaQuery.of(context).size.height *
+                                            0.5,
                                         items: chartTime
                                             .map((value) => DropdownMenuItem(
-                                                  child: Text(
-                                                    value.toString(),
-                                                    style: CustomWidget(context: context)
-                                                        .CustomSizedTextStyle(
-                                                        14.0,
-                                                        Theme.of(context).scaffoldBackgroundColor,
-                                                        FontWeight.w400,
-                                                        'FontRegular'),
-                                                  ),
-                                                  value: value,
-                                                ))
+                                          child: Text(
+                                            value.toString(),
+                                            style: CustomWidget(context: context)
+                                                .CustomSizedTextStyle(
+                                                14.0,
+                                                Theme.of(context).scaffoldBackgroundColor,
+                                                FontWeight.w400,
+                                                'FontRegular'),
+                                          ),
+                                          value: value,
+                                        ))
                                             .toList(),
                                         onChanged: (value) async {
                                           setState(() {
@@ -400,7 +400,7 @@ class _TransferScreenState extends State<TransferScreen> {
                       ],
                     ),
                   ),
-                const  SizedBox(
+                  const  SizedBox(
                     height: 10.0,
                   ),
                   Row(
@@ -420,8 +420,8 @@ class _TransferScreenState extends State<TransferScreen> {
                               color: selectedBtn
                                   ? Colors.transparent
                                   : CustomTheme.of(context)
-                                      .hintColor
-                                      .withOpacity(0.2),
+                                  .hintColor
+                                  .withOpacity(0.2),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(10.0),
                               ),
@@ -464,8 +464,8 @@ class _TransferScreenState extends State<TransferScreen> {
                               color: !selectedBtn
                                   ? Colors.transparent
                                   : CustomTheme.of(context)
-                                      .hintColor
-                                      .withOpacity(0.2),
+                                  .hintColor
+                                  .withOpacity(0.2),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(10.0),
                               ),
@@ -569,7 +569,7 @@ class _TransferScreenState extends State<TransferScreen> {
                     ),
                   ),
 
-                const  SizedBox(
+                  const  SizedBox(
                     height: 60.0,
                   ),
                   Text(
@@ -615,6 +615,6 @@ class _TransferScreenState extends State<TransferScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 }
