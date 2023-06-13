@@ -81,6 +81,9 @@ class _SellTradeScreenState extends State<TradeScreen>
   FocusNode searchAssetFocus = FocusNode();
   bool enableTrade = false;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+
   String balance = "0.00";
   String escrow = "0.00";
   String val = "";
@@ -132,6 +135,10 @@ class _SellTradeScreenState extends State<TradeScreen>
   AnimationController? _animationController;
   Animation? _colorTween;
 
+
+  List<String> marketAseetList = [];
+  int indexVal = 0;
+  String selectedmarketAseet = "";
   @override
   void initState() {
     // TODO: implement initState
@@ -368,6 +375,7 @@ class _SellTradeScreenState extends State<TradeScreen>
     return MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
         child: Scaffold(
+          key: _scaffoldKey,
           backgroundColor: CustomTheme.of(context).primaryColor,
           body: Container(
             height: MediaQuery.of(context).size.height,
@@ -409,6 +417,16 @@ class _SellTradeScreenState extends State<TradeScreen>
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
+                                      indexVal=0;
+                                      selectedmarketAseet = marketAseetList.first;
+
+                                      for (int m = 0; m < searchPair.length; m++) {
+                                        if (searchPair[m].marketAsset.toString().toLowerCase() ==
+                                            selectedmarketAseet.toLowerCase()) {
+                                          tradePair.add(searchPair[m]);
+                                        }
+                                      }
+                                      QuickselectPair=tradePair.first;
                                       buySell = true;
                                       selectPair = tradePair[0];
                                       openOrders = [];
@@ -467,6 +485,17 @@ class _SellTradeScreenState extends State<TradeScreen>
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
+                                      indexVal=0;
+
+                                      selectedmarketAseet = marketAseetList.first;
+
+                                      for (int m = 0; m < searchPair.length; m++) {
+                                        if (searchPair[m].marketAsset.toString().toLowerCase() ==
+                                            selectedmarketAseet.toLowerCase()) {
+                                          tradePair.add(searchPair[m]);
+                                        }
+                                      }
+                                      selectPair=tradePair.first;
                                       buySell = true;
                                       selectPair = tradePair[0];
                                       _currentSliderValue = 0;
@@ -544,7 +573,471 @@ class _SellTradeScreenState extends State<TradeScreen>
               ],
             ),
           ),
+          drawer: drawerUI(),
         ));
+  }
+
+  Widget drawerUI(){
+    return  Drawer(
+//      backgroundColor:    CustomTheme.of(context).primaryColor,
+backgroundColor: Colors.transparent,
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.only(top: 45.0),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                // Add one stop for each color
+                // Values should increase from 0.0 to 1.0
+                stops: [
+                  0.1,
+                  0.5,
+                  0.9,
+                ],
+                colors: [
+                  CustomTheme.of(context).primaryColor,
+                  CustomTheme.of(context).backgroundColor,
+                  Theme.of(context).dialogBackgroundColor,
+                ])),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(15, 2, 15, 2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  "Market",
+                  style: CustomWidget(context: context).CustomSizedTextStyle(16.0,
+                      Theme.of(context).splashColor, FontWeight.w500, 'FontRegular'),
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 0.00),
+                  child: ListView.builder(
+                    itemCount: marketAseetList.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                indexVal = index;
+                                tradePair.clear();
+                                tradePair = [];
+                                selectedmarketAseet = marketAseetList[index];
+                                for (int m = 0;
+                                m < searchPair.length;
+                                m++) {
+                                  if (searchPair[m]
+                                      .marketAsset
+                                      .toString()
+                                      .toLowerCase() ==
+                                      selectedmarketAseet.toLowerCase()) {
+                                    tradePair.add(searchPair[m]);
+                                  }
+                                }
+
+
+                              });
+
+                            },
+                            child: Container(
+                                padding:
+                                EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    gradient: indexVal == index
+                                        ? LinearGradient(
+                                      begin: Alignment.bottomLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        CustomTheme.of(context).shadowColor,
+                                        CustomTheme.of(context).shadowColor,
+                                      ],
+                                    )
+                                        : LinearGradient(
+                                      begin: Alignment.bottomLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        CustomTheme.of(context)
+                                            .hintColor
+                                            .withOpacity(0.5),
+                                        CustomTheme.of(context)
+                                            .hintColor
+                                            .withOpacity(0.5),
+                                      ],
+                                    )),
+                                child: Center(
+                                  child: Text(
+                                    marketAseetList[index].toString(),
+                                    style: CustomWidget(context: context)
+                                        .CustomSizedTextStyle(
+                                        14.0,
+                                        indexVal == index
+                                            ? Theme.of(context).splashColor
+                                            : Theme.of(context).shadowColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
+                                  ),
+                                )),
+                          ),
+                          const SizedBox(
+                            width: 10.0,
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                  height: 35.0,
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "Name",
+                              style: CustomWidget(context: context)
+                                  .CustomSizedTextStyle(
+                                  13.0,
+                                  Theme.of(context)
+                                      .hintColor
+                                      .withOpacity(0.5),
+                                  FontWeight.w500,
+                                  'FontRegular'),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "/ vol",
+                              style: CustomWidget(context: context)
+                                  .CustomSizedTextStyle(
+                                  13.0,
+                                  Theme.of(context)
+                                      .hintColor
+                                      .withOpacity(0.5),
+                                  FontWeight.w500,
+                                  'FontRegular'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Market Price",
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              13.0,
+                              Theme.of(context).hintColor.withOpacity(0.5),
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Change",
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              13.0,
+                              Theme.of(context).hintColor.withOpacity(0.5),
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                ListView.builder(
+                  itemCount: tradePair.length,
+                  shrinkWrap: true,
+                  controller: controller,
+                  itemBuilder: (BuildContext context, int index) {
+                    double data =
+                    double.parse(tradePair[index].hrExchange.toString());
+                    return InkWell(
+                      onTap: (){
+                        buyData = [];
+                        sellData = [];
+
+                        if(marginOption)
+                          {
+                            buyData = [];
+                            sellData = [];
+
+                            setState(() {
+                              QuickselectPair =
+                              tradePair[index];
+                              String pair =
+                              QuickselectPair!.symbol.toString();
+
+                              QuickfirstCoin = QuickselectPair!
+                                  .baseAsset
+                                  .toString();
+                              QuicksecondCoin = QuickselectPair!
+                                  .marketAsset
+                                  .toString();
+                              var ofeed = "orderbook.net.$pair";
+                              balance = "0.00";
+                              escrow = "0.00";
+                              totalBalance = "0.00";
+                            });
+                          }
+                        else{
+
+                          setState(() {
+                            selectPair = tradePair[index];
+
+                            String pair =
+                            selectPair!.symbol.toString();
+
+                            firstCoin =
+                                selectPair!.baseAsset.toString();
+                            secondCoin =
+                                selectPair!.marketAsset.toString();
+                            var ofeed = "orderbook.net.$pair";
+                            balance = "0.00";
+                            escrow = "0.00";
+                            totalBalance = "0.00";
+
+                            var tickerfeed = "ticker.sfox.$pair";
+                            var orderfeed =
+                                "private.user.open-orders";
+
+                            var authMessage = {
+                              "type": "authenticate",
+                              "apiKey": token,
+                            };
+                            var messageJSON = {
+                              "type": "subscribe",
+                              "feeds": [
+                                ofeed,
+                                tickerfeed,
+                                orderfeed
+                              ],
+                            };
+                            channelOpenOrder!.sink
+                                .add(json.encode(authMessage));
+                            channelOpenOrder!.sink
+                                .add(json.encode(messageJSON));
+
+                            for (int m = 0;
+                            m < availableBalance.length;
+                            m++) {
+                              if (buySell) {
+                                if (secondCoin.toLowerCase() ==
+                                    availableBalance[m]
+                                        .currency
+                                        .toLowerCase()) {
+                                  balance =
+                                      availableBalance[m].balance;
+                                  escrow =
+                                      availableBalance[m].available;
+                                  totalBalance =
+                                      availableBalance[m].trading;
+                                }
+                              } else {
+                                if (firstCoin.toLowerCase() ==
+                                    availableBalance[m]
+                                        .currency
+                                        .toLowerCase()) {
+
+                                  balance =
+                                      availableBalance[m].balance;
+                                  escrow =
+                                      availableBalance[m].available;
+                                  totalBalance =
+                                      availableBalance[m].trading;
+                                }
+                              }
+                            }
+                          });
+                        }
+
+
+                        _scaffoldKey.currentState!.closeDrawer();
+                      },
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        tradePair[index].tradePair.toString(),
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                            13.0,
+                                            Theme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.5),
+                                            FontWeight.w500,
+                                            'FontRegular'),
+                                      ),
+                                      const SizedBox(
+                                        height: 5.0,
+                                      ),
+                                      Text(
+                                        double.parse(tradePair[index]
+                                            .hrVolume
+                                            .toString())
+                                            .toStringAsFixed(2),
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                            12.0,
+                                            Theme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.5),
+                                            FontWeight.w500,
+                                            'FontRegular'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                flex: 3,
+                              ),
+                              Flexible(
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        tradePair[index]
+                                            .cointwoDecimal
+                                            .toString() ==
+                                            null ||
+                                            tradePair[index]
+                                                .cointwoDecimal
+                                                .toString() ==
+                                                "null"
+                                            ? double.parse(tradePair[index]
+                                            .currentPrice
+                                            .toString())
+                                            .toStringAsFixed(4)
+                                            : double.parse(tradePair[index]
+                                            .currentPrice
+                                            .toString())
+                                            .toStringAsFixed(int.parse(
+                                            tradePair[index]
+                                                .cointwoDecimal
+                                                .toString())),
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                            13.0,
+                                            double.parse(data.toString()) >= 0
+                                                ? Theme.of(context)
+                                                .indicatorColor
+                                                : Theme.of(context).canvasColor,
+                                            FontWeight.w500,
+                                            'FontRegular'),
+                                      ),
+                                      const SizedBox(
+                                        height: 5.0,
+                                      ),
+                                      // Text(
+                                      //   "\$ " +
+                                      //       double.parse(marketList[index]
+                                      //               .tick!['lastPrice']
+                                      //               .toString())
+                                      //           .toStringAsFixed(8),
+                                      //   style: CustomWidget(context: context)
+                                      //       .CustomSizedTextStyle(
+                                      //           12.0,
+                                      //           Theme.of(context)
+                                      //               .hintColor
+                                      //               .withOpacity(0.5),
+                                      //           FontWeight.w500,
+                                      //           'FontRegular'),
+                                      // ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  ),
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                                flex: 3,
+                              ),
+                              Flexible(
+                                child: Container(
+                                  child: Center(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            left: 15.0,
+                                            right: 15.0,
+                                            top: 8.0,
+                                            bottom: 8.0),
+                                        child: Text(
+                                          data.toStringAsFixed(2) + "%",
+                                          style: CustomWidget(context: context)
+                                              .CustomSizedTextStyle(
+                                              10.0,
+                                              Theme.of(context).hintColor,
+                                              FontWeight.w500,
+                                              'FontRegular'),
+                                        ),
+                                        decoration: BoxDecoration(
+                                            color: double.parse(data.toString()) >= 0
+                                                ? Theme.of(context).indicatorColor
+                                                : Theme.of(context).canvasColor,
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                      )),
+                                ),
+                                flex: 2,
+                              ),
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                          ),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+
+    );
   }
 
   Widget spotUI() {
@@ -561,7 +1054,8 @@ class _SellTradeScreenState extends State<TradeScreen>
                 marginOption
                     ? InkWell(
                         onTap: () {
-                          showQuickSheeet();
+                          _scaffoldKey.currentState!.openDrawer();
+                        //  showQuickSheeet();
                         },
                         child: Row(
                           children: [
@@ -577,23 +1071,22 @@ class _SellTradeScreenState extends State<TradeScreen>
                                 ),
                               ),
                             ),
-                            QuicktradePair.length > 0
-                                ? Text(
-                                    QuickselectPair!.tradePair.toString(),
-                                    style: CustomWidget(context: context)
-                                        .CustomSizedTextStyle(
-                                            16.0,
-                                            Theme.of(context).splashColor,
-                                            FontWeight.w500,
-                                            'FontRegular'),
-                                  )
-                                : Container(),
+                         tradePair.length>0?   Text(
+                              QuickselectPair!.tradePair.toString(),
+                              style: CustomWidget(context: context)
+                                  .CustomSizedTextStyle(
+                                  16.0,
+                                  Theme.of(context).splashColor,
+                                  FontWeight.w500,
+                                  'FontRegular'),
+                            ):Container()
                           ],
                         ),
                       )
                     : InkWell(
                         onTap: () {
-                          showSheeet();
+                          //showSheeet();
+                          _scaffoldKey.currentState!.openDrawer();
                         },
                         child: Row(
                           children: [
@@ -4391,13 +4884,14 @@ class _SellTradeScreenState extends State<TradeScreen>
       if (loginData.success!) {
         setState(() {
           loading = false;
-          tradePair = loginData.result!;
-          selectPair = tradePair.first;
-          searchPair = loginData.result!;
+          // tradePair = loginData.result!;
 
-          for (int m = 0; m < tradePair.length; m++) {
-            if (tradePair[m].isinstant.toString() == "1") {
-              QuicktradePair.add(tradePair[m]);
+          searchPair = loginData.result!;
+          selectPair = searchPair.first;
+
+          for (int m = 0; m < searchPair.length; m++) {
+            if (searchPair[m].isinstant.toString() == "1") {
+              QuicktradePair.add(searchPair[m]);
             }
           }
 
@@ -4409,6 +4903,21 @@ class _SellTradeScreenState extends State<TradeScreen>
           firstCoin = selectPair!.baseAsset.toString();
           secondCoin = selectPair!.marketAsset.toString();
 
+
+          for (int m = 0; m < searchPair.length; m++) {
+
+            marketAseetList.add(searchPair[m].marketAsset.toString());
+          }
+
+          marketAseetList = marketAseetList.toSet().toList();
+          selectedmarketAseet = marketAseetList.first;
+
+          for (int m = 0; m < searchPair.length; m++) {
+            if (searchPair[m].marketAsset.toString().toLowerCase() ==
+                selectedmarketAseet.toLowerCase()) {
+              tradePair.add(searchPair[m]);
+            }
+          }
           var ofeed = "orderbook.net.$pair";
           var tfeed = "private.user.balances";
           var tickerfeed = "ticker.sfox.$pair";

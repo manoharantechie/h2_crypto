@@ -1,5 +1,7 @@
 
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:h2_crypto/common/colors.dart';
 import 'package:h2_crypto/common/custom_widget.dart';
@@ -26,31 +28,89 @@ class _TradeChartScreenState extends State<TradeChartScreen> {
   void initState() {
     super.initState();
 
+    if (Platform.isAndroid) {
+      webcontroller = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setBackgroundColor(const Color(0xFF242B48))
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {
+              // Update loading bar.
+            },
+            onPageStarted: (String url) {
+              print("test1");
 
-    webcontroller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {
-            setState(() {
-              loading=false;
-            });
-          },
-          onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith('https://h2crypto.exchange/trading-chart/'+widget.pair,)) {
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse('https://h2crypto.exchange/trading-chart/'+widget.pair,));
+            },
+            onPageFinished: (String url) {
+              setState(() {
+                loading=false;
+              });
+            },
+            onWebResourceError: (WebResourceError error) {
+              print("test");
+              print(error);
+            },
+
+          ),
+        )
+        ..loadRequest(Uri.parse('https://h2crypto.exchange/trading-chart/'+widget.pair));
+    } else if (Platform.isIOS) {
+      webcontroller = WebViewController()
+        ..setBackgroundColor(const Color(0xFF242B48))
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {
+              // Update loading bar.
+            },
+            onPageStarted: (String url) {
+              print("test1");
+
+            },
+            onPageFinished: (String url) {
+              setState(() {
+                loading=false;
+              });
+            },
+            onWebResourceError: (WebResourceError error) {
+              print("test");
+              print(error);
+            },
+          ),
+        )
+        ..loadRequest(Uri.parse('https://h2crypto.exchange/trading-chart/'+widget.pair));
+    }
+
+
+
+    //
+    // webcontroller = WebViewController()
+    //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    //   ..setBackgroundColor(const Color(0x00000000))
+    //   ..setNavigationDelegate(
+    //     NavigationDelegate(
+    //       onProgress: (int progress) {
+    //         // Update loading bar.
+    //       },
+    //       onPageStarted: (String url) {},
+    //       onPageFinished: (String url) {
+    //         setState(() {
+    //           loading=false;
+    //         });
+    //       },
+    //       onWebResourceError: (WebResourceError error) {
+    //         print("Mano");
+    //
+    //         print(error);
+    //       },
+    //       onNavigationRequest: (NavigationRequest request) {
+    //         if (request.url.startsWith('https://h2crypto.exchange/trading-chart/'+widget.pair,)) {
+    //           return NavigationDecision.prevent;
+    //         }
+    //         return NavigationDecision.navigate;
+    //       },
+    //     ),
+    //   )
+    //   ..loadRequest(Uri.parse('https://h2crypto.exchange/trading-chart/'+widget.pair,));
 
 
 

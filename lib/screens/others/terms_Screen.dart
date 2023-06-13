@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -24,35 +26,61 @@ class _TermsConditionState extends State<TermsCondition> {
 
   @override
   void initState() {
+
     super.initState();
+    if (Platform.isAndroid) {
+      webcontroller = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setBackgroundColor(const Color(0xFF242B48))
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {
+              // Update loading bar.
+            },
+            onPageStarted: (String url) {
+              print("test1");
 
+            },
+            onPageFinished: (String url) {
+              setState(() {
+                loading=false;
+              });
+            },
+            onWebResourceError: (WebResourceError error) {
+              print("test");
+              print(error);
+            },
 
-    webcontroller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor( Color(0xFF242B48))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {
-            setState(() {
-              loading=false;
-            });
-          },
+          ),
+        )
+        ..loadRequest(Uri.parse(widget.content));
+    } else if (Platform.isIOS) {
+      webcontroller = WebViewController()
+        ..setBackgroundColor(const Color(0xFF242B48))
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {
+              // Update loading bar.
+            },
+            onPageStarted: (String url) {
+              print("test1");
 
-          onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith(widget.content,)) {
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
+            },
+            onPageFinished: (String url) {
+              setState(() {
+                loading=false;
+              });
+            },
+            onWebResourceError: (WebResourceError error) {
+              print("test");
+              print(error);
+            },
 
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.content,));
+          ),
+        )
+        ..loadRequest(Uri.parse(widget.content));
+    }
+
 
 
 
@@ -64,7 +92,6 @@ class _TermsConditionState extends State<TermsCondition> {
       backgroundColor: CustomTheme.of(context).backgroundColor,
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
-
         elevation: 0.0,
         title: Text(
           AppLocalizations.instance.text(widget.title),
