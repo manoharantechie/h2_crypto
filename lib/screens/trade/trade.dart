@@ -1163,7 +1163,7 @@ backgroundColor: Colors.transparent,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Total "+ (buySell ?  firstCoin:secondCoin),
+                        "Total "+ (buySell ?  QuickfirstCoin:QuicksecondCoin),
                         style: CustomWidget(context: context).CustomSizedTextStyle(
                             12.0,
                             Theme.of(context).splashColor,
@@ -1189,7 +1189,7 @@ backgroundColor: Colors.transparent,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Live Price",
+                        "Live Price ",
                         style: CustomWidget(context: context).CustomSizedTextStyle(
                             12.0,
                             Theme.of(context).splashColor,
@@ -1199,7 +1199,7 @@ backgroundColor: Colors.transparent,
                       Text(
                          QuicklivePrice +
                                 " " +
-                                (buySell ? secondCoin : firstCoin),
+                                (buySell ? QuicksecondCoin : QuickfirstCoin),
                         style: CustomWidget(context: context).CustomSizedTextStyle(
                             11.5,
                             Theme.of(context).splashColor,
@@ -1212,7 +1212,7 @@ backgroundColor: Colors.transparent,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Live Price",
+                        "Live Price ",
                         style: CustomWidget(context: context).CustomSizedTextStyle(
                             12.0,
                             Theme.of(context).splashColor,
@@ -1238,7 +1238,7 @@ backgroundColor: Colors.transparent,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Total "+ (buySell ?  secondCoin:firstCoin),
+                        "Total "+ (buySell ?  QuicksecondCoin:QuickfirstCoin),
                         style: CustomWidget(context: context).CustomSizedTextStyle(
                             12.0,
                             Theme.of(context).splashColor,
@@ -1277,7 +1277,7 @@ backgroundColor: Colors.transparent,
                     'FontRegular'),
               ),
               Text(
-                balance + " " + ((buySell ? secondCoin : firstCoin)),
+                balance + " " + ((buySell ? QuicksecondCoin : QuickfirstCoin)),
                 style: CustomWidget(context: context).CustomSizedTextStyle(
                     11.5,
                     Theme.of(context).splashColor,
@@ -3599,7 +3599,7 @@ backgroundColor: Colors.transparent,
                           AppLocalizations.instance
                                   .text("loc_sell_trade_txt5") +
                               " " +
-                              QuicksecondCoin,
+                              QuickfirstCoin,
                           style: CustomWidget(context: context)
                               .CustomSizedTextStyle(
                                   13.0,
@@ -4530,7 +4530,7 @@ backgroundColor: Colors.transparent,
               ? Container(
                   color: Theme.of(context).backgroundColor,
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height,
                   child: ListView.builder(
                     itemCount: historyOrders.length,
                     shrinkWrap: true,
