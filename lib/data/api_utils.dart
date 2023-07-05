@@ -14,6 +14,7 @@ import 'package:h2_crypto/data/crypt_model/quote_details_model.dart';
 import 'package:h2_crypto/data/crypt_model/support_ticket_model.dart';
 import 'package:h2_crypto/data/crypt_model/user_details_model.dart';
 import 'package:h2_crypto/data/crypt_model/user_wallet_balance_model.dart';
+import 'package:h2_crypto/data/crypt_model/withdraw_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:h2_crypto/data/crypt_model/common_model.dart';
@@ -66,6 +67,8 @@ class APIUtils {
   static const String supportListUrl = '/api/ticket-view';
   static const String messageListUrl = '/api/get-message';
   static const String sendNewMessageUrl = '/api/send-message';
+  static const String verifyOTP = '/api/withdraw-otp';
+  static const String resendOTP = '/api/withdraw-resend-otp';
 
   Future<CommonModel> doVerifyRegister(
       String first_name,
@@ -568,7 +571,7 @@ class APIUtils {
     return CommonModel.fromJson(json.decode(response.body));
   }
 
-  Future<CommonModel> coinWithdrawDetails(
+  Future<WithdrawModel> coinWithdrawDetails(
     String asset,
     String address,
     String amount,
@@ -588,7 +591,7 @@ class APIUtils {
         headers: {
           "authorization": "Bearer " + preferences.getString("token").toString()
         });
-    return CommonModel.fromJson(json.decode(response.body));
+    return WithdrawModel.fromJson(json.decode(response.body));
   }
 
   Future<CommonModel> doCreateTicket(
@@ -666,5 +669,47 @@ class APIUtils {
     return CommonModel.fromJson(json.decode(response.body));
   }
 
+
+  Future<CommonModel> confirmWithdrawOTP(
+      String OTP,
+      String atx_id,
+      ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var bankData = {
+      "OTP": OTP,
+      "OTP": atx_id,
+    };
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + verifyOTP,
+        ),
+        body: bankData,
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+
+  Future<CommonModel> resendWithdrawOTP(
+      String atx_id,
+
+      ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var bankData = {
+      "atx_id": atx_id,
+
+    };
+
+    final response = await http.post(
+        Uri.parse(
+          crypto_baseURL + resendOTP,
+        ),
+        body: bankData,
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
+    return CommonModel.fromJson(json.decode(response.body));
+  }
 
 }

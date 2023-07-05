@@ -2,10 +2,13 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:h2_crypto/common/otp/otp_field_custom.dart';
+import 'package:h2_crypto/common/otp/style.dart';
 import 'package:h2_crypto/data/api_utils.dart';
 import 'package:h2_crypto/data/crypt_model/bank_model.dart';
 import 'package:h2_crypto/data/crypt_model/common_model.dart';
 import 'package:h2_crypto/data/crypt_model/user_wallet_balance_model.dart';
+import 'package:h2_crypto/data/crypt_model/withdraw_model.dart';
 import 'package:h2_crypto/screens/bank/add_bank.dart';
 
 import '../../../common/colors.dart';
@@ -45,6 +48,9 @@ class _WithDrawState extends State<WithDraw> {
   final _flashOffController = TextEditingController(text: 'Flash off');
   final _cancelController = TextEditingController(text: 'Cancel');
   ScrollController controller = ScrollController();
+  ScrollController _scroll = ScrollController();
+  var pinValue;
+  String axn_id="";
 
   int indexVal = 0;
   List<BankList> bankList = [];
@@ -55,19 +61,31 @@ class _WithDrawState extends State<WithDraw> {
     // TODO: implement initState
     super.initState();
 
+
+    print(widget.id);
     coinList = widget.coinList;
     searchCoinList = widget.coinList;
 
-    for(int m=0;m<coinList.length;m++)
+
+    if(widget.id=="0")
       {
-        if(coinList[m].name.toString()==widget.id)
-          {
-            selectedCoin = coinList[m];
-          }
-        else {
-          selectedCoin=coinList.first;
-        }
+        selectedCoin=coinList.first;
+
       }
+    else{
+      for(int m=0;m<coinList.length;m++)
+      {
+
+        if(coinList[m].name.toString()==widget.id)
+        {
+          selectedCoin = coinList[m];
+
+        }
+
+      }
+    }
+
+
 
 
   }
@@ -80,6 +98,7 @@ class _WithDrawState extends State<WithDraw> {
   }
   Widget build(BuildContext context) {
     return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
+      backgroundColor: CustomTheme.of(context).primaryColor,
       appBar: AppBar(
         backgroundColor: CustomTheme.of(context).primaryColor,
         elevation: 0.0,
@@ -503,7 +522,7 @@ class _WithDrawState extends State<WithDraw> {
                           SizedBox(
                             height: 10.0,
                           ),
-                          TextFormField(
+                          selectedCoin!.type.toString()=="fiat"?  TextFormField(
                             // controller: email,
                             // focusNode: emailFocus,
                             maxLines: 1,
@@ -554,51 +573,51 @@ class _WithDrawState extends State<WithDraw> {
                                     width: 1.0),
                               ),
                             ),
-                          ),
+                          ):Container(),
                           SizedBox(
                             height: 10.0,
                           ),
-                          Text(
-                            "H2cryptO’s API allows users to make market inquiries, trade automatically and perform various other tasks. You may find out more here",
-                            style: CustomWidget(context: context)
-                                .CustomSizedTextStyle(
-                                12.0,
-                                Theme.of(context)
-                                    .splashColor
-                                    .withOpacity(0.5),
-                                FontWeight.w400,
-                                'FontRegular'),
-                          ),
+                          // Text(
+                          //   "H2cryptO’s API allows users to make market inquiries, trade automatically and perform various other tasks. You may find out more here",
+                          //   style: CustomWidget(context: context)
+                          //       .CustomSizedTextStyle(
+                          //       12.0,
+                          //       Theme.of(context)
+                          //           .splashColor
+                          //           .withOpacity(0.5),
+                          //       FontWeight.w400,
+                          //       'FontRegular'),
+                          // ),
+                          // SizedBox(
+                          //   height: 10.0,
+                          // ),
+                          // Text(
+                          //   "Each user may create up to 5 groups of API keys. The platform currently supports most mainstream currencies. For a full list of supported currencies, click here.",
+                          //   style: CustomWidget(context: context)
+                          //       .CustomSizedTextStyle(
+                          //       12.0,
+                          //       Theme.of(context)
+                          //           .splashColor
+                          //           .withOpacity(0.5),
+                          //       FontWeight.w400,
+                          //       'FontRegular'),
+                          // ),
+                          // SizedBox(
+                          //   height: 10.0,
+                          // ),
+                          // Text(
+                          //   "Please keep your API key confidential to protect your account. For security reasons, we recommend you link your IP address with your API key. To link your API Key with multiple addresses, you may separate each of them with a comma such as 192.168.1.1, 192.168.1.2, 192.168.1.3. Each API key can be linked with up to 4 IP addresses.",
+                          //   style: CustomWidget(context: context)
+                          //       .CustomSizedTextStyle(
+                          //       12.0,
+                          //       Theme.of(context)
+                          //           .splashColor
+                          //           .withOpacity(0.5),
+                          //       FontWeight.w400,
+                          //       'FontRegular'),
+                          // ),
                           SizedBox(
-                            height: 10.0,
-                          ),
-                          Text(
-                            "Each user may create up to 5 groups of API keys. The platform currently supports most mainstream currencies. For a full list of supported currencies, click here.",
-                            style: CustomWidget(context: context)
-                                .CustomSizedTextStyle(
-                                12.0,
-                                Theme.of(context)
-                                    .splashColor
-                                    .withOpacity(0.5),
-                                FontWeight.w400,
-                                'FontRegular'),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Text(
-                            "Please keep your API key confidential to protect your account. For security reasons, we recommend you link your IP address with your API key. To link your API Key with multiple addresses, you may separate each of them with a comma such as 192.168.1.1, 192.168.1.2, 192.168.1.3. Each API key can be linked with up to 4 IP addresses.",
-                            style: CustomWidget(context: context)
-                                .CustomSizedTextStyle(
-                                12.0,
-                                Theme.of(context)
-                                    .splashColor
-                                    .withOpacity(0.5),
-                                FontWeight.w400,
-                                'FontRegular'),
-                          ),
-                          SizedBox(
-                            height: 35.0,
+                            height: 55.0,
                           ),
                           ButtonCustom(
                               text:
@@ -633,7 +652,12 @@ class _WithDrawState extends State<WithDraw> {
                                   }
                                   else
                                   {
+
                                     loading=true;
+
+
+
+                                    print("Mano");
                                     coinWithdraw();
 
                                   }
@@ -653,6 +677,8 @@ class _WithDrawState extends State<WithDraw> {
       ),
     ));
   }
+
+
 
 
   showSheeet(BuildContext contexts) {
@@ -675,6 +701,7 @@ class _WithDrawState extends State<WithDraw> {
                     .of(context)
                     .primaryColor,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     SizedBox(
                       height: 20.0,
@@ -899,7 +926,7 @@ class _WithDrawState extends State<WithDraw> {
           );
         });
   }
-  // showSheeet(BuildContext contexts) {
+  // showssSheeet(BuildContext contexts) {
   //   return showModalBottomSheet(
   //       context: contexts,
   //       isScrollControlled: true,
@@ -1116,6 +1143,165 @@ class _WithDrawState extends State<WithDraw> {
   //         );
   //       });
   // }
+  viewDetails(BuildContext contexts) {
+    return showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter ssetState) {
+                return Container(
+                  margin: EdgeInsets.only(top: 5.0),
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.only(right: 5.0, left: 0.0,),
+                  decoration: BoxDecoration(
+                      color: CustomTheme.of(context).cardColor,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(30.0),
+                        topLeft: Radius.circular(30.0),
+                      )
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        height: 30.0,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+
+
+
+
+                            Container(
+                              padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                              child:  Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Withdraw  OTP",
+                                    style: CustomWidget(context: context)
+                                        .CustomSizedTextStyle(
+                                        16.0,
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w600,
+                                        'FontRegular'),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  const SizedBox(height: 35.0,),
+                                  OTPTextField(
+                                    length: 6,
+                                    width: MediaQuery.of(context).size.width,
+                                    fieldWidth: 45,
+                                    style: CustomWidget(context: context)
+                                        .CustomSizedTextStyle(
+                                        14.0,
+                                        Theme.of(context).primaryColor,
+                                        FontWeight.w600,
+                                        'FontRegular'),
+                                    textFieldAlignment: MainAxisAlignment.spaceAround,
+                                    fieldStyle: FieldStyle.underline,
+                                    onCompleted: (pin) {
+                                      // print("Completed: " + pin);
+                                      setState(() {
+
+                                        pinValue=pin;
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(height: 45.0,),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: InkWell(
+                                      onTap: (){
+                                        if(pinValue.isEmpty || pinValue.length<6)
+
+                                        {
+                                          CustomWidget(context: context)
+                                              .custombar("Withdraw","Please enter OTP", false);
+                                        }
+                                        else{
+                                          ssetState(() {
+                                            loading=true;
+                                            confirmWithdraw();
+                                          });
+                                        }
+
+
+                                      },
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width * 0.6,
+                                        padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                        decoration: BoxDecoration(
+                                          // border: Border.all(
+                                          //   width: 1.0,
+                                          //   color: Theme.of(context).cardColor,
+                                          // ),
+                                          borderRadius: BorderRadius.circular(6.0),
+                                          color: CustomTheme.of(context).shadowColor,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "Verify",
+                                            style: CustomWidget(context: context)
+                                                .CustomSizedTextStyle(
+                                                16.0,
+                                                Theme.of(context).splashColor,
+                                                FontWeight.w800,
+                                                'FontRegular'),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10.0,),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: InkWell(
+                                      onTap: (){
+                                        ssetState(() {
+                                          loading=true;
+                                          resndOTP();
+                                        });
+
+
+                                      },
+                                      child: Text(
+                                        "Resend OTP",
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                            14.0,
+                                            Theme.of(context).shadowColor,
+                                            FontWeight.w800,
+                                            'FontRegular'),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15.0,),
+                                ],
+                              ),
+                            ) ,
+
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+
+                    ],
+                  ),
+                );
+              }),
+        ));
+  }
+
 
   Future<void> _scan() async {
     try {
@@ -1178,7 +1364,37 @@ class _WithDrawState extends State<WithDraw> {
   }
 
   coinWithdraw() {
-    apiUtils.coinWithdrawDetails(selectedCoin!.name.toString(), addressController.text.toString(), amountController.text.toString()).then((CommonModel loginData) {
+    apiUtils.coinWithdrawDetails(selectedCoin!.name.toString(), addressController.text.toString(), amountController.text.toString()).then((WithdrawModel loginData) {
+      if (loginData.success!) {
+        setState(() {
+          loading = false;
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), true);
+          axn_id=loginData.result!.atxId.toString();
+
+          viewDetails(context);
+
+        });
+      } else {
+        setState(() {
+          loading = false;
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), false);
+        });
+      }
+    }).catchError((Object error) {
+      print(error);
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  confirmWithdraw() {
+    setState(() {
+      loading=true;
+    });
+    apiUtils.confirmWithdrawOTP(pinValue.toString(),  axn_id).then((CommonModel loginData) {
       if (loginData.status!) {
         setState(() {
           loading = false;
@@ -1191,6 +1407,32 @@ class _WithDrawState extends State<WithDraw> {
           coinList.clear();
           coinList=[];
           searchCoinList=[];
+
+        });
+      } else {
+        setState(() {
+          loading = false;
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), false);
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+  resndOTP() {
+    setState(() {
+      loading=true;
+    });
+    apiUtils.resendWithdrawOTP(axn_id).then((CommonModel loginData) {
+      if (loginData.status!) {
+        setState(() {
+          loading = false;
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), true);
+
 
         });
       } else {

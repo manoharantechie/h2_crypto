@@ -1019,27 +1019,11 @@ class _HomeState extends State<Home>
                                           child: Column(
                                             children: [
                                               Text(
-                                                tradePairList[index]
-                                                                .cointwoDecimal
-                                                                .toString() ==
-                                                            null ||
-                                                        tradePairList[index]
-                                                                .cointwoDecimal
-                                                                .toString() ==
-                                                            "null"
-                                                    ? double.parse(
-                                                            tradePairList[index]
-                                                                .currentPrice
-                                                                .toString())
-                                                        .toStringAsFixed(2)
-                                                    : double.parse(
-                                                            tradePairList[index]
-                                                                .currentPrice
-                                                                .toString())
-                                                        .toStringAsFixed(int.parse(
-                                                            tradePairList[index]
-                                                                .cointwoDecimal
-                                                                .toString())),
+                                                double.parse(
+                                                    tradePairList[index]
+                                                        .currentPrice
+                                                        .toString())
+                                                    .toStringAsFixed(2),
                                                 style: CustomWidget(
                                                         context: context)
                                                     .CustomSizedTextStyle(
@@ -1070,11 +1054,19 @@ class _HomeState extends State<Home>
                                       ),
                                       Flexible(
                                         child: Container(
+
                                           child: Center(
                                               child: Container(
+
                                             padding: EdgeInsets.only(
-                                                left: 15.0,
-                                                right: 15.0,
+                                                left: double.parse(
+                                                    data.toString()) >=
+                                                    0
+                                                    ?10.0: 8.0,
+                                                right: double.parse(
+                                                    data.toString()) >=
+                                                    0
+                                                    ?10.0: 8.0,
                                                 top: 8.0,
                                                 bottom: 8.0),
                                             child: Text(
@@ -1082,7 +1074,7 @@ class _HomeState extends State<Home>
                                               style:
                                                   CustomWidget(context: context)
                                                       .CustomSizedTextStyle(
-                                                          10.0,
+                                                          8.0,
                                                           Theme.of(context)
                                                               .hintColor,
                                                           FontWeight.w500,
@@ -1099,6 +1091,7 @@ class _HomeState extends State<Home>
                                                 borderRadius:
                                                     BorderRadius.circular(5.0)),
                                           )),
+
                                         ),
                                         flex: 1,
                                       ),

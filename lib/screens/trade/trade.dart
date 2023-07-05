@@ -201,6 +201,7 @@ class _SellTradeScreenState extends State<TradeScreen>
 
   socketData() {
     setState(() {
+
       buyData.clear();
       sellData.clear();
       buyData = [];
@@ -216,6 +217,7 @@ class _SellTradeScreenState extends State<TradeScreen>
           if (mounted) {
             setState(() {
               loading = false;
+
               String val = decode["recipient"];
 
               if (val.toLowerCase() ==
@@ -224,7 +226,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                       "ticker.sfox." + QuickselectPair!.symbol!.toLowerCase()) {
                 if (marginOption) {
                   var m = decode["payload"]["last"];
-                  /*QuicklivePrice = m.toString();*/
+                  QuicklivePrice = m.toString();
                 } else {
                   var m = decode["payload"]["last"];
                   livePrice = m.toString();
@@ -427,6 +429,9 @@ class _SellTradeScreenState extends State<TradeScreen>
                                         }
                                       }
                                       QuickselectPair=tradePair.first;
+
+                                      QuickfirstCoin = QuickselectPair!.baseAsset.toString();
+                                      QuicksecondCoin = QuickselectPair!.marketAsset.toString();
                                       buySell = true;
                                       selectPair = tradePair[0];
                                       openOrders = [];
@@ -442,6 +447,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                       getCoinList();
                                       enableTrade = false;
                                       selectedTime = chartTime.first;
+
                                     });
                                   },
                                   child: Container(
@@ -648,6 +654,8 @@ backgroundColor: Colors.transparent,
 
 
                               });
+                             livePrice = "0.00";
+                               QuicklivePrice = "0.00";
 
                             },
                             child: Container(
@@ -792,6 +800,10 @@ backgroundColor: Colors.transparent,
                         buyData = [];
                         sellData = [];
 
+                        setState(() {
+                          livePrice = "0.00";
+                          QuicklivePrice = "0.00";
+                        });
                         if(marginOption)
                           {
                             buyData = [];
@@ -827,6 +839,10 @@ backgroundColor: Colors.transparent,
                                 selectPair!.baseAsset.toString();
                             secondCoin =
                                 selectPair!.marketAsset.toString();
+                            channelOpenOrder!.sink.close();
+                            channelOpenOrder = IOWebSocketChannel.connect(
+                                Uri.parse("wss://ws.sfox.com/ws"),
+                                pingInterval: Duration(seconds: 5));
                             var ofeed = "orderbook.net.$pair";
                             balance = "0.00";
                             escrow = "0.00";
@@ -852,6 +868,7 @@ backgroundColor: Colors.transparent,
                                 .add(json.encode(authMessage));
                             channelOpenOrder!.sink
                                 .add(json.encode(messageJSON));
+                            socketData();
 
                             for (int m = 0;
                             m < availableBalance.length;
@@ -885,6 +902,7 @@ backgroundColor: Colors.transparent,
                             }
                           });
                         }
+
 
 
                         _scaffoldKey.currentState!.closeDrawer();
@@ -937,25 +955,10 @@ backgroundColor: Colors.transparent,
                                   child: Column(
                                     children: [
                                       Text(
-                                        tradePair[index]
-                                            .cointwoDecimal
-                                            .toString() ==
-                                            null ||
-                                            tradePair[index]
-                                                .cointwoDecimal
-                                                .toString() ==
-                                                "null"
-                                            ? double.parse(tradePair[index]
+                                        double.parse(tradePair[index]
                                             .currentPrice
                                             .toString())
-                                            .toStringAsFixed(4)
-                                            : double.parse(tradePair[index]
-                                            .currentPrice
-                                            .toString())
-                                            .toStringAsFixed(int.parse(
-                                            tradePair[index]
-                                                .cointwoDecimal
-                                                .toString())),
+                                            .toStringAsFixed(2),
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
                                             13.0,
@@ -997,15 +1000,21 @@ backgroundColor: Colors.transparent,
                                   child: Center(
                                       child: Container(
                                         padding: EdgeInsets.only(
-                                            left: 15.0,
-                                            right: 15.0,
+                                            left: double.parse(
+                                                data.toString()) >=
+                                                0
+                                                ?10.0: 7.0,
+                                            right: double.parse(
+                                                data.toString()) >=
+                                                0
+                                                ?10.0: 8.0,
                                             top: 8.0,
                                             bottom: 8.0),
                                         child: Text(
                                           data.toStringAsFixed(2) + "%",
                                           style: CustomWidget(context: context)
                                               .CustomSizedTextStyle(
-                                              10.0,
+                                              8.0,
                                               Theme.of(context).hintColor,
                                               FontWeight.w500,
                                               'FontRegular'),

@@ -27,6 +27,8 @@ class _TermsConditionState extends State<TermsCondition> {
   @override
   void initState() {
 
+    print(widget.content);
+
     super.initState();
     if (Platform.isAndroid) {
       webcontroller = WebViewController()

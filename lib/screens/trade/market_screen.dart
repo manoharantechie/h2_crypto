@@ -418,32 +418,37 @@ class _MarketSceen1State extends State<MarketSceen>
                                 ],
                               ),
                             ),
-                            flex: 3,
+                            flex: 2,
                           ),
                           Flexible(
                             child: Container(
                               child: Column(
+
                                 children: [
                                   Text(
-                                    tradePairList[index]
-                                                    .cointwoDecimal
-                                                    .toString() ==
-                                                null ||
-                                            tradePairList[index]
-                                                    .cointwoDecimal
-                                                    .toString() ==
-                                                "null"
-                                        ? double.parse(tradePairList[index]
-                                                .currentPrice
-                                                .toString())
-                                            .toStringAsFixed(4)
-                                        : double.parse(tradePairList[index]
-                                                .currentPrice
-                                                .toString())
-                                            .toStringAsFixed(int.parse(
-                                                tradePairList[index]
-                                                    .cointwoDecimal
-                                                    .toString())),
+                  double.parse(tradePairList[index]
+                      .currentPrice
+                      .toString())
+                      .toStringAsFixed(2),
+                                    // tradePairList[index]
+                                    //                 .cointwoDecimal
+                                    //                 .toString() ==
+                                    //             null ||
+                                    //         tradePairList[index]
+                                    //                 .cointwoDecimal
+                                    //                 .toString() ==
+                                    //             "null"
+                                    //     ? double.parse(tradePairList[index]
+                                    //             .currentPrice
+                                    //             .toString())
+                                    //         .toStringAsFixed(4)
+                                    //     : double.parse(tradePairList[index]
+                                    //             .currentPrice
+                                    //             .toString())
+                                    //         .toStringAsFixed(int.parse(
+                                    //             tradePairList[index]
+                                    //                 .cointwoDecimal
+                                    //                 .toString())),
                                     style: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
                                             13.0,
@@ -453,6 +458,7 @@ class _MarketSceen1State extends State<MarketSceen>
                                                 : Theme.of(context).canvasColor,
                                             FontWeight.w500,
                                             'FontRegular'),
+                                    textAlign: TextAlign.center,
                                   ),
                                   const SizedBox(
                                     height: 5.0,
@@ -474,7 +480,7 @@ class _MarketSceen1State extends State<MarketSceen>
                                   // ),
                                 ],
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                               ),
                               width: MediaQuery.of(context).size.width,
                             ),
@@ -484,16 +490,22 @@ class _MarketSceen1State extends State<MarketSceen>
                             child: Container(
                               child: Center(
                                   child: Container(
-                                padding: EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 8.0,
-                                    bottom: 8.0),
+                                    padding: EdgeInsets.only(
+                                        left: double.parse(
+                                            data.toString()) >=
+                                            0
+                                            ?10.0: 8.0,
+                                        right: double.parse(
+                                            data.toString()) >=
+                                            0
+                                            ?10.0: 8.0,
+                                        top: 8.0,
+                                        bottom: 8.0),
                                 child: Text(
                                   data.toStringAsFixed(2) + "%",
                                   style: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                          10.0,
+                                          8.0,
                                           Theme.of(context).hintColor,
                                           FontWeight.w500,
                                           'FontRegular'),
@@ -509,7 +521,7 @@ class _MarketSceen1State extends State<MarketSceen>
                           ),
                         ],
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                       ),
                       const SizedBox(
                         height: 10.0,

@@ -353,55 +353,55 @@ class _DepositAddressState extends State<DepositScreen> {
         const SizedBox(
           height: 30.0,
         ),
-        Column(
-          children: [
-            Text(
-              "H2cryptO’s API allows users to make market inquiries, trade automatically and perform various other tasks. You may find out more here ",
-              style: CustomWidget(context: context).CustomSizedTextStyle(
-                  12.0,
-                  Theme
-                      .of(context)
-                      .hintColor
-                      .withOpacity(0.5),
-                  FontWeight.w400,
-                  'FontRegular'),
-              textAlign: TextAlign.justify,
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              "Each user may create up to 5 groups of API keys. The platform currently supports most mainstream currencies. For a full list of supported currencies, click here.",
-              style: CustomWidget(context: context).CustomSizedTextStyle(
-                  12.0,
-                  Theme
-                      .of(context)
-                      .hintColor
-                      .withOpacity(0.5),
-                  FontWeight.w400,
-                  'FontRegular'),
-              textAlign: TextAlign.justify,
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              "Please keep your API key confidential to protect your account. For security reasons, we recommend you link your IP address with your API key. To link your API Key with multiple addresses, you may separate each of them with a comma such as 192.168.1.1, 192.168.1.2, 192.168.1.3. Each API key can be linked with up to 4 IP addresses.",
-              style: CustomWidget(context: context).CustomSizedTextStyle(
-                  12.0,
-                  Theme
-                      .of(context)
-                      .hintColor
-                      .withOpacity(0.5),
-                  FontWeight.w400,
-                  'FontRegular'),
-              textAlign: TextAlign.justify,
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-          ],
-        ),
+        // Column(
+        //   children: [
+        //     Text(
+        //       "H2cryptO’s API allows users to make market inquiries, trade automatically and perform various other tasks. You may find out more here ",
+        //       style: CustomWidget(context: context).CustomSizedTextStyle(
+        //           12.0,
+        //           Theme
+        //               .of(context)
+        //               .hintColor
+        //               .withOpacity(0.5),
+        //           FontWeight.w400,
+        //           'FontRegular'),
+        //       textAlign: TextAlign.justify,
+        //     ),
+        //     SizedBox(
+        //       height: 10.0,
+        //     ),
+        //     Text(
+        //       "Each user may create up to 5 groups of API keys. The platform currently supports most mainstream currencies. For a full list of supported currencies, click here.",
+        //       style: CustomWidget(context: context).CustomSizedTextStyle(
+        //           12.0,
+        //           Theme
+        //               .of(context)
+        //               .hintColor
+        //               .withOpacity(0.5),
+        //           FontWeight.w400,
+        //           'FontRegular'),
+        //       textAlign: TextAlign.justify,
+        //     ),
+        //     SizedBox(
+        //       height: 10.0,
+        //     ),
+        //     Text(
+        //       "Please keep your API key confidential to protect your account. For security reasons, we recommend you link your IP address with your API key. To link your API Key with multiple addresses, you may separate each of them with a comma such as 192.168.1.1, 192.168.1.2, 192.168.1.3. Each API key can be linked with up to 4 IP addresses.",
+        //       style: CustomWidget(context: context).CustomSizedTextStyle(
+        //           12.0,
+        //           Theme
+        //               .of(context)
+        //               .hintColor
+        //               .withOpacity(0.5),
+        //           FontWeight.w400,
+        //           'FontRegular'),
+        //       textAlign: TextAlign.justify,
+        //     ),
+        //     SizedBox(
+        //       height: 10.0,
+        //     ),
+        //   ],
+        // ),
         const SizedBox(
           height: 15.0,
         ),
