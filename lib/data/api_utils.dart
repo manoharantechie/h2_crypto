@@ -278,6 +278,7 @@ class APIUtils {
           "authorization": "Bearer " + preferences.getString("token").toString()
         });
 
+    print(response.body);
     return CoinListModel.fromJson(json.decode(response.body));
   }
 

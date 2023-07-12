@@ -137,8 +137,12 @@ class _SellTradeScreenState extends State<TradeScreen>
 
 
   List<String> marketAseetList = [];
+  List<String> QuickmarketAseetList = [];
+  int d = 0;
   int indexVal = 0;
+  int QuickindexVal = 0;
   String selectedmarketAseet = "";
+  String QuickselectedmarketAseet = "";
   @override
   void initState() {
     // TODO: implement initState
@@ -419,21 +423,21 @@ class _SellTradeScreenState extends State<TradeScreen>
                                 child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      indexVal=0;
-                                      selectedmarketAseet = marketAseetList.first;
+                                      QuickindexVal=0;
+                                      QuickselectedmarketAseet = QuickmarketAseetList.first;
 
-                                      for (int m = 0; m < searchPair.length; m++) {
-                                        if (searchPair[m].marketAsset.toString().toLowerCase() ==
-                                            selectedmarketAseet.toLowerCase()) {
-                                          tradePair.add(searchPair[m]);
-                                        }
-                                      }
-                                      QuickselectPair=tradePair.first;
+                                      // for (int m = 0; m < QuickSearchPair.length; m++) {
+                                      //   if (QuickSearchPair[m].marketAsset.toString().toLowerCase() ==
+                                      //       selectedmarketAseet.toLowerCase()) {
+                                      //     tradePair.add(QuickSearchPair[m]);
+                                      //   }
+                                      // }
+                                      QuickselectPair=QuicktradePair.first;
 
                                       QuickfirstCoin = QuickselectPair!.baseAsset.toString();
                                       QuicksecondCoin = QuickselectPair!.marketAsset.toString();
                                       buySell = true;
-                                      selectPair = tradePair[0];
+
                                       openOrders = [];
                                       _currentSliderValue = 0;
                                       tleverageVal = "1";
@@ -535,9 +539,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                               top: 6.0, bottom: 6.0)
                                           : EdgeInsets.only(
                                               top: 7.0, bottom: 7.0),
-                                      child: Text(
-                                        AppLocalizations.instance
-                                            .text("loc_sell_trade_txt1"),
+                                      child: Text("Pro Trade",
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
                                                 13.0,
@@ -579,7 +581,7 @@ class _SellTradeScreenState extends State<TradeScreen>
               ],
             ),
           ),
-          drawer: drawerUI(),
+          drawer: marginOption? drawerQuickUI():drawerUI(),
         ));
   }
 
@@ -1048,7 +1050,397 @@ backgroundColor: Colors.transparent,
 
     );
   }
+  Widget drawerQuickUI(){
+    return  Drawer(
+//      backgroundColor:    CustomTheme.of(context).primaryColor,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.only(top: 45.0),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                // Add one stop for each color
+                // Values should increase from 0.0 to 1.0
+                stops: [
+                  0.1,
+                  0.5,
+                  0.9,
+                ],
+                colors: [
+                  CustomTheme.of(context).primaryColor,
+                  CustomTheme.of(context).backgroundColor,
+                  Theme.of(context).dialogBackgroundColor,
+                ])),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(15, 2, 15, 2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  "Market",
+                  style: CustomWidget(context: context).CustomSizedTextStyle(16.0,
+                      Theme.of(context).splashColor, FontWeight.w500, 'FontRegular'),
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 0.00),
+                  child: ListView.builder(
+                    itemCount: QuickmarketAseetList.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                QuickindexVal = index;
+                                QuicktradePair.clear();
+                                QuicktradePair = [];
+                                QuickselectedmarketAseet = QuickmarketAseetList[index];
+                                for (int m = 0;
+                                m < QuickSearchPair.length;
+                                m++) {
+                                  if (QuickSearchPair[m]
+                                      .marketAsset
+                                      .toString()
+                                      .toLowerCase() ==
+                                      QuickselectedmarketAseet.toLowerCase()) {
+                                    QuicktradePair.add(QuickSearchPair[m]);
+                                  }
+                                }
+
+
+                              });
+                              livePrice = "0.00";
+                              QuicklivePrice = "0.00";
+
+                            },
+                            child: Container(
+                                padding:
+                                EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    gradient: QuickindexVal == index
+                                        ? LinearGradient(
+                                      begin: Alignment.bottomLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        CustomTheme.of(context).shadowColor,
+                                        CustomTheme.of(context).shadowColor,
+                                      ],
+                                    )
+                                        : LinearGradient(
+                                      begin: Alignment.bottomLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        CustomTheme.of(context)
+                                            .hintColor
+                                            .withOpacity(0.5),
+                                        CustomTheme.of(context)
+                                            .hintColor
+                                            .withOpacity(0.5),
+                                      ],
+                                    )),
+                                child: Center(
+                                  child: Text(
+                                    QuickmarketAseetList[index].toString(),
+                                    style: CustomWidget(context: context)
+                                        .CustomSizedTextStyle(
+                                        14.0,
+                                        QuickindexVal == index
+                                            ? Theme.of(context).splashColor
+                                            : Theme.of(context).shadowColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
+                                  ),
+                                )),
+                          ),
+                          const SizedBox(
+                            width: 10.0,
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                  height: 35.0,
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "Name",
+                              style: CustomWidget(context: context)
+                                  .CustomSizedTextStyle(
+                                  13.0,
+                                  Theme.of(context)
+                                      .hintColor
+                                      .withOpacity(0.5),
+                                  FontWeight.w500,
+                                  'FontRegular'),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "/ vol",
+                              style: CustomWidget(context: context)
+                                  .CustomSizedTextStyle(
+                                  13.0,
+                                  Theme.of(context)
+                                      .hintColor
+                                      .withOpacity(0.5),
+                                  FontWeight.w500,
+                                  'FontRegular'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Market Price",
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              13.0,
+                              Theme.of(context).hintColor.withOpacity(0.5),
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Change",
+                          style: CustomWidget(context: context)
+                              .CustomSizedTextStyle(
+                              13.0,
+                              Theme.of(context).hintColor.withOpacity(0.5),
+                              FontWeight.w500,
+                              'FontRegular'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                ListView.builder(
+                  itemCount: QuicktradePair.length,
+                  shrinkWrap: true,
+                  controller: controller,
+                  itemBuilder: (BuildContext context, int index) {
+                    double data =
+                    double.parse(QuicktradePair[index].hrExchange.toString());
+                    return InkWell(
+                      onTap: (){
+                        buyData = [];
+                        sellData = [];
+
+                        setState(() {
+                          livePrice = "0.00";
+                          QuicklivePrice = "0.00";
+                        });
+                        if(marginOption)
+                        {
+                          buyData = [];
+                          sellData = [];
+
+                          setState(() {
+                            QuickselectPair =
+                            QuicktradePair[index];
+                            String pair =
+                            QuickselectPair!.symbol.toString();
+
+                            QuickfirstCoin = QuickselectPair!
+                                .baseAsset
+                                .toString();
+                            QuicksecondCoin = QuickselectPair!
+                                .marketAsset
+                                .toString();
+                            var ofeed = "orderbook.net.$pair";
+                            balance = "0.00";
+                            escrow = "0.00";
+                            totalBalance = "0.00";
+                          });
+                        }
+
+
+
+
+                        _scaffoldKey.currentState!.closeDrawer();
+                      },
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        QuicktradePair[index].tradePair.toString(),
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                            13.0,
+                                            Theme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.5),
+                                            FontWeight.w500,
+                                            'FontRegular'),
+                                      ),
+                                      const SizedBox(
+                                        height: 5.0,
+                                      ),
+                                      Text(
+                                        double.parse(QuicktradePair[index]
+                                            .hrVolume
+                                            .toString())
+                                            .toStringAsFixed(2),
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                            12.0,
+                                            Theme.of(context)
+                                                .hintColor
+                                                .withOpacity(0.5),
+                                            FontWeight.w500,
+                                            'FontRegular'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                flex: 3,
+                              ),
+                              Flexible(
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        double.parse(QuicktradePair[index]
+                                            .currentPrice
+                                            .toString())
+                                            .toStringAsFixed(2),
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                            13.0,
+                                            double.parse(data.toString()) >= 0
+                                                ? Theme.of(context)
+                                                .indicatorColor
+                                                : Theme.of(context).canvasColor,
+                                            FontWeight.w500,
+                                            'FontRegular'),
+                                      ),
+                                      const SizedBox(
+                                        height: 5.0,
+                                      ),
+                                      // Text(
+                                      //   "\$ " +
+                                      //       double.parse(marketList[index]
+                                      //               .tick!['lastPrice']
+                                      //               .toString())
+                                      //           .toStringAsFixed(8),
+                                      //   style: CustomWidget(context: context)
+                                      //       .CustomSizedTextStyle(
+                                      //           12.0,
+                                      //           Theme.of(context)
+                                      //               .hintColor
+                                      //               .withOpacity(0.5),
+                                      //           FontWeight.w500,
+                                      //           'FontRegular'),
+                                      // ),
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  ),
+                                  width: MediaQuery.of(context).size.width,
+                                ),
+                                flex: 3,
+                              ),
+                              Flexible(
+                                child: Container(
+                                  child: Center(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            left: double.parse(
+                                                data.toString()) >=
+                                                0
+                                                ?10.0: 7.0,
+                                            right: double.parse(
+                                                data.toString()) >=
+                                                0
+                                                ?10.0: 8.0,
+                                            top: 8.0,
+                                            bottom: 8.0),
+                                        child: Text(
+                                          data.toStringAsFixed(2) + "%",
+                                          style: CustomWidget(context: context)
+                                              .CustomSizedTextStyle(
+                                              8.0,
+                                              Theme.of(context).hintColor,
+                                              FontWeight.w500,
+                                              'FontRegular'),
+                                        ),
+                                        decoration: BoxDecoration(
+                                            color: double.parse(data.toString()) >= 0
+                                                ? Theme.of(context).indicatorColor
+                                                : Theme.of(context).canvasColor,
+                                            borderRadius: BorderRadius.circular(5.0)),
+                                      )),
+                                ),
+                                flex: 2,
+                              ),
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                          ),
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+
+    );
+  }
   Widget spotUI() {
     return SingleChildScrollView(
       child: Column(
@@ -1080,7 +1472,7 @@ backgroundColor: Colors.transparent,
                                 ),
                               ),
                             ),
-                         tradePair.length>0?   Text(
+                         QuicktradePair.length>0?   Text(
                               QuickselectPair!.tradePair.toString(),
                               style: CustomWidget(context: context)
                                   .CustomSizedTextStyle(
@@ -3739,7 +4131,7 @@ backgroundColor: Colors.transparent,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      buySell ? QuicksecondCoin : QuickfirstCoin,
+                      QuickfirstCoin,
                       style: CustomWidget(context: context)
                           .CustomSizedTextStyle(
                               10.0,
@@ -4895,17 +5287,42 @@ backgroundColor: Colors.transparent,
           loading = false;
           // tradePair = loginData.result!;
 
+          List<CoinList> QuicktradePairs = [];
           searchPair = loginData.result!;
           selectPair = searchPair.first;
 
+          print(searchPair[0].isinstant);
+
           for (int m = 0; m < searchPair.length; m++) {
             if (searchPair[m].isinstant.toString() == "1") {
-              QuicktradePair.add(searchPair[m]);
+              QuicktradePairs.add(searchPair[m]);
             }
           }
 
+          print(QuicktradePairs.length);
+
+
+
+          for (int m = 0; m < QuicktradePairs.length; m++) {
+
+            QuickmarketAseetList.add(QuicktradePairs[m].marketAsset.toString());
+          }
+
+
+          QuickmarketAseetList = QuickmarketAseetList.toSet().toList();
+          QuickselectedmarketAseet = QuickmarketAseetList.first;
+
+          QuickSearchPair.addAll(QuicktradePairs);
+          for (int m = 0; m < QuicktradePairs.length; m++) {
+            if (QuicktradePairs[m].marketAsset.toString().toLowerCase() ==
+                QuickselectedmarketAseet.toLowerCase()) {
+              QuicktradePair.add(QuicktradePairs[m]);
+            }
+          }
           QuickselectPair = QuicktradePair.first;
-          QuickSearchPair.addAll(QuicktradePair);
+          QuickselectPair=QuicktradePair[0];
+
+
           QuickfirstCoin = QuickselectPair!.baseAsset.toString();
           QuicksecondCoin = QuickselectPair!.marketAsset.toString();
           String pair = selectPair!.symbol.toString();
@@ -4946,10 +5363,12 @@ backgroundColor: Colors.transparent,
         });
       } else {
         setState(() {
-          //loading = false;
+          loading = false;
         });
       }
     }).catchError((Object error) {
+      print("Mano");
+
       print(error);
     });
   }
