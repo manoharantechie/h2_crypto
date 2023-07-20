@@ -133,20 +133,20 @@ class _MarketSceen1State extends State<MarketSceen>
                 Theme.of(context).splashColor, FontWeight.w500, 'FontRegular'),
           ),
           actions: <Widget>[
-            Container(
-                padding: const EdgeInsets.all(15.0),
-                child: InkWell(
-                  onTap: () {
-                    // Navigator.pop(context);
-                  },
-                  child: SvgPicture.asset(
-                    'assets/others/search.svg',
-                    height: 24.0,
-                    width: 24.0,
-                    allowDrawingOutsideViewBox: true,
-                    color: CustomTheme.of(context).splashColor,
-                  ),
-                )),
+            // Container(
+            //     padding: const EdgeInsets.all(15.0),
+            //     child: InkWell(
+            //       onTap: () {
+            //         // Navigator.pop(context);
+            //       },
+            //       child: SvgPicture.asset(
+            //         'assets/others/search.svg',
+            //         height: 24.0,
+            //         width: 24.0,
+            //         allowDrawingOutsideViewBox: true,
+            //         color: CustomTheme.of(context).splashColor,
+            //       ),
+            //     )),
           ],
         ),
         body: Container(

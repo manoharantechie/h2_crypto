@@ -8,23 +8,27 @@ class UserWalletBalanceModel {
   bool? success;
   List<UserWalletResult>? result;
   String? message;
+  String? usdTotal;
 
   UserWalletBalanceModel({
     this.success,
     this.result,
     this.message,
+    this.usdTotal,
   });
 
   factory UserWalletBalanceModel.fromJson(Map<String, dynamic> json) => UserWalletBalanceModel(
     success: json["success"],
     result: List<UserWalletResult>.from(json["result"].map((x) => UserWalletResult.fromJson(x))),
     message: json["message"],
+    usdTotal: json["usdTotal"],
   );
 
   Map<String, dynamic> toJson() => {
     "success": success,
     "result": List<dynamic>.from(result!.map((x) => x.toJson())),
     "message": message,
+    "usdTotal": usdTotal,
   };
 }
 

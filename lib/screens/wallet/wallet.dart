@@ -110,9 +110,10 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        double.parse(btcBalance).toStringAsFixed(8),
+                        double.parse(usdBalance).toStringAsFixed(8),
                         style: CustomWidget(context: context)
                             .CustomSizedTextStyle(
                                 24.0,
@@ -124,41 +125,43 @@ class _WalletScreenState extends State<WalletScreen> {
                         width: 10.0,
                       ),
                       Text(
-                        "BTC",
-                        style: CustomWidget(context: context).CustomTextStyle(
-                            Theme.of(context).splashColor,
-                            FontWeight.w400,
-                            'FontRegular'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 5.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        "~ " + double.parse(usdBalance).toStringAsFixed(2),
+                        "USD",
                         style: CustomWidget(context: context)
                             .CustomSizedTextStyle(
-                                14.0,
-                                Theme.of(context).splashColor,
-                                FontWeight.w500,
-                                'FontRegular'),
-                      ),
-                      const SizedBox(
-                        width: 10.0,
-                      ),
-                      Text(
-                        "(USD)",
-                        style: CustomWidget(context: context).CustomTextStyle(
+                            18.0,
                             Theme.of(context).splashColor,
                             FontWeight.w400,
                             'FontRegular'),
                       ),
                     ],
                   ),
+                  // const SizedBox(
+                  //   height: 5.0,
+                  // ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   children: [
+                  //     Text(
+                  //       "~ " + double.parse(usdBalance).toStringAsFixed(2),
+                  //       style: CustomWidget(context: context)
+                  //           .CustomSizedTextStyle(
+                  //               14.0,
+                  //               Theme.of(context).splashColor,
+                  //               FontWeight.w500,
+                  //               'FontRegular'),
+                  //     ),
+                  //     const SizedBox(
+                  //       width: 10.0,
+                  //     ),
+                  //     Text(
+                  //       "(USD)",
+                  //       style: CustomWidget(context: context).CustomTextStyle(
+                  //           Theme.of(context).splashColor,
+                  //           FontWeight.w400,
+                  //           'FontRegular'),
+                  //     ),
+                  //   ],
+                  // ),
                   const SizedBox(
                     height: 10.0,
                   ),
@@ -683,6 +686,7 @@ class _WalletScreenState extends State<WalletScreen> {
           loading = false;
           coinList = loginData.result!;
           searchPair = loginData.result!;
+          usdBalance=loginData.usdTotal.toString();
 
           coinList..sort((a, b) => b.balance!.compareTo(a.balance!));
         });

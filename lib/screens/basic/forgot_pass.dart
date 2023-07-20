@@ -173,87 +173,87 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         const SizedBox(
                           height: 30.0,
                         ),
-                        Visibility(
-                          visible: isDisplay,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              InkWell(
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    setState(() {
-                                      if (isMobile) {
-                                        isMobile = false;
-                                        isEmail = true;
-                                      }
-                                    });
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                          AppLocalizations.instance
-                                              .text("loc_email"),
-                                          style: CustomWidget(context: context)
-                                              .CustomSizedTextStyle(
-                                                  16.0,
-                                                  Theme.of(context).splashColor,
-                                                  FontWeight.w500,
-                                                  'FontRegular')),
-                                      const SizedBox(
-                                        height: 5.0,
-                                      ),
-                                      Container(
-                                        width: MediaQuery.of(context).size.width *
-                                            0.25,
-                                        color: isEmail
-                                            ? CustomTheme.of(context).shadowColor
-                                            : CustomTheme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.1),
-                                        height: 2.0,
-                                      )
-                                    ],
-                                  )),
-                              InkWell(
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    setState(() {
-                                      if (!isMobile) {
-                                        isMobile = true;
-                                        isEmail = false;
-                                      }
-                                    });
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                          AppLocalizations.instance
-                                              .text("loc_mobile"),
-                                          style: CustomWidget(context: context)
-                                              .CustomSizedTextStyle(
-                                                  16.0,
-                                                  Theme.of(context).splashColor,
-                                                  FontWeight.w500,
-                                                  'FontRegular')),
-                                      const SizedBox(
-                                        height: 5.0,
-                                      ),
-                                      Container(
-                                        width: MediaQuery.of(context).size.width *
-                                            0.25,
-                                        color: isMobile
-                                            ? CustomTheme.of(context).shadowColor
-                                            : CustomTheme.of(context)
-                                                .primaryColor
-                                                .withOpacity(0.1),
-                                        height: 2.0,
-                                      )
-                                    ],
-                                  )),
-                            ],
-                          ),
-                        ),
+                        // Visibility(
+                        //   visible: isDisplay,
+                        //   child: Row(
+                        //     crossAxisAlignment: CrossAxisAlignment.center,
+                        //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        //     children: [
+                        //       InkWell(
+                        //           onTap: () {
+                        //             FocusScope.of(context).unfocus();
+                        //             setState(() {
+                        //               if (isMobile) {
+                        //                 isMobile = false;
+                        //                 isEmail = true;
+                        //               }
+                        //             });
+                        //           },
+                        //           child: Column(
+                        //             children: [
+                        //               Text(
+                        //                   AppLocalizations.instance
+                        //                       .text("loc_email"),
+                        //                   style: CustomWidget(context: context)
+                        //                       .CustomSizedTextStyle(
+                        //                           16.0,
+                        //                           Theme.of(context).splashColor,
+                        //                           FontWeight.w500,
+                        //                           'FontRegular')),
+                        //               const SizedBox(
+                        //                 height: 5.0,
+                        //               ),
+                        //               Container(
+                        //                 width: MediaQuery.of(context).size.width *
+                        //                     0.25,
+                        //                 color: isEmail
+                        //                     ? CustomTheme.of(context).shadowColor
+                        //                     : CustomTheme.of(context)
+                        //                         .primaryColor
+                        //                         .withOpacity(0.1),
+                        //                 height: 2.0,
+                        //               )
+                        //             ],
+                        //           )),
+                        //       InkWell(
+                        //           onTap: () {
+                        //             FocusScope.of(context).unfocus();
+                        //             setState(() {
+                        //               if (!isMobile) {
+                        //                 isMobile = true;
+                        //                 isEmail = false;
+                        //               }
+                        //             });
+                        //           },
+                        //           child: Column(
+                        //             children: [
+                        //               Text(
+                        //                   AppLocalizations.instance
+                        //                       .text("loc_mobile"),
+                        //                   style: CustomWidget(context: context)
+                        //                       .CustomSizedTextStyle(
+                        //                           16.0,
+                        //                           Theme.of(context).splashColor,
+                        //                           FontWeight.w500,
+                        //                           'FontRegular')),
+                        //               const SizedBox(
+                        //                 height: 5.0,
+                        //               ),
+                        //               Container(
+                        //                 width: MediaQuery.of(context).size.width *
+                        //                     0.25,
+                        //                 color: isMobile
+                        //                     ? CustomTheme.of(context).shadowColor
+                        //                     : CustomTheme.of(context)
+                        //                         .primaryColor
+                        //                         .withOpacity(0.1),
+                        //                 height: 2.0,
+                        //               )
+                        //             ],
+                        //           )),
+                        //     ],
+                        //   ),
+                        // ),
                         const SizedBox(
                           height: 20.0,
                         ),
@@ -549,6 +549,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                             .toString()) {
                                       if (isEmail) {
                                         setState(() {
+                                          verifyMail();
 
                                         });
                                       } else {
@@ -824,7 +825,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         custombar("Forgot Password", loginData.message.toString(), true);
       } else {
         setState(() {
-          print("jeeva");
+
           loading = false;
           custombar("Forgot Password", loginData.message.toString(), false);
         });
@@ -855,12 +856,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
           mobileCodeVerify = true;
         });
-        custombar("Register", loginData.message.toString(), true);
+        custombar("Forgot Password", loginData.message.toString(), true);
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => LoginScreen()));
 
       } else {
         setState(() {
           loading = false;
-          custombar("Register", loginData.message.toString(), false);
+          custombar("Forgot Password", loginData.message.toString(), false);
         });
       }
     }).catchError((Object error) {

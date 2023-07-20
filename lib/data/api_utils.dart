@@ -62,13 +62,14 @@ class APIUtils {
   static const String fiatDepUrl = 'v1/user/wire-instructions';
   static const String bankListUrl = 'api/list-bank';
   static const String addBankUrl = 'api/add-bank';
-  static const String coinWithUrl = '/api/withdraw-asset';
-  static const String createTicketUrl = '/api/create-ticket';
-  static const String supportListUrl = '/api/ticket-view';
-  static const String messageListUrl = '/api/get-message';
-  static const String sendNewMessageUrl = '/api/send-message';
-  static const String verifyOTP = '/api/withdraw-otp';
-  static const String resendOTP = '/api/withdraw-resend-otp';
+  static const String coinWithUrl = 'api/withdraw-asset';
+  static const String createTicketUrl = 'api/create-ticket';
+  static const String supportListUrl = 'api/ticket-view';
+  static const String messageListUrl = 'api/get-message';
+  static const String sendNewMessageUrl = 'api/send-message';
+  static const String verifyOTP = 'api/withdraw-otp';
+  static const String resendOTP = 'api/withdraw-resend-otp';
+  static const String changePassUrl = 'api/change-password';
 
   Future<CommonModel> doVerifyRegister(
       String first_name,
@@ -422,6 +423,7 @@ class APIUtils {
       "authorization": "Bearer " + preferences.getString("token").toString()
     });
 
+    print(response.body);
 
     return DepositDetailsModel.fromJson(json.decode(response.body));
   }
@@ -520,8 +522,8 @@ class APIUtils {
   ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var bankData = {
-      "bankAccountType": bankAccountType,
-      "type": type,
+      "bankAccountType": bankAccountType.toLowerCase(),
+      "type": type.toLowerCase(),
       "isInternational": isInternational,
       "first_name": first_name,
       "last_name": last_name,
@@ -544,7 +546,7 @@ class APIUtils {
 
     final response = await http.post(
         Uri.parse(
-          crypto_baseURL + cancelTradeUrl,
+          crypto_baseURL + addBankUrl,
         ),
         body: isInternational == "true" ? InbankData : bankData,
         headers: {
@@ -713,4 +715,24 @@ class APIUtils {
     return CommonModel.fromJson(json.decode(response.body));
   }
 
+  Future<CommonModel> doChangePassword(
+      String cpassword,  String npassword, String confPass) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var emailbodyData = {
+      'current-password': cpassword,
+      "new-password": npassword,
+      "confirm-password": confPass,
+
+    };
+
+    final response = await http.post(
+        Uri.parse(crypto_baseURL + changePassUrl),
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        },
+        body: emailbodyData);
+
+    print(response.body);
+    return CommonModel.fromJson(json.decode(response.body));
+  }
 }

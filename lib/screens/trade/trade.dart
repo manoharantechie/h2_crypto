@@ -448,7 +448,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                                       val="";
                                       priceController.clear();
                                       amountController.clear();
-                                      getCoinList();
+
                                       enableTrade = false;
                                       selectedTime = chartTime.first;
 
@@ -499,12 +499,7 @@ class _SellTradeScreenState extends State<TradeScreen>
 
                                       selectedmarketAseet = marketAseetList.first;
 
-                                      for (int m = 0; m < searchPair.length; m++) {
-                                        if (searchPair[m].marketAsset.toString().toLowerCase() ==
-                                            selectedmarketAseet.toLowerCase()) {
-                                          tradePair.add(searchPair[m]);
-                                        }
-                                      }
+
                                       selectPair=tradePair.first;
                                       buySell = true;
                                       selectPair = tradePair[0];
@@ -5288,18 +5283,24 @@ backgroundColor: Colors.transparent,
           // tradePair = loginData.result!;
 
           List<CoinList> QuicktradePairs = [];
-          searchPair = loginData.result!;
-          selectPair = searchPair.first;
+          List<CoinList>    searchPairList = loginData.result!;
+          searchPairList = loginData.result!;
 
-          print(searchPair[0].isinstant);
 
-          for (int m = 0; m < searchPair.length; m++) {
-            if (searchPair[m].isinstant.toString() == "1") {
-              QuicktradePairs.add(searchPair[m]);
+          searchPair= loginData.result!;
+
+
+          for (int m = 0; m < searchPairList.length; m++) {
+            if (searchPairList[m].isinstant.toString() == "1") {
+              QuicktradePairs.add(searchPairList[m]);
             }
+
+
           }
 
-          print(QuicktradePairs.length);
+          selectPair = searchPair.first;
+
+
 
 
 

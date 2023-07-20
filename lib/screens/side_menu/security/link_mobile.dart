@@ -590,14 +590,9 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
       if (loginData.status!) {
         setState(() {
           loading = false;
+          mobileCodeVerify=true;
           CustomWidget(context: context).  custombar("Link Mobile Number",loginData.message.toString(), true);
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => Home(
 
-              ),
-            ),
-          );
 
         });
       } else {
@@ -619,7 +614,13 @@ class _LinkMobileNoState extends State<LinkMobileNo> {
         setState(() {
           loading = false;
           CustomWidget(context: context).  custombar("Link Mobile Number",loginData.message.toString(), true);
-          Navigator.pop(context,true);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => Home(
+
+              ),
+            ),
+          );
 
         });
       } else {

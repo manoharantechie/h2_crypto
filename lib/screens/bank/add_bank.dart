@@ -52,6 +52,7 @@ class _AddBankScreenState extends State<AddBankScreen> {
   FocusNode swiftnumFocus = FocusNode();
   FocusNode wireInsFocus = FocusNode();
   APIUtils apiUtils = APIUtils();
+  final emailformKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -108,6 +109,7 @@ class _AddBankScreenState extends State<AddBankScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Form(
+                        key: emailformKey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -855,7 +857,14 @@ class _AddBankScreenState extends State<AddBankScreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  setState(() {});
+                                  setState(() {
+                                    if(emailformKey.currentState!.validate())
+                                      {
+                                        loading=true;
+                                        addBank();
+
+                                      }
+                                  });
                                 },
                                 child: Container(
                                     decoration: BoxDecoration(
@@ -896,7 +905,7 @@ class _AddBankScreenState extends State<AddBankScreen> {
     ));
   }
 
-  addBank(String id) {
+  addBank() {
     apiUtils.addbankDetails(selectedaccType.toString(),selectedtrasnType.toString(),selectednationalType.toString(),fnameContoller.text.toString(),lnameContoller.text.toString(),
         accnumContoller.text.toString(),bankNameContoller.text.toString(),swiftnumContoller.text.toString(),wireInsContoller.text.toString(),wireroutnumContoller.text.toString(),routnumContoller.text.toString()).then((CommonModel loginData) {
       if (loginData.status!) {

@@ -1,0 +1,19 @@
+H2Crypto
+
+-------------
+
+Alias :h2crypto
+Password :h2crypto
+
+=========================================
+
+
+Generate JKS file
+=========================================
+
+
+
+keytool -genkey -v -keystore /Users/alpharivetech/Desktop/jks/h2crypto.jks -keyalg RSA -keysize 2048 -validity 10000 -alias h2crypto
+
+
+

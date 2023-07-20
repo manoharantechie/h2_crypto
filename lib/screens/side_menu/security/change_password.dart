@@ -378,7 +378,10 @@ class _ChangePasswordState extends State<ChangePassword> {
 
                                         if(passwordController.text.toString()==confirmpasswordController.text.toString())
                                         {
+                                          print("Mano");
 
+                                          loading=true;
+                                          verifyMail();
 
                                         }
                                         else
@@ -431,6 +434,37 @@ class _ChangePasswordState extends State<ChangePassword> {
             ],
           )),
     ));
+  }
+
+  verifyMail() {
+    apiUtils
+        .doChangePassword(currentpasswordController.text.toString(),passwordController.text.toString(),confirmpasswordController.text.toString())
+        .then((CommonModel loginData) {
+      if (loginData.status!) {
+        setState(() {
+          loading = false;
+
+          currentpasswordController.clear();
+          passwordController.clear();
+          confirmpasswordController.clear();
+
+        });
+        CustomWidget(context: context)
+            .custombar("Register", loginData.message.toString(), true);
+        Navigator.pop(context);
+
+      } else {
+        setState(() {
+          loading = false;
+          CustomWidget(context: context)
+              .  custombar("Register", loginData.message.toString(), false);
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
+    });
   }
 
 }

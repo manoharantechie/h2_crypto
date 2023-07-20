@@ -117,16 +117,19 @@ class _KYCPageState extends State<KYCPage> {
 
   Future<Null> _selectDate(BuildContext context, bool isDob,
       DateTime initialDate, DateTime firstDate, DateTime lastDate) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await showDatePickers(
       context: context,
       initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
+
       builder: (context, child) {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: CustomTheme.of(context).primaryColor,
-            dialogBackgroundColor: CustomTheme.of(context).primaryColor,
+            dialogBackgroundColor: CustomTheme.of(context).splashColor,
+
+            backgroundColor:  CustomTheme.of(context).primaryColor,
             colorScheme: ColorScheme.light(
               primary: CustomTheme.of(context).primaryColor,
             ),
@@ -150,16 +153,19 @@ class _KYCPageState extends State<KYCPage> {
 
   Future<Null> _selectExpiryDate(BuildContext context, bool isExpDate,
       DateTime initialDate, DateTime firstDate, DateTime lastDate) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await showDatePickers(
       context: context,
       initialDate: initialDate,
       firstDate: firstDate,
+
       lastDate: lastDate,
       builder: (context, child) {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: CustomTheme.of(context).primaryColor,
-            dialogBackgroundColor: CustomTheme.of(context).primaryColor,
+            dialogBackgroundColor: CustomTheme.of(context).splashColor,
+
+            backgroundColor:  CustomTheme.of(context).primaryColor,
             colorScheme: ColorScheme.light(
               primary: CustomTheme.of(context).primaryColor,
             ),
@@ -374,8 +380,8 @@ class _KYCPageState extends State<KYCPage> {
                                   padding: const EdgeInsets.only(
                                       left: 10.0,
                                       right: 10.0,
-                                      top: 13.0,
-                                      bottom: 13.0),
+                                      top: 14.7,
+                                      bottom: 14.7),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         color: CustomTheme.of(context)
@@ -1607,6 +1613,13 @@ class _KYCPageState extends State<KYCPage> {
         });
         CustomWidget(context: context)
             .custombar("Verify KYC", loginData.message.toString(), true);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => LinkEmailAddress(
+
+            ),
+          ),
+        );
 
       } else {
         setState(() {

@@ -245,24 +245,24 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
                                   onPressed: () {
                                     FocusScope.of(context).unfocus();
 
-                                    Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (context) => LinkMobileNo(),),);
+                                    // Navigator.of(context).pushReplacement(
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => LinkMobileNo(),),);
 
-                                    // if (emailformKey.currentState!.validate()) {
-                                    //   if (mobile_verify.text.isNotEmpty) {
-                                    //     setState(() {
-                                    //       loading = true;
-                                    //       verifyEmail();
-                                    //     });
-                                    //   } else {
-                                    //     CustomWidget(context: context)
-                                    //         .custombar(
-                                    //             "verify Email",
-                                    //             "Enter Email Verification Code",
-                                    //             false);
-                                    //   }
-                                    // }
+                                    if (emailformKey.currentState!.validate()) {
+                                      if (emailVerify.text.isNotEmpty) {
+                                        setState(() {
+                                          loading = true;
+                                          verifyEmail();
+                                        });
+                                      } else {
+                                        CustomWidget(context: context)
+                                            .custombar(
+                                                "verify Email",
+                                                "Enter Email Verification Code",
+                                                false);
+                                      }
+                                    }
                                   },
                                   paddng: 0.0),
                               const SizedBox(
@@ -294,6 +294,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
       if (loginData.status!) {
         setState(() {
           loading = false;
+          emailCodeVerify=true;
           CustomWidget(context: context)
               .custombar("Link Email", loginData.message.toString(), true);
         });
@@ -318,6 +319,7 @@ class _ChangeEmailAddressState extends State<LinkEmailAddress> {
       if (loginData.status!) {
         setState(() {
           loading = false;
+
           CustomWidget(context: context)
               .custombar("Link Email", loginData.message.toString(), true);
 

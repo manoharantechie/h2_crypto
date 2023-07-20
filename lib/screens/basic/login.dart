@@ -94,6 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     // email=TextEditingController(text: "vinoth.alpharive@gmail.com");
     // email_password=TextEditingController(text: "Vinoth@2020");
+    // email=TextEditingController(text: "man@mailinator.com");
+    // email_password=TextEditingController(text: "Pass@123");
     initCountry();
     super.initState();
 
@@ -132,7 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
           }
-        else if(loginData.result!.userDetails!.emailVerify!.toString()=="0")
+        else
+          if(loginData.result!.userDetails!.emailVerify!.toString()=="0")
           {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
