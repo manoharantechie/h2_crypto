@@ -117,7 +117,7 @@ class _KYCPageState extends State<KYCPage> {
 
   Future<Null> _selectDate(BuildContext context, bool isDob,
       DateTime initialDate, DateTime firstDate, DateTime lastDate) async {
-    final DateTime? picked = await showDatePickers(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: firstDate,
@@ -153,7 +153,7 @@ class _KYCPageState extends State<KYCPage> {
 
   Future<Null> _selectExpiryDate(BuildContext context, bool isExpDate,
       DateTime initialDate, DateTime firstDate, DateTime lastDate) async {
-    final DateTime? picked = await showDatePickers(
+    final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: firstDate,

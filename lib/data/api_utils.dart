@@ -35,6 +35,7 @@ class APIUtils {
   static const String loginURL = 'api/login';
 
   static const String KycVerifyUrl = 'api/add-kyc';
+  static const String KybVerifyUrl = 'api/add-kyb';
   static const String emailSendOTPUrl = 'api/send-otp';
   static const String verifyOTPUrl = 'api/verify-otp';
   static const String logoutUrl = 'api/logout';
@@ -70,6 +71,7 @@ class APIUtils {
   static const String verifyOTP = 'api/withdraw-otp';
   static const String resendOTP = 'api/withdraw-resend-otp';
   static const String changePassUrl = 'api/change-password';
+  static const String deactiveAccUrl = 'api/deactivateaccount';
 
   Future<CommonModel> doVerifyRegister(
       String first_name,
@@ -418,10 +420,11 @@ class APIUtils {
     var tradeData = {
       "asset": coin.toUpperCase(),
     };
-    final response = await http
-        .post(Uri.parse(crypto_baseURL + depositInfoUrl),body: tradeData, headers: {
-      "authorization": "Bearer " + preferences.getString("token").toString()
-    });
+    final response = await http.post(Uri.parse(crypto_baseURL + depositInfoUrl),
+        body: tradeData,
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        });
 
     print(response.body);
 
@@ -621,7 +624,6 @@ class APIUtils {
   Future<SupportTicketListData> fetchSupportTicketList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
-
     final response = await http.post(
         Uri.parse(
           crypto_baseURL + supportListUrl,
@@ -633,8 +635,8 @@ class APIUtils {
   }
 
   Future<GetMessageData> fetchMessageList(
-      String ticket_id,
-      ) async {
+    String ticket_id,
+  ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var bankData = {
       "ticket_id": ticket_id,
@@ -652,9 +654,9 @@ class APIUtils {
   }
 
   Future<CommonModel> doSendMessage(
-      String ticket_id,
-      String message,
-      ) async {
+    String ticket_id,
+    String message,
+  ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var bankData = {
       "ticket_id": ticket_id,
@@ -672,11 +674,10 @@ class APIUtils {
     return CommonModel.fromJson(json.decode(response.body));
   }
 
-
   Future<CommonModel> confirmWithdrawOTP(
-      String OTP,
-      String atx_id,
-      ) async {
+    String OTP,
+    String atx_id,
+  ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var bankData = {
       "OTP": OTP,
@@ -695,13 +696,11 @@ class APIUtils {
   }
 
   Future<CommonModel> resendWithdrawOTP(
-      String atx_id,
-
-      ) async {
+    String atx_id,
+  ) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var bankData = {
       "atx_id": atx_id,
-
     };
 
     final response = await http.post(
@@ -716,17 +715,15 @@ class APIUtils {
   }
 
   Future<CommonModel> doChangePassword(
-      String cpassword,  String npassword, String confPass) async {
+      String cpassword, String npassword, String confPass) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var emailbodyData = {
       'current-password': cpassword,
       "new-password": npassword,
       "confirm-password": confPass,
-
     };
 
-    final response = await http.post(
-        Uri.parse(crypto_baseURL + changePassUrl),
+    final response = await http.post(Uri.parse(crypto_baseURL + changePassUrl),
         headers: {
           "authorization": "Bearer " + preferences.getString("token").toString()
         },
@@ -735,4 +732,102 @@ class APIUtils {
     print(response.body);
     return CommonModel.fromJson(json.decode(response.body));
   }
+
+  Future<CommonModel> doDeactivateAccount() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    final response = await http.post(
+      Uri.parse(crypto_baseURL + deactiveAccUrl),
+      headers: {
+        "authorization": "Bearer " + preferences.getString("token").toString()
+      },
+    );
+
+    return CommonModel.fromJson(json.decode(response.body));
+  }
+  Future<CommonModel> updateKybDetails(
+      String fname,
+      String lastname,
+      String counrtycode,
+      String mobile,
+      String dob,
+      String gender,
+      String country,
+      String city,
+      String states,
+      String entity_name,
+      String cor_country,
+      String cor_state,
+      String cor_date,
+      String org_type,
+      String business_type,
+      String res_number,
+      String description,
+      String principal_place_country,
+      String principal_place_state,
+      String principal_place_city,
+      String principal_place_address,
+      String principal_place_postal_code,
+      String account_purpose,
+      String zip,
+      String address,
+      String addressline,
+      String idproof,
+      String idnumber,
+      String expdate,
+      String id_issuing_country,
+      String aadharImg,
+   ) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    var request =
+    http.MultipartRequest("POST", Uri.parse(crypto_baseURL +KybVerifyUrl));
+    request.headers['authorization'] =
+        "Bearer " + preferences.getString("token").toString();
+    request.headers['Accept'] = 'application/json';
+
+    var pic = await http.MultipartFile.fromPath("front_upload_id", aadharImg);
+
+    request.files.add(pic);
+
+    request.fields['first_name'] = fname;
+    request.fields['last_name'] = lastname;
+
+    request.fields['phone_code'] = counrtycode;
+    request.fields['phone_no'] = mobile;
+    request.fields['dob'] = dob;
+    request.fields['gender_type'] = gender;
+    request.fields['country'] = country;
+    request.fields['city'] = city;
+    request.fields['state'] = states;
+    request.fields['entity_name'] = entity_name;
+    request.fields['cor_country'] = cor_country;
+    request.fields['cor_state'] = cor_state;
+    request.fields['cor_date'] = cor_date;
+    request.fields['org_type'] = org_type;
+    request.fields['business_type'] = business_type;
+    request.fields['res_number'] = res_number;
+    request.fields['description'] = description;
+    request.fields['principal_place_country'] = principal_place_country;
+    request.fields['principal_place_state'] = principal_place_state;
+    request.fields['principal_place_city'] = principal_place_city;
+    request.fields['principal_place_address'] = principal_place_address;
+    request.fields['principal_place_postal_code'] = principal_place_postal_code;
+    request.fields['account_purpose'] = account_purpose;
+    request.fields['zip_code'] = zip;
+    request.fields['address'] = address;
+    request.fields['addressline'] = addressline;
+    request.fields['id_type'] = idproof;
+    request.fields['id_number'] = idnumber;
+    request.fields['address_line1'] = address;
+    request.fields['address_line2'] = addressline;
+    request.fields['id_exp'] = expdate;
+    request.fields['id_issuing_country'] = id_issuing_country;
+
+    http.Response response =
+    await http.Response.fromStream(await request.send());
+
+    return CommonModel.fromJson(json.decode(response.body.toString()));
+  }
 }
+

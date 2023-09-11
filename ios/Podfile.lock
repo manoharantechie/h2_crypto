@@ -16,7 +16,7 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - SwiftProtobuf (1.22.0)
+  - SwiftProtobuf (1.22.1)
   - url_launcher_ios (0.0.1):
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
@@ -67,7 +67,7 @@ SPEC CHECKSUMS:
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
-  SwiftProtobuf: 40bd808372cb8706108f22d28f8ab4a6b9bc6989
+  SwiftProtobuf: 7773c4e96a99d7b8ab7cda0fc30a883732ff93b1
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
 

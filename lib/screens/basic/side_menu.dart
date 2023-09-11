@@ -6,6 +6,7 @@ import 'package:h2_crypto/common/localization/localizations.dart';
 import 'package:h2_crypto/common/theme/custom_theme.dart';
 import 'package:h2_crypto/common/theme/themes.dart';
 import 'package:h2_crypto/data/api_utils.dart';
+import 'package:h2_crypto/data/crypt_model/common_model.dart';
 import 'package:h2_crypto/data/crypt_model/user_details_model.dart';
 import 'package:h2_crypto/screens/basic/login.dart';
 import 'package:h2_crypto/screens/bank/bank_screen.dart';
@@ -422,6 +423,47 @@ class _SideMenuState extends State<SideMenu> {
                           const SizedBox(
                             height: 20.0,
                           ),
+                          InkWell(
+                            onTap: (){
+
+                              setState(() {
+                                removeAlertDialog(
+                                    "H2cryptO", "Are you sure want to Remove Account ?");
+
+                              });
+
+                            },
+                            child:  Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.highlight_off_outlined, color: CustomTheme.of(context).shadowColor.withOpacity(0.6),),
+                                    const SizedBox(
+                                      width: 10.0,
+                                    ),
+                                    Text(
+                                      "Remove Account",
+                                      style: CustomWidget(context: context)
+                                          .CustomSizedTextStyle(
+                                          16.0,
+                                          Theme.of(context).splashColor,
+                                          FontWeight.normal,
+                                          'FontRegular'),
+                                    ),
+                                  ],
+                                ),
+                                SvgPicture.asset(
+                                  'assets/sidemenu/arrow.svg',
+                                  color: CustomTheme.of(context).splashColor,
+                                  height: 20.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
                           // Row(
                           //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           //   children: [
@@ -675,6 +717,144 @@ class _SideMenuState extends State<SideMenu> {
     // show the dialog
   }
 
+  removeAlertDialog(String title, String message) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0)), //this right here
+            child: Container(
+              decoration: new BoxDecoration(
+                  color: CustomTheme.of(context).splashColor,
+                  borderRadius: BorderRadius.circular(5.0)),
+              height: MediaQuery.of(context).size.height * 0.30,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      title.toUpperCase(),
+                      style: CustomWidget(context: context)
+                          .CustomSizedTextStyle(
+                          16.0,
+                          Theme.of(context).shadowColor,
+                          FontWeight.bold,
+                          'FontRegular'),
+                    ),
+                    Container(
+                        margin: EdgeInsets.only(top: 7.0, bottom: 10.0),
+                        height: 2.0,
+                        color: CustomTheme.of(context).shadowColor),
+                    Text(
+                      message,
+                      style: CustomWidget(context: context)
+                          .CustomSizedTextStyle(
+                          16.0,
+                          Theme.of(context).shadowColor,
+                          FontWeight.w500,
+                          'FontRegular'),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          child: InkWell(
+                            child: Container(
+                              width: 100,
+                              height: 40,
+                              margin: const EdgeInsets.fromLTRB(
+                                  10.0, 10.0, 10.0, 0.0),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      CustomTheme.of(context).shadowColor,
+                                      CustomTheme.of(context).shadowColor
+                                    ],
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                    stops: [0.0, 1.0],
+                                    tileMode: TileMode.clamp),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "ok".toUpperCase(),
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      16.0,
+                                      Theme.of(context).splashColor,
+                                      FontWeight.w500,
+                                      'FontRegular'),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                             setState(() {
+                               loading=true;
+                               deactivateAccount();
+                             });
+                              Navigator.of(context).pop(true);
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          child: InkWell(
+                            child: Container(
+                              width: 100,
+                              height: 40,
+                              margin: const EdgeInsets.fromLTRB(
+                                  10.0, 10.0, 10.0, 0.0),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      CustomTheme.of(context).shadowColor,
+                                      CustomTheme.of(context).shadowColor,
+                                    ],
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                    stops: [0.0, 1.0],
+                                    tileMode: TileMode.clamp),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Cancel".toUpperCase(),
+                                  style: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      16.0,
+                                      Theme.of(context).splashColor,
+                                      FontWeight.w500,
+                                      'FontRegular'),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pop(true);
+                            },
+                          ),
+                        )
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+    // show the dialog
+  }
+
   Future callLogout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
@@ -694,6 +874,26 @@ class _SideMenuState extends State<SideMenu> {
 
           name=loginData.result!.firstName.toString()+" "+loginData.result!.lastName.toString();
           email=loginData.result!.email.toString();
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  deactivateAccount() {
+    apiUtils.doDeactivateAccount().then((CommonModel loginData) {
+      if (loginData.status!) {
+        setState(() {
+          loading = false;
+          callLogout();
+
         });
       } else {
         setState(() {
