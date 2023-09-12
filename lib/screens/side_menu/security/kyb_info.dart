@@ -36,6 +36,7 @@ class _KYCPageState extends State<KYBPage> {
   DateTime? selectedExpiryDate;
   DateTime? selectedExDate;
   DateTime? companyExDate;
+  DateTime? companycreateDate;
   bool verify = false;
   String selectedTime = "";
 
@@ -135,6 +136,8 @@ class _KYCPageState extends State<KYBPage> {
   List<CountryCodeResult> countryIssueList = [];
   CountryCodeResult? selectedIssueCountryType;
 
+  List<CountryCodeResult> countryEntityList = [];
+  CountryCodeResult? selectedEntityCountryType;
   String panUrl = "";
   String aadharUrl = "";
   String faceUrl = "";
@@ -163,6 +166,8 @@ class _KYCPageState extends State<KYBPage> {
   TextEditingController principal_addressController = TextEditingController();
   FocusNode principal_codeFocus = FocusNode();
   TextEditingController principal_codeController = TextEditingController();
+
+  TextEditingController companydobController = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -174,6 +179,8 @@ class _KYCPageState extends State<KYBPage> {
     selectedExpiryDate = DateTime(
         (DateTime.now()).year, (DateTime.now()).month, (DateTime.now()).day);
     companyExDate = DateTime(
+        (DateTime.now()).year, (DateTime.now()).month, (DateTime.now()).day);
+    companycreateDate = DateTime(
         (DateTime.now()).year, (DateTime.now()).month, (DateTime.now()).day);
 
     selectedGender = genderType.first;
@@ -226,6 +233,8 @@ class _KYCPageState extends State<KYBPage> {
               TextEditingController(text: picked.toString().split(' ')[0]);
         } else {
           selectedExDate = picked;
+          companydobController =
+              TextEditingController(text: picked.toString().split(' ')[0]);
         }
       });
   }
@@ -259,7 +268,10 @@ class _KYCPageState extends State<KYBPage> {
           expController =
               TextEditingController(text: picked.toString().split(' ')[0]);
         } else {
-          selectedExDate = picked;
+          companyExDate = picked;
+
+          companydobController =
+              TextEditingController(text: picked.toString().split(' ')[0]);
         }
       });
   }
@@ -328,6 +340,17 @@ class _KYCPageState extends State<KYBPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(
+                                "BUSINESS INFORMATION:",
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    14.0,
+                                    Theme.of(context).splashColor,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                                softWrap: true,
+                              ),
+                              const SizedBox(height: 15.0,),
                               TextFormField(
                                 controller: firstNameController,
                                 // focusNode: emailFocus,
@@ -998,6 +1021,360 @@ class _KYCPageState extends State<KYBPage> {
                               SizedBox(
                                 height: 10.0,
                               ),
+                              TextFormField(
+                                controller: entityController,
+                                // autocorrect: _autoValidate,
+                                autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                                // focusNode: emailFocus,
+                                maxLines: 1,
+                                // enabled: emailVerify,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.text,
+                                style: CustomWidget(context: context)
+                                    .CustomTextStyle(
+                                    Theme.of(context).splashColor,
+                                    FontWeight.w400,
+                                    'FontRegular'),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 12, right: 0, top: 2, bottom: 2),
+                                  hintText: "Entity Name",
+                                  hintStyle: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      14.0,
+                                      Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                      FontWeight.w300,
+                                      'FontRegular'),
+                                  filled: true,
+                                  fillColor:
+                                  CustomTheme.of(context).backgroundColor,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Colors.red, width: 1.0),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please enter Entity Name";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 2.0,
+                              ),
+                              Text(
+                                "Note: The legal business entity name",
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    10.0,
+                                    Colors.red,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                                softWrap: true,
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding:
+                                EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: CustomTheme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                      width: 1.0),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  color:
+                                  CustomTheme.of(context).backgroundColor,
+                                ),
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                    canvasColor:
+                                    CustomTheme.of(context).cardColor,
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      menuMaxHeight:
+                                      MediaQuery.of(context).size.height *
+                                          0.7,
+                                      items: countryEntityList
+                                          .map((value) => DropdownMenuItem(
+                                        child: Text(
+                                          value.code!.toString(),
+                                          style: CustomWidget(
+                                              context: context)
+                                              .CustomSizedTextStyle(
+                                              14.0,
+                                              Theme.of(context)
+                                                  .hintColor,
+                                              FontWeight.w400,
+                                              'FontRegular'),
+                                        ),
+                                        value: value,
+                                      ))
+                                          .toList(),
+                                      onChanged: (value) async {
+                                        setState(() {
+                                          selectedEntityCountryType = value;
+
+                                        });
+                                      },
+                                      hint: Text(
+                                        "Select Country",
+                                        style: CustomWidget(context: context)
+                                            .CustomSizedTextStyle(
+                                            14.0,
+                                            Theme.of(context).hintColor,
+                                            FontWeight.w400,
+                                            'FontRegular'),
+                                      ),
+                                      isExpanded: true,
+                                      value: selectedEntityCountryType,
+                                      icon: const Icon(
+                                        Icons.arrow_drop_down,
+                                        // color: AppColors.otherTextColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 2.0,
+                              ),
+                              Text(
+                                "Country code the entity was incorporated",
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    10.0,
+                                    Colors.red,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                                softWrap: true,
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              TextFormField(
+                                controller: bis_stateController,
+                                // autocorrect: _autoValidate,
+                                autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                                // focusNode: emailFocus,
+                                maxLines: 1,
+                                // enabled: emailVerify,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.text,
+                                style: CustomWidget(context: context)
+                                    .CustomTextStyle(
+                                    Theme.of(context).splashColor,
+                                    FontWeight.w400,
+                                    'FontRegular'),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 12, right: 0, top: 2, bottom: 2),
+                                  hintText: "State",
+                                  hintStyle: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      14.0,
+                                      Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                      FontWeight.w300,
+                                      'FontRegular'),
+                                  filled: true,
+                                  fillColor:
+                                  CustomTheme.of(context).backgroundColor,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Colors.red, width: 1.0),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please enter State";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 2.0,
+                              ),
+                              Text(
+                                "Note:State the entity was incorporated",
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    10.0,
+                                    Colors.red,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                                softWrap: true,
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+
+                              InkWell(
+                                onTap: () {
+                                  companycreateDate = DateTime(
+                                      (DateTime.now()).year ,
+                                      (DateTime.now()).month,
+                                      (DateTime.now()).day);
+                                  _selectDate(
+                                      context,
+                                      false,
+                                      DateTime(
+                                          companycreateDate!.year,
+                                          companycreateDate!.month,
+                                          companycreateDate!.day),
+                                      DateTime(
+                                          companycreateDate!.year - 100,
+                                          companycreateDate!.month,
+                                          companycreateDate!.day),
+                                      DateTime(
+                                          companycreateDate!.year,
+                                          companycreateDate!.month,
+                                          companycreateDate!.day));
+                                },
+                                child: TextFormField(
+                                  controller: companydobController,
+                                  // focusNode: emailFocus,
+                                  maxLines: 1,
+                                  enabled: false,
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: CustomWidget(context: context)
+                                      .CustomTextStyle(
+                                      Theme.of(context).splashColor,
+                                      FontWeight.w400,
+                                      'FontRegular'),
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.only(
+                                        left: 12, right: 0, top: 2, bottom: 2),
+                                    hintText: "Date",
+                                    hintStyle: CustomWidget(context: context)
+                                        .CustomSizedTextStyle(
+                                        14.0,
+                                        Theme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        FontWeight.w300,
+                                        'FontRegular'),
+                                    filled: true,
+                                    fillColor:
+                                    CustomTheme.of(context).backgroundColor,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: CustomTheme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          width: 1.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: CustomTheme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          width: 1),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: CustomTheme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          width: 1.0),
+                                    ),
+                                    disabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: CustomTheme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          width: 1),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Colors.red, width: 1.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 2.0,
+                              ),
+                              Text(
+                                "Note:Country code the entity was incorporated",
+                                style: CustomWidget(context: context)
+                                    .CustomSizedTextStyle(
+                                    10.0,
+                                    Colors.red,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                                softWrap: true,
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+
                               Text(
                                 "Organization Type",
                                 style: CustomWidget(context: context)
@@ -1822,216 +2199,20 @@ class _KYCPageState extends State<KYBPage> {
                                 softWrap: true,
                               ),
                               SizedBox(
-                                height: 10.0,
+                                height: 20.0,
                               ),
-                              TextFormField(
-                                controller: zipController,
-                                // autocorrect: _autoValidate,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                // focusNode: emailFocus,
-                                maxLines: 1,
-                                // enabled: emailVerify,
-                                textInputAction: TextInputAction.next,
-                                keyboardType: TextInputType.number,
+                              Text(
+                                "beneficial owners".toUpperCase(),
                                 style: CustomWidget(context: context)
-                                    .CustomTextStyle(
-                                        Theme.of(context).splashColor,
-                                        FontWeight.w400,
-                                        'FontRegular'),
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 12, right: 0, top: 2, bottom: 2),
-                                  hintText: "Zip / Postal Code",
-                                  hintStyle: CustomWidget(context: context)
-                                      .CustomSizedTextStyle(
-                                          14.0,
-                                          Theme.of(context)
-                                              .splashColor
-                                              .withOpacity(0.5),
-                                          FontWeight.w300,
-                                          'FontRegular'),
-                                  filled: true,
-                                  fillColor:
-                                      CustomTheme.of(context).backgroundColor,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: CustomTheme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
-                                        width: 1.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: CustomTheme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
-                                        width: 1),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: CustomTheme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
-                                        width: 1.0),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: Colors.red, width: 1.0),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please enter Zip code";
-                                  }
-                                  return null;
-                                },
+                                    .CustomSizedTextStyle(
+                                    14.0,
+                                    Theme.of(context).splashColor,
+                                    FontWeight.w500,
+                                    'FontRegular'),
+                                softWrap: true,
                               ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              TextFormField(
-                                controller: addressController,
-                                // autocorrect: _autoValidate,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                // focusNode: emailFocus,
-                                maxLines: 5,
-                                // enabled: emailVerify,
-                                textInputAction: TextInputAction.next,
-                                keyboardType: TextInputType.streetAddress,
-                                style: CustomWidget(context: context)
-                                    .CustomTextStyle(
-                                        Theme.of(context).splashColor,
-                                        FontWeight.w400,
-                                        'FontRegular'),
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 12, right: 0, top: 2, bottom: 2),
-                                  hintText: "Address Line 1",
-                                  hintStyle: CustomWidget(context: context)
-                                      .CustomSizedTextStyle(
-                                          14.0,
-                                          Theme.of(context)
-                                              .splashColor
-                                              .withOpacity(0.5),
-                                          FontWeight.w300,
-                                          'FontRegular'),
-                                  filled: true,
-                                  fillColor:
-                                      CustomTheme.of(context).backgroundColor,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: CustomTheme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
-                                        width: 1.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: CustomTheme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
-                                        width: 1),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color:
-                                            CustomTheme.of(context).splashColor,
-                                        width: 1.0),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: Colors.red, width: 1.0),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please enter Address Line1 ";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              TextFormField(
-                                controller: addressLineController,
-                                // autocorrect: _autoValidate,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                // focusNode: emailFocus,
-                                maxLines: 5,
-                                // enabled: emailVerify,
-                                textInputAction: TextInputAction.next,
-                                keyboardType: TextInputType.streetAddress,
-                                style: CustomWidget(context: context)
-                                    .CustomTextStyle(
-                                        Theme.of(context).splashColor,
-                                        FontWeight.w400,
-                                        'FontRegular'),
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 12, right: 0, top: 2, bottom: 2),
-                                  hintText: "Address Line 2",
-                                  hintStyle: CustomWidget(context: context)
-                                      .CustomSizedTextStyle(
-                                          14.0,
-                                          Theme.of(context)
-                                              .splashColor
-                                              .withOpacity(0.5),
-                                          FontWeight.w300,
-                                          'FontRegular'),
-                                  filled: true,
-                                  fillColor:
-                                      CustomTheme.of(context).backgroundColor,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: CustomTheme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
-                                        width: 1.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: CustomTheme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
-                                        width: 1),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color:
-                                            CustomTheme.of(context).splashColor,
-                                        width: 1.0),
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
-                                        color: Colors.red, width: 1.0),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Please enter Address Line 2 ";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
+                              const SizedBox(height: 15.0,),
+
                               Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding:
@@ -2394,6 +2575,214 @@ class _KYCPageState extends State<KYBPage> {
                               const SizedBox(
                                 height: 10.0,
                               ),
+                              TextFormField(
+                                controller: zipController,
+                                // autocorrect: _autoValidate,
+                                autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                                // focusNode: emailFocus,
+                                maxLines: 1,
+                                // enabled: emailVerify,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.number,
+                                style: CustomWidget(context: context)
+                                    .CustomTextStyle(
+                                    Theme.of(context).splashColor,
+                                    FontWeight.w400,
+                                    'FontRegular'),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 12, right: 0, top: 2, bottom: 2),
+                                  hintText: "Zip / Postal Code",
+                                  hintStyle: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      14.0,
+                                      Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                      FontWeight.w300,
+                                      'FontRegular'),
+                                  filled: true,
+                                  fillColor:
+                                  CustomTheme.of(context).backgroundColor,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Colors.red, width: 1.0),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please enter Zip code";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              TextFormField(
+                                controller: addressController,
+                                // autocorrect: _autoValidate,
+                                autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                                // focusNode: emailFocus,
+                                maxLines: 5,
+                                // enabled: emailVerify,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.streetAddress,
+                                style: CustomWidget(context: context)
+                                    .CustomTextStyle(
+                                    Theme.of(context).splashColor,
+                                    FontWeight.w400,
+                                    'FontRegular'),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 12, right: 0, top: 2, bottom: 2),
+                                  hintText: "Address Line 1",
+                                  hintStyle: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      14.0,
+                                      Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                      FontWeight.w300,
+                                      'FontRegular'),
+                                  filled: true,
+                                  fillColor:
+                                  CustomTheme.of(context).backgroundColor,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color:
+                                        CustomTheme.of(context).splashColor,
+                                        width: 1.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Colors.red, width: 1.0),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please enter Address Line1 ";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              TextFormField(
+                                controller: addressLineController,
+                                // autocorrect: _autoValidate,
+                                autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                                // focusNode: emailFocus,
+                                maxLines: 5,
+                                // enabled: emailVerify,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.streetAddress,
+                                style: CustomWidget(context: context)
+                                    .CustomTextStyle(
+                                    Theme.of(context).splashColor,
+                                    FontWeight.w400,
+                                    'FontRegular'),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 12, right: 0, top: 2, bottom: 2),
+                                  hintText: "Address Line 2",
+                                  hintStyle: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      14.0,
+                                      Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                      FontWeight.w300,
+                                      'FontRegular'),
+                                  filled: true,
+                                  fillColor:
+                                  CustomTheme.of(context).backgroundColor,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color:
+                                        CustomTheme.of(context).splashColor,
+                                        width: 1.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Colors.red, width: 1.0),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please enter Address Line 2 ";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
 
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -2634,7 +3023,7 @@ class _KYCPageState extends State<KYBPage> {
 
   updateKyc() {
     apiUtils
-        .updateKycDetails(
+        .updateKybDetails(
             firstNameController.text.toString(),
             lastNameController.text.toString(),
             _selectedCountry!.callingCode.toString(),
@@ -2644,21 +3033,36 @@ class _KYCPageState extends State<KYBPage> {
             selectedCountryType!.code.toString(),
             cityController.text.toString(),
             statesController.text.toString(),
+            entityController.text.toString(),
+            selectedEntityCountryType!.name.toString(),
+            bis_stateController.text.toString(),
+        companydobController.text.toString(),
+        select_org.toString(),
+        select_purpose.toString(),
+        select_business.toString(),
+            reg_numController.text.toString(),
+            descripController.text.toString(),
+        selectedPrinCountryType!.code.toString(),
+            principal_stateController.text.toString(),
+            principal_cityController.text.toString(),
+            principal_addressController.text.toString(),
+            principal_codeController.text.toString(),
+        select_purpose.toString(),
             zipController.text.toString(),
             addressController.text.toString(),
             addressLineController.text.toString(),
             selectedIdProof.toString().toLowerCase(),
             idController.text.toString(),
             expController.text.toString(),
-            AadharImg,
-            PanImg)
+            AadharImg
+            )
         .then((CommonModel loginData) {
       if (loginData.status!) {
         setState(() {
           loading = false;
         });
         CustomWidget(context: context)
-            .custombar("Verify KYC", loginData.message.toString(), true);
+            .custombar("Verify KYB", loginData.message.toString(), true);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => LinkEmailAddress(),
@@ -2668,7 +3072,7 @@ class _KYCPageState extends State<KYBPage> {
         setState(() {
           loading = false;
           CustomWidget(context: context)
-              .custombar("Verify KYC", loginData.message.toString(), false);
+              .custombar("Verify KYB", loginData.message.toString(), false);
         });
       }
     }).catchError((Object error) {
@@ -2697,10 +3101,12 @@ class _KYCPageState extends State<KYBPage> {
           loading = false;
           countryList = loginData.result!;
           countryPrincList = loginData.result!;
+          countryEntityList = loginData.result!;
           countryIssueList = loginData.result!;
           selectedCountryType = countryList.first;
           selectedPrinCountryType = countryPrincList.first;
           selectedIssueCountryType = countryIssueList.first;
+          selectedEntityCountryType = countryEntityList.first;
         });
       } else {
         setState(() {
