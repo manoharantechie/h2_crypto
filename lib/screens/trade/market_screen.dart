@@ -25,8 +25,7 @@ class MarketSceen extends StatefulWidget {
 
 class _MarketSceen1State extends State<MarketSceen>
     with SingleTickerProviderStateMixin {
-  bool _flag = true;
-  bool _btns = true;
+
 
   var array_dta;
   bool loading = false;
@@ -69,6 +68,7 @@ class _MarketSceen1State extends State<MarketSceen>
       (data) {
         if (data != null || data != "null") {
           var decode = jsonDecode(data);
+          print(decode);
 
           if (mounted) {
             setState(() {
@@ -105,7 +105,7 @@ class _MarketSceen1State extends State<MarketSceen>
             pingInterval: Duration(seconds: 30));
 
         channelOpenOrder!.sink.add(json.encode(messageJSON));
-        channelOpenOrder!.sink.add(json.encode(messageJSON));
+
         socketData();
       },
       onError: (error) => print("Err" + error),
@@ -549,6 +549,7 @@ class _MarketSceen1State extends State<MarketSceen>
           tradePairListAll = loginData.result!;
 
           for (int m = 0; m < tradePairListAll.length; m++) {
+
             arrData.add("ticker.sfox." + tradePairListAll[m].symbol.toString());
             marketAseetList.add(tradePairListAll[m].marketAsset.toString());
           }
@@ -583,27 +584,4 @@ class _MarketSceen1State extends State<MarketSceen>
   }
 }
 
-class Tag {
-  String name;
-  double value;
-  double quantity;
-  double change;
-  String coin;
 
-  Tag(this.name, this.value, this.quantity, this.change, this.coin);
-
-  factory Tag.fromJson(dynamic json) {
-    return Tag(
-      json['name'] as String,
-      json['value'] as double,
-      json['quantity'] as double,
-      json['change'] as double,
-      json['coin'] as String,
-    );
-  }
-
-  @override
-  String toString() {
-    return '{ ${this.name},${this.value}, ${this.quantity} ,${this.change},${this.coin}}';
-  }
-}

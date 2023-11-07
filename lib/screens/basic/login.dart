@@ -18,6 +18,7 @@ import 'package:h2_crypto/data/crypt_model/login_model.dart';
 import 'package:h2_crypto/screens/basic/forgot_pass.dart';
 import 'package:h2_crypto/screens/basic/home.dart';
 import 'package:h2_crypto/screens/basic/register.dart';
+import 'package:h2_crypto/screens/side_menu/security/choose_option.dart';
 
 import 'package:h2_crypto/screens/side_menu/security/kyc_info.dart';
 import 'package:h2_crypto/screens/side_menu/security/link_email_address.dart';
@@ -92,10 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    email=TextEditingController(text: "vinoth.alpharive@gmail.com");
-    email_password=TextEditingController(text: "Vinoth@2020");
-    // email=TextEditingController(text: "subashjeevanantham.gaipp@gmail.com");
-    // email_password=TextEditingController(text: "Pass@123");
+
+    // email=TextEditingController(text: "manoharan.alpharive@gmail.com");
+    // email_password=TextEditingController(text: "Password@123");
     initCountry();
     super.initState();
 
@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
           {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => KYCPage(),
+                builder: (context) => ChooseOption(),
               ),
             );
           }
