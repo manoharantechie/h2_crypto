@@ -68,7 +68,7 @@ class _MarketSceen1State extends State<MarketSceen>
       (data) {
         if (data != null || data != "null") {
           var decode = jsonDecode(data);
-          print(decode);
+
 
           if (mounted) {
             setState(() {

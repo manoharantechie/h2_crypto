@@ -10,7 +10,7 @@ class CommonModel {
     this.message,
   });
 
-  bool? status;
+  dynamic status;
   String? message;
 
   factory CommonModel.fromJson(Map<String, dynamic> json) => CommonModel(

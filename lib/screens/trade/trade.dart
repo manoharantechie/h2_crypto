@@ -1805,6 +1805,14 @@ backgroundColor: Colors.transparent,
                                               onTap: () {
                                                 setState(() {
                                                   buySell = true;
+                                                  priceController.clear();
+                                                  amountController.clear();
+                                                  amountController.text=sellData[index]
+                                                      .quantity
+                                                      .toString();
+                                                  priceController.text=sellData[index]
+                                                      .price
+                                                      .toString();
                                                 });
                                               },
                                               child: Row(
@@ -1907,6 +1915,14 @@ backgroundColor: Colors.transparent,
                                             onTap: () {
                                               setState(() {
                                                 buySell = false;
+                                                priceController.clear();
+                                                amountController.clear();
+                                                amountController.text=buyData[index]
+                                                    .quantity
+                                                    .toString();
+                                                priceController.text=buyData[index]
+                                                    .price
+                                                    .toString();
                                               });
                                             },
                                             child: Row(
@@ -5368,9 +5384,8 @@ backgroundColor: Colors.transparent,
         });
       }
     }).catchError((Object error) {
-      print("Mano");
 
-      print(error);
+
     });
   }
 
@@ -5402,37 +5417,36 @@ backgroundColor: Colors.transparent,
   }
 
   doPostTrade() {
+    print(enableTrade);
+    print('Manb');
     apiUtils
         .doLimitOrder(
             selectPair!.symbol.toString(),
             buySell ? "buy" : "sell",
             selectedTime == "Limit Order" ? "limit" : "market",
-            selectedTime == "Limit Order"
-                ? amountController.text.toString()
-                : "0.00",
+        amountController.text.toString()
+               ,
             priceController.text.toString(),
             "",
             enableTrade?false:true)
-        .then((dynamic loginData) {
+        .then((CommonModel loginData) {
       setState(() {
-        List<dynamic> listData = loginData;
-        for (int m = 0; m < listData.length; m++) {
-          historyOrders.add(OpenOrderList(
-            id: listData[m]["id"].toString(),
-            pair: listData[m]["pair"].toString(),
-            fees: listData[m]["fees"].toString(),
-            date: listData[m]["dateupdated"].toString(),
-            filled: listData[m]["filled"].toString(),
-            filled_amount: listData[m]["filled_amount"].toString(),
-            orderType: listData[m]["action"].toString(),
-            price: listData[m]["price"].toString(),
-            userId: listData[m]["client_order_id"].toString(),
-            volume: listData[m]["quantity"].toString() == "0"
-                ? listData[m]["amount"].toString()
-                : listData[m]["quantity"].toString(),
-            status: listData[m]["status"].toString(),
-          ));
+
+
+        if (loginData.status!) {
+
+          loading = false;
+          amountController.clear();
+          priceController.clear();
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), true);
+
+        } else {
+          loading = false;
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), false);
         }
+
       });
     }).catchError((Object error) {});
   }

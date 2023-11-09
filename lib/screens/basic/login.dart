@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:h2_crypto/common/colors.dart';
 import 'package:h2_crypto/common/country.dart';
 import 'package:h2_crypto/common/custom_button.dart';
@@ -19,13 +18,9 @@ import 'package:h2_crypto/screens/basic/forgot_pass.dart';
 import 'package:h2_crypto/screens/basic/home.dart';
 import 'package:h2_crypto/screens/basic/register.dart';
 import 'package:h2_crypto/screens/side_menu/security/choose_option.dart';
-
-import 'package:h2_crypto/screens/side_menu/security/kyc_info.dart';
 import 'package:h2_crypto/screens/side_menu/security/link_email_address.dart';
 import 'package:h2_crypto/screens/side_menu/security/link_mobile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -48,9 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController mobile_auth = TextEditingController();
   TextEditingController email_auth = TextEditingController();
   String userId = "";
-
   TextEditingController email = TextEditingController();
-
   TextEditingController email_password = TextEditingController();
   TextEditingController email_verify = TextEditingController();
   TextEditingController email_refer = TextEditingController();
@@ -93,12 +86,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-
+    //
     // email=TextEditingController(text: "manoharan.alpharive@gmail.com");
     // email_password=TextEditingController(text: "Password@123");
+    // email=TextEditingController(text: "me@jakeiperez.com");
+    // email_password=TextEditingController(text: "Temppassword123!");
     initCountry();
     super.initState();
-
   }
 
   void initCountry() async {
@@ -108,8 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
       countryB = true;
     });
   }
-
-
 
   verifyMail() {
     apiUtils
@@ -123,54 +115,38 @@ class _LoginScreenState extends State<LoginScreen> {
           loading = false;
           CustomWidget(context: context)
               .custombar("Login", loginData.message.toString(), true);
-          storeData(loginData.result!.accessToken.toString(),loginData.result!.userDetails!.sfoxKey.toString());
+          storeData(loginData.result!.accessToken.toString(),
+              loginData.result!.userDetails!.sfoxKey.toString());
         });
 
-        if(loginData.result!.userDetails!.kycVerify!.toString()=="0")
-          {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => ChooseOption(),
-              ),
-            );
-          }
-        else
-          if(loginData.result!.userDetails!.emailVerify!.toString()=="0")
-          {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => LinkEmailAddress(
-
-                ),
-              ),
-            );
-          }
-        else if(loginData.result!.userDetails!.smsVerify!.toString()=="0")
-        {
+        if (loginData.result!.userDetails!.kycVerify!.toString() == "0") {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => LinkMobileNo(
-
-              ),
+              builder: (context) => ChooseOption(),
+            ),
+          );
+        } else if (loginData.result!.userDetails!.emailVerify!.toString() ==
+            "0") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => LinkEmailAddress(),
+            ),
+          );
+        } else if (loginData.result!.userDetails!.smsVerify!.toString() ==
+            "0") {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => LinkMobileNo(),
+            ),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => Home(),
             ),
           );
         }
-        else
-          {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => Home(
-
-                ),
-              ),
-            );
-
-          }
-
-
-
-        }
-      else {
+      } else {
         setState(() {
           loading = false;
           CustomWidget(context: context)
@@ -221,20 +197,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-
                         const SizedBox(
                           height: 50.0,
                         ),
-                         Container(
-                           width: MediaQuery.of(context).size.width,
-                           child: Center(
-                             child:  SvgPicture.asset(
-                               'assets/icon/n_logo.svg',
-                               height: MediaQuery.of(context).size.height * 0.2,
-                               width: MediaQuery.of(context).size.width*0.7,
-                             ),
-                           ),
-                         ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'assets/icon/n_logo.svg',
+                              height: MediaQuery.of(context).size.height * 0.2,
+                              width: MediaQuery.of(context).size.width * 0.7,
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 30.0,
                         ),
@@ -353,22 +328,21 @@ class _LoginScreenState extends State<LoginScreen> {
                             shadowColor: CustomTheme.of(context).shadowColor,
                             splashColor: CustomTheme.of(context).shadowColor,
                             onPressed: () {
-                                setState(() {
-                                  FocusScope.of(context).unfocus();
-                                  if (email.text.isEmpty ||
-                                      !RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                          .hasMatch(email.text)) {
-                                    custombar(
-                                        "Login", "Please Enter Email ", false);
-                                  } else if (email_password.text.isEmpty) {
-                                    custombar("Login", "Please Enter Password ",
-                                        false);
-                                  } else {
-                                    loading = true;
-                                    verifyMail();
-                                  }
-                                });
-
+                              setState(() {
+                                FocusScope.of(context).unfocus();
+                                if (email.text.isEmpty ||
+                                    !RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                        .hasMatch(email.text)) {
+                                  custombar(
+                                      "Login", "Please Enter Email ", false);
+                                } else if (email_password.text.isEmpty) {
+                                  custombar(
+                                      "Login", "Please Enter Password ", false);
+                                } else {
+                                  loading = true;
+                                  verifyMail();
+                                }
+                              });
                             },
                             paddng: 1.0),
                         const SizedBox(
@@ -376,7 +350,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         InkWell(
                           onTap: () {
-
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -470,8 +443,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-
 
   Widget emailWidget() {
     return Form(
@@ -570,7 +541,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (value!.isEmpty) {
                 return "Please enter Password";
               }
-             /* else if (!RegExp(
+              /* else if (!RegExp(
                       r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$")
                   .hasMatch(value)) {
                 return "Please enter valid Password";
@@ -604,9 +575,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   fillColor: AppColors.borderColor,
                   textInputAction: TextInputAction.next,
                   focusNode: emailVerifyFocus,
-            // inputFormatters: [
-            //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9_.]')),
-            // ],
+                  // inputFormatters: [
+                  //   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z@0-9_.]')),
+                  // ],
                   maxlines: 1,
                   text: '',
                   hintText: AppLocalizations.instance.text("loc_email_code"),
@@ -710,6 +681,5 @@ class _LoginScreenState extends State<LoginScreen> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("token", token);
     preferences.setString("sfox", sfox);
-
   }
 }
