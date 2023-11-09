@@ -281,7 +281,7 @@ class APIUtils {
           "authorization": "Bearer " + preferences.getString("token").toString()
         });
 
-    print(response.body);
+    // print(response.body);
     return CoinListModel.fromJson(json.decode(response.body));
   }
 
@@ -426,7 +426,7 @@ class APIUtils {
           "authorization": "Bearer " + preferences.getString("token").toString()
         });
 
-    print(response.body);
+    // print(response.body);
 
     return DepositDetailsModel.fromJson(json.decode(response.body));
   }
@@ -729,7 +729,7 @@ class APIUtils {
         },
         body: emailbodyData);
 
-    print(response.body);
+    // print(response.body);
     return CommonModel.fromJson(json.decode(response.body));
   }
 
