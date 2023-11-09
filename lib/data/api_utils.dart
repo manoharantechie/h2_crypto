@@ -392,6 +392,8 @@ class APIUtils {
       "quote_id": quote_id,
     };
 
+print(spotStopData);
+
     final response = await http.post(
         Uri.parse(
           crypto_baseURL + stopLimitUrl,
@@ -400,6 +402,7 @@ class APIUtils {
         headers: {
           "authorization": "Bearer " + preferences.getString("token").toString()
         });
+    print(response.body);
     return CommonModel.fromJson(json.decode(response.body));
   }
 
