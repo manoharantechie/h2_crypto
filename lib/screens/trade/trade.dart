@@ -4173,16 +4173,23 @@ backgroundColor: Colors.transparent,
                       val="25%";
                       if (double.parse(QuicklivePrice) > 0) {
                         double perce = ((double.parse(balance) * 25) /
-                                double.parse(livePrice)) /
+                                double.parse(QuicklivePrice)) /
                             100;
 
-                        quickAmountController.text =
-                            double.parse(perce.toString()).toStringAsFixed(4);
-                        double a = double.parse(perce
-                            .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
-                        double b = double.parse(livePrice);
-                        totalAmount =
-                            double.parse((a * b).toString()).toStringAsFixed(4);
+
+                        if( double.parse(perce.toString())>0 || perce.toString()!="Infinity")
+                          {
+                            quickAmountController.text =
+                                double.parse(perce.toString()).toStringAsFixed(8);
+                            double a = double.parse(perce
+                                .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+                            double b = double.parse(QuicklivePrice);
+                            totalAmount =
+                                double.parse((a * b).toString()).toStringAsFixed(8);
+                          }else{
+                          quickAmountController.clear();
+                        }
+
                       }
                     });
                   },
@@ -4219,17 +4226,29 @@ backgroundColor: Colors.transparent,
                       val="50%";
                       if (double.parse(QuicklivePrice) > 0) {
                         double perce = ((double.parse(balance) * 50) /
-                                double.parse(livePrice)) /
+                                double.parse(QuicklivePrice)) /
                             100;
 
 
-                        quickAmountController.text =
-                            double.parse(perce.toString()).toStringAsFixed(4);
-                        double a = double.parse(perce
-                            .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
-                        double b = double.parse(livePrice);
-                        totalAmount =
-                            double.parse((a * b).toString()).toStringAsFixed(4);
+                        if( double.parse(perce.toString())>0 || perce.toString()!="Infinity")
+                        {
+                          quickAmountController.text =
+                              double.parse(perce.toString()).toStringAsFixed(8);
+                          double a = double.parse(perce
+                              .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+                          double b = double.parse(QuicklivePrice);
+                          totalAmount =
+                              double.parse((a * b).toString()).toStringAsFixed(8);
+                        }else{
+                          quickAmountController.clear();
+                        }
+                        // quickAmountController.text =
+                        //     double.parse(perce.toString());
+                        // double a = double.parse(perce
+                        //     .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+                        // double b = double.parse(livePrice);
+                        // totalAmount =
+                        //     double.parse((a * b).toString());
                       }
                     });
                   },
@@ -4266,16 +4285,21 @@ backgroundColor: Colors.transparent,
                       val="75%";
                       if (double.parse(QuicklivePrice) > 0) {
                         double perce = ((double.parse(balance) * 75) /
-                                double.parse(livePrice)) /
+                                double.parse(QuicklivePrice)) /
                             100;
 
-                        quickAmountController.text =
-                            double.parse(perce.toString()).toStringAsFixed(4);
-                        double a = double.parse(perce
-                            .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
-                        double b = double.parse(livePrice);
-                        totalAmount =
-                            double.parse((a * b).toString()).toStringAsFixed(4);
+                        if( double.parse(perce.toString())>0 || perce.toString()!="Infinity")
+                        {
+                          quickAmountController.text =
+                              double.parse(perce.toString()).toStringAsFixed(8);
+                          double a = double.parse(perce
+                              .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+                          double b = double.parse(QuicklivePrice);
+                          totalAmount =
+                              double.parse((a * b).toString()).toStringAsFixed(8);
+                        }else{
+                          quickAmountController.clear();
+                        }
                       }
                     });
                   },
@@ -4309,19 +4333,25 @@ backgroundColor: Colors.transparent,
                 child: InkWell(
                   onTap: () {
                     setState(() {
+
                       val="100%";
                       if (double.parse(QuicklivePrice) > 0) {
                         double perce = ((double.parse(balance) * 100) /
-                                double.parse(livePrice)) /
+                                double.parse(QuicklivePrice)) /
                             100;
 
-                        quickAmountController.text =
-                            double.parse(perce.toString()).toStringAsFixed(4);
-                        double a = double.parse(perce
-                            .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
-                        double b = double.parse(livePrice);
-                        totalAmount =
-                            double.parse((a * b).toString()).toStringAsFixed(4);
+                        if( double.parse(perce.toString())>0 || perce.toString()!="Infinity")
+                        {
+                          quickAmountController.text =
+                              double.parse(perce.toString()).toStringAsFixed(8);
+                          double a = double.parse(perce
+                              .toString()); // this is the value in my first text field (This is the percentage rate i intend to use)
+                          double b = double.parse(QuicklivePrice);
+                          totalAmount =
+                              double.parse((a * b).toString()).toStringAsFixed(8);
+                        }else{
+                          quickAmountController.clear();
+                        }
                       }
                     });
                   },

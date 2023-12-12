@@ -302,7 +302,7 @@ class APIUtils {
       String idnumber,
       String expdate,
       String aadharImg,
-      String panImg) async {
+      String panImg,String idIssue) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     var request =
@@ -334,6 +334,7 @@ class APIUtils {
     request.fields['address_line1'] = address;
     request.fields['address_line2'] = addressline;
     request.fields['id_exp'] = expdate;
+    request.fields['id_issuing_country'] = idIssue;
 
     http.Response response =
         await http.Response.fromStream(await request.send());
@@ -826,6 +827,7 @@ print(spotStopData);
     request.fields['address_line2'] = addressline;
     request.fields['id_exp'] = expdate;
     request.fields['id_issuing_country'] = id_issuing_country;
+
 
     http.Response response =
     await http.Response.fromStream(await request.send());

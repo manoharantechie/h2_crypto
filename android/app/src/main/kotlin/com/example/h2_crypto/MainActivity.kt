@@ -1,4 +1,4 @@
-package com.h2crypto.exchange
+package com.h2crypto.alpha
 
 import io.flutter.embedding.android.FlutterActivity
 
