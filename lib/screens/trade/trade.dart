@@ -5540,28 +5540,38 @@ backgroundColor: Colors.transparent,
             "",
             quoteID,
             false)
-        .then((dynamic loginData) {
-      setState(() {
-        List<dynamic> listData = loginData;
-        for (int m = 0; m < listData.length; m++) {
-          historyOrders.add(OpenOrderList(
-            id: listData[m]["id"].toString(),
-            pair: listData[m]["pair"].toString(),
-            fees: listData[m]["fees"].toString(),
-            date: listData[m]["dateupdated"].toString(),
-            filled: listData[m]["filled"].toString(),
-            filled_amount: listData[m]["filled_amount"].toString(),
-            orderType: listData[m]["action"].toString(),
-            price: listData[m]["price"].toString(),
-            userId: listData[m]["client_order_id"].toString(),
-            volume: listData[m]["quantity"].toString() == "0"
-                ? listData[m]["amount"].toString()
-                : listData[m]["quantity"].toString(),
-            status: listData[m]["status"].toString(),
-          ));
-        }
-      });
-    }).catchError((Object error) {});
+        .then((CommonModel loginData) {
+          // print(loginData.toString());
+      if (loginData.status!) {
+        setState(() {
+          // List<dynamic> listData = loginData;
+          // for (int m = 0; m < listData.length; m++) {
+          //   historyOrders.add(OpenOrderList(
+          //     id: listData[m]["id"].toString(),
+          //     pair: listData[m]["pair"].toString(),
+          //     fees: listData[m]["fees"].toString(),
+          //     date: listData[m]["dateupdated"].toString(),
+          //     filled: listData[m]["filled"].toString(),
+          //     filled_amount: listData[m]["filled_amount"].toString(),
+          //     orderType: listData[m]["action"].toString(),
+          //     price: listData[m]["price"].toString(),
+          //     userId: listData[m]["client_order_id"].toString(),
+          //     volume: listData[m]["quantity"].toString() == "0"
+          //         ? listData[m]["amount"].toString()
+          //         : listData[m]["quantity"].toString(),
+          //     status: listData[m]["status"].toString(),
+          //   ));
+          // }
+        });
+      }
+      else {
+        loading = false;
+        CustomWidget(context: context)
+            .custombar("H2Crypto", loginData.message.toString(), false);
+      }
+    }).catchError((Object error) {
+      print("not working");
+    });
   }
 
   showSheeet() {
