@@ -1,8 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.h2crypto.exchange">
+    package="com.h2crypto.alpha">
 
 
-    <!-- com.h2crypto.alpha-->
+    <!-- com.h2crypto.alpha Android-->
+    <!-- com.h2crypto.alpha iOS-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Permissions options for the `storage` group -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>

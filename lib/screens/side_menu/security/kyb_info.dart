@@ -79,7 +79,6 @@ class _KYCPageState extends State<KYBPage> {
   ];
   String select_business = "";
 
-
   List<String> org_type = [
     "Trust",
     "Sole Proprietor",
@@ -113,7 +112,7 @@ class _KYCPageState extends State<KYBPage> {
   TextEditingController cityController = TextEditingController();
   TextEditingController statesController = TextEditingController();
   TextEditingController zipController = TextEditingController();
-
+  TextEditingController idIssueController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController addressLineController = TextEditingController();
   TextEditingController expController = TextEditingController();
@@ -125,7 +124,9 @@ class _KYCPageState extends State<KYBPage> {
   List<CountryCodeResult> countryList = [];
   List<String> idProofType = [
     "Passport",
+    "Driving Licence",
     "SSN",
+    "Aadhaar Card"
   ];
   String selectedGender = "";
   String selectedIdProof = "";
@@ -148,7 +149,6 @@ class _KYCPageState extends State<KYBPage> {
 
   String PanImg = "img65";
 
-
   FocusNode entityFocus = FocusNode();
   TextEditingController entityController = TextEditingController();
   FocusNode bis_stateFocus = FocusNode();
@@ -168,6 +168,7 @@ class _KYCPageState extends State<KYBPage> {
   TextEditingController principal_codeController = TextEditingController();
 
   TextEditingController companydobController = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -344,13 +345,15 @@ class _KYCPageState extends State<KYBPage> {
                                 "BUSINESS INFORMATION:",
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
-                                    14.0,
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                        14.0,
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w500,
+                                        'FontRegular'),
                                 softWrap: true,
                               ),
-                              const SizedBox(height: 15.0,),
+                              const SizedBox(
+                                height: 15.0,
+                              ),
                               TextFormField(
                                 controller: firstNameController,
                                 // focusNode: emailFocus,
@@ -1025,7 +1028,7 @@ class _KYCPageState extends State<KYBPage> {
                                 controller: entityController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 1,
                                 // enabled: emailVerify,
@@ -1033,24 +1036,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.text,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Entity Name",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -1094,11 +1097,8 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note: The legal business entity name",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -1107,7 +1107,7 @@ class _KYCPageState extends State<KYBPage> {
                               Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding:
-                                EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
+                                    EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: CustomTheme.of(context)
@@ -1116,48 +1116,47 @@ class _KYCPageState extends State<KYBPage> {
                                       width: 1.0),
                                   borderRadius: BorderRadius.circular(5.0),
                                   color:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                 ),
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     canvasColor:
-                                    CustomTheme.of(context).cardColor,
+                                        CustomTheme.of(context).cardColor,
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                       menuMaxHeight:
-                                      MediaQuery.of(context).size.height *
-                                          0.7,
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
                                       items: countryEntityList
                                           .map((value) => DropdownMenuItem(
-                                        child: Text(
-                                          value.code!.toString(),
-                                          style: CustomWidget(
-                                              context: context)
-                                              .CustomSizedTextStyle(
-                                              14.0,
-                                              Theme.of(context)
-                                                  .hintColor,
-                                              FontWeight.w400,
-                                              'FontRegular'),
-                                        ),
-                                        value: value,
-                                      ))
+                                                child: Text(
+                                                  value.code!.toString(),
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomSizedTextStyle(
+                                                          14.0,
+                                                          Theme.of(context)
+                                                              .hintColor,
+                                                          FontWeight.w400,
+                                                          'FontRegular'),
+                                                ),
+                                                value: value,
+                                              ))
                                           .toList(),
                                       onChanged: (value) async {
                                         setState(() {
                                           selectedEntityCountryType = value;
-
                                         });
                                       },
                                       hint: Text(
                                         "Select Country",
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
-                                            14.0,
-                                            Theme.of(context).hintColor,
-                                            FontWeight.w400,
-                                            'FontRegular'),
+                                                14.0,
+                                                Theme.of(context).hintColor,
+                                                FontWeight.w400,
+                                                'FontRegular'),
                                       ),
                                       isExpanded: true,
                                       value: selectedEntityCountryType,
@@ -1175,11 +1174,8 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Country code the entity was incorporated",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -1189,7 +1185,7 @@ class _KYCPageState extends State<KYBPage> {
                                 controller: bis_stateController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 1,
                                 // enabled: emailVerify,
@@ -1197,24 +1193,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.text,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "State",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -1258,21 +1254,17 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note:State the entity was incorporated",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
                                 height: 10.0,
                               ),
-
                               InkWell(
                                 onTap: () {
                                   companycreateDate = DateTime(
-                                      (DateTime.now()).year ,
+                                      (DateTime.now()).year,
                                       (DateTime.now()).month,
                                       (DateTime.now()).day);
                                   _selectDate(
@@ -1300,24 +1292,24 @@ class _KYCPageState extends State<KYBPage> {
                                   keyboardType: TextInputType.emailAddress,
                                   style: CustomWidget(context: context)
                                       .CustomTextStyle(
-                                      Theme.of(context).splashColor,
-                                      FontWeight.w400,
-                                      'FontRegular'),
+                                          Theme.of(context).splashColor,
+                                          FontWeight.w400,
+                                          'FontRegular'),
                                   decoration: InputDecoration(
                                     contentPadding: const EdgeInsets.only(
                                         left: 12, right: 0, top: 2, bottom: 2),
                                     hintText: "Date",
                                     hintStyle: CustomWidget(context: context)
                                         .CustomSizedTextStyle(
-                                        14.0,
-                                        Theme.of(context)
-                                            .splashColor
-                                            .withOpacity(0.5),
-                                        FontWeight.w300,
-                                        'FontRegular'),
+                                            14.0,
+                                            Theme.of(context)
+                                                .splashColor
+                                                .withOpacity(0.5),
+                                            FontWeight.w300,
+                                            'FontRegular'),
                                     filled: true,
                                     fillColor:
-                                    CustomTheme.of(context).backgroundColor,
+                                        CustomTheme.of(context).backgroundColor,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: BorderSide(
@@ -1364,26 +1356,21 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note:Country code the entity was incorporated",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
                                 height: 10.0,
                               ),
-
                               Text(
                                 "Organization Type",
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
-                                    12.0,
-                                    Theme.of(context)
-                                        .splashColor,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                        12.0,
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w500,
+                                        'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -1392,7 +1379,7 @@ class _KYCPageState extends State<KYBPage> {
                               Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding:
-                                EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
+                                    EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: CustomTheme.of(context)
@@ -1401,33 +1388,33 @@ class _KYCPageState extends State<KYBPage> {
                                       width: 1.0),
                                   borderRadius: BorderRadius.circular(5.0),
                                   color:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                 ),
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     canvasColor:
-                                    CustomTheme.of(context).cardColor,
+                                        CustomTheme.of(context).cardColor,
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                       menuMaxHeight:
-                                      MediaQuery.of(context).size.height *
-                                          0.7,
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
                                       items: org_type
                                           .map((value) => DropdownMenuItem(
-                                        child: Text(
-                                          value.toString(),
-                                          style: CustomWidget(
-                                              context: context)
-                                              .CustomSizedTextStyle(
-                                              14.0,
-                                              Theme.of(context)
-                                                  .hintColor,
-                                              FontWeight.w400,
-                                              'FontRegular'),
-                                        ),
-                                        value: value,
-                                      ))
+                                                child: Text(
+                                                  value.toString(),
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomSizedTextStyle(
+                                                          14.0,
+                                                          Theme.of(context)
+                                                              .hintColor,
+                                                          FontWeight.w400,
+                                                          'FontRegular'),
+                                                ),
+                                                value: value,
+                                              ))
                                           .toList(),
                                       onChanged: (value) async {
                                         setState(() {
@@ -1438,10 +1425,10 @@ class _KYCPageState extends State<KYBPage> {
                                         "Select Category",
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
-                                            14.0,
-                                            Theme.of(context).hintColor,
-                                            FontWeight.w400,
-                                            'FontRegular'),
+                                                14.0,
+                                                Theme.of(context).hintColor,
+                                                FontWeight.w400,
+                                                'FontRegular'),
                                       ),
                                       isExpanded: true,
                                       value: select_org,
@@ -1460,11 +1447,10 @@ class _KYCPageState extends State<KYBPage> {
                                 "Account Purpose",
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
-                                    12.0,
-                                    Theme.of(context)
-                                        .splashColor,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                        12.0,
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w500,
+                                        'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -1473,7 +1459,7 @@ class _KYCPageState extends State<KYBPage> {
                               Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding:
-                                EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
+                                    EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: CustomTheme.of(context)
@@ -1482,33 +1468,33 @@ class _KYCPageState extends State<KYBPage> {
                                       width: 1.0),
                                   borderRadius: BorderRadius.circular(5.0),
                                   color:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                 ),
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     canvasColor:
-                                    CustomTheme.of(context).cardColor,
+                                        CustomTheme.of(context).cardColor,
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                       menuMaxHeight:
-                                      MediaQuery.of(context).size.height *
-                                          0.7,
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
                                       items: acc_purpose
                                           .map((value) => DropdownMenuItem(
-                                        child: Text(
-                                          value.toString(),
-                                          style: CustomWidget(
-                                              context: context)
-                                              .CustomSizedTextStyle(
-                                              14.0,
-                                              Theme.of(context)
-                                                  .hintColor,
-                                              FontWeight.w400,
-                                              'FontRegular'),
-                                        ),
-                                        value: value,
-                                      ))
+                                                child: Text(
+                                                  value.toString(),
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomSizedTextStyle(
+                                                          14.0,
+                                                          Theme.of(context)
+                                                              .hintColor,
+                                                          FontWeight.w400,
+                                                          'FontRegular'),
+                                                ),
+                                                value: value,
+                                              ))
                                           .toList(),
                                       onChanged: (value) async {
                                         setState(() {
@@ -1519,10 +1505,10 @@ class _KYCPageState extends State<KYBPage> {
                                         "Select Category",
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
-                                            14.0,
-                                            Theme.of(context).hintColor,
-                                            FontWeight.w400,
-                                            'FontRegular'),
+                                                14.0,
+                                                Theme.of(context).hintColor,
+                                                FontWeight.w400,
+                                                'FontRegular'),
                                       ),
                                       isExpanded: true,
                                       value: select_purpose,
@@ -1541,11 +1527,10 @@ class _KYCPageState extends State<KYBPage> {
                                 "Business Type",
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
-                                    12.0,
-                                    Theme.of(context)
-                                        .splashColor,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                        12.0,
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w500,
+                                        'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -1554,7 +1539,7 @@ class _KYCPageState extends State<KYBPage> {
                               Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding:
-                                EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
+                                    EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: CustomTheme.of(context)
@@ -1563,33 +1548,33 @@ class _KYCPageState extends State<KYBPage> {
                                       width: 1.0),
                                   borderRadius: BorderRadius.circular(5.0),
                                   color:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                 ),
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     canvasColor:
-                                    CustomTheme.of(context).cardColor,
+                                        CustomTheme.of(context).cardColor,
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                       menuMaxHeight:
-                                      MediaQuery.of(context).size.height *
-                                          0.7,
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
                                       items: business_type
                                           .map((value) => DropdownMenuItem(
-                                        child: Text(
-                                          value.toString(),
-                                          style: CustomWidget(
-                                              context: context)
-                                              .CustomSizedTextStyle(
-                                              14.0,
-                                              Theme.of(context)
-                                                  .hintColor,
-                                              FontWeight.w400,
-                                              'FontRegular'),
-                                        ),
-                                        value: value,
-                                      ))
+                                                child: Text(
+                                                  value.toString(),
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomSizedTextStyle(
+                                                          14.0,
+                                                          Theme.of(context)
+                                                              .hintColor,
+                                                          FontWeight.w400,
+                                                          'FontRegular'),
+                                                ),
+                                                value: value,
+                                              ))
                                           .toList(),
                                       onChanged: (value) async {
                                         setState(() {
@@ -1600,10 +1585,10 @@ class _KYCPageState extends State<KYBPage> {
                                         "Select Category",
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
-                                            14.0,
-                                            Theme.of(context).hintColor,
-                                            FontWeight.w400,
-                                            'FontRegular'),
+                                                14.0,
+                                                Theme.of(context).hintColor,
+                                                FontWeight.w400,
+                                                'FontRegular'),
                                       ),
                                       isExpanded: true,
                                       value: select_business,
@@ -1618,14 +1603,11 @@ class _KYCPageState extends State<KYBPage> {
                               SizedBox(
                                 height: 10.0,
                               ),
-
-
-
                               TextFormField(
                                 controller: reg_numController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 1,
                                 // enabled: emailVerify,
@@ -1633,24 +1615,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.number,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Registration Number",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -1694,11 +1676,8 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note: The business’s TIN (tax identification number) for US businesses or registration number",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -1708,7 +1687,7 @@ class _KYCPageState extends State<KYBPage> {
                                 controller: descripController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 1,
                                 // enabled: emailVerify,
@@ -1716,24 +1695,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.number,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Description",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -1777,11 +1756,8 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note: A description of the business",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -1790,7 +1766,7 @@ class _KYCPageState extends State<KYBPage> {
                               Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding:
-                                EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
+                                    EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: CustomTheme.of(context)
@@ -1799,48 +1775,47 @@ class _KYCPageState extends State<KYBPage> {
                                       width: 1.0),
                                   borderRadius: BorderRadius.circular(5.0),
                                   color:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                 ),
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     canvasColor:
-                                    CustomTheme.of(context).cardColor,
+                                        CustomTheme.of(context).cardColor,
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                       menuMaxHeight:
-                                      MediaQuery.of(context).size.height *
-                                          0.7,
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
                                       items: countryPrincList
                                           .map((value) => DropdownMenuItem(
-                                        child: Text(
-                                          value.code!.toString(),
-                                          style: CustomWidget(
-                                              context: context)
-                                              .CustomSizedTextStyle(
-                                              14.0,
-                                              Theme.of(context)
-                                                  .hintColor,
-                                              FontWeight.w400,
-                                              'FontRegular'),
-                                        ),
-                                        value: value,
-                                      ))
+                                                child: Text(
+                                                  value.code!.toString(),
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomSizedTextStyle(
+                                                          14.0,
+                                                          Theme.of(context)
+                                                              .hintColor,
+                                                          FontWeight.w400,
+                                                          'FontRegular'),
+                                                ),
+                                                value: value,
+                                              ))
                                           .toList(),
                                       onChanged: (value) async {
                                         setState(() {
                                           selectedPrinCountryType = value;
-
                                         });
                                       },
                                       hint: Text(
                                         "Select Country",
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
-                                            14.0,
-                                            Theme.of(context).hintColor,
-                                            FontWeight.w400,
-                                            'FontRegular'),
+                                                14.0,
+                                                Theme.of(context).hintColor,
+                                                FontWeight.w400,
+                                                'FontRegular'),
                                       ),
                                       isExpanded: true,
                                       value: selectedPrinCountryType,
@@ -1858,22 +1833,18 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note: Country code of the business’ principal place of business operations",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
                                 height: 10.0,
                               ),
-
                               TextFormField(
                                 controller: principal_stateController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 1,
                                 // enabled: emailVerify,
@@ -1881,24 +1852,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.text,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Principal place state",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -1942,11 +1913,8 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note: State/province of the business’ principal place of business operations",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -1956,7 +1924,7 @@ class _KYCPageState extends State<KYBPage> {
                                 controller: principal_addressController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 1,
                                 // enabled: emailVerify,
@@ -1964,24 +1932,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.text,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Principal place address",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -2025,11 +1993,8 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note: Street address of the business’ principal place of business operations",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -2039,7 +2004,7 @@ class _KYCPageState extends State<KYBPage> {
                                 controller: principal_cityController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 1,
                                 // enabled: emailVerify,
@@ -2047,24 +2012,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.text,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Principal place city",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -2108,11 +2073,8 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note: City of the business’ principal place of business operations",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -2122,7 +2084,7 @@ class _KYCPageState extends State<KYBPage> {
                                 controller: principal_codeController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 1,
                                 // enabled: emailVerify,
@@ -2130,24 +2092,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.text,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Principal place postal code",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -2191,11 +2153,8 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note: Postal code of the business’ principal place of business operationss",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
@@ -2205,14 +2164,15 @@ class _KYCPageState extends State<KYBPage> {
                                 "beneficial owners".toUpperCase(),
                                 style: CustomWidget(context: context)
                                     .CustomSizedTextStyle(
-                                    14.0,
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                        14.0,
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w500,
+                                        'FontRegular'),
                                 softWrap: true,
                               ),
-                              const SizedBox(height: 15.0,),
-
+                              const SizedBox(
+                                height: 15.0,
+                              ),
                               Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding:
@@ -2298,7 +2258,7 @@ class _KYCPageState extends State<KYBPage> {
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
-                                  hintText: "Id Number",
+                                  hintText: "Id Document Number",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
                                           14.0,
@@ -2342,6 +2302,77 @@ class _KYCPageState extends State<KYBPage> {
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return "Please enter Id Number";
+                                  }
+
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+
+                              TextFormField(
+                                controller: idIssueController,
+                                // focusNode: emailFocus,
+                                maxLines: 1,
+                                // autocorrect: _autoValidate,
+                                autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                                // enabled: emailVerify,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.text,
+                                style: CustomWidget(context: context)
+                                    .CustomTextStyle(
+                                    Theme.of(context).splashColor,
+                                    FontWeight.w400,
+                                    'FontRegular'),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 12, right: 0, top: 2, bottom: 2),
+                                  hintText: "ID Issuing Country Code",
+                                  hintStyle: CustomWidget(context: context)
+                                      .CustomSizedTextStyle(
+                                      14.0,
+                                      Theme.of(context)
+                                          .splashColor
+                                          .withOpacity(0.5),
+                                      FontWeight.w300,
+                                      'FontRegular'),
+                                  filled: true,
+                                  fillColor:
+                                  CustomTheme.of(context).backgroundColor,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: CustomTheme.of(context)
+                                            .splashColor
+                                            .withOpacity(0.5),
+                                        width: 1),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color:
+                                        CustomTheme.of(context).splashColor,
+                                        width: 1.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Colors.red, width: 1.0),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please enter ID Issuing Country Code";
                                   }
 
                                   return null;
@@ -2444,7 +2475,7 @@ class _KYCPageState extends State<KYBPage> {
                               Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding:
-                                EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
+                                    EdgeInsets.fromLTRB(12.0, 0.0, 12, 0.0),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: CustomTheme.of(context)
@@ -2453,48 +2484,47 @@ class _KYCPageState extends State<KYBPage> {
                                       width: 1.0),
                                   borderRadius: BorderRadius.circular(5.0),
                                   color:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                 ),
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     canvasColor:
-                                    CustomTheme.of(context).cardColor,
+                                        CustomTheme.of(context).cardColor,
                                   ),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                       menuMaxHeight:
-                                      MediaQuery.of(context).size.height *
-                                          0.7,
+                                          MediaQuery.of(context).size.height *
+                                              0.7,
                                       items: countryIssueList
                                           .map((value) => DropdownMenuItem(
-                                        child: Text(
-                                          value.code!.toString(),
-                                          style: CustomWidget(
-                                              context: context)
-                                              .CustomSizedTextStyle(
-                                              14.0,
-                                              Theme.of(context)
-                                                  .hintColor,
-                                              FontWeight.w400,
-                                              'FontRegular'),
-                                        ),
-                                        value: value,
-                                      ))
+                                                child: Text(
+                                                  value.code!.toString(),
+                                                  style: CustomWidget(
+                                                          context: context)
+                                                      .CustomSizedTextStyle(
+                                                          14.0,
+                                                          Theme.of(context)
+                                                              .hintColor,
+                                                          FontWeight.w400,
+                                                          'FontRegular'),
+                                                ),
+                                                value: value,
+                                              ))
                                           .toList(),
                                       onChanged: (value) async {
                                         setState(() {
                                           selectedIssueCountryType = value;
-
                                         });
                                       },
                                       hint: Text(
                                         "Select Country",
                                         style: CustomWidget(context: context)
                                             .CustomSizedTextStyle(
-                                            14.0,
-                                            Theme.of(context).hintColor,
-                                            FontWeight.w400,
-                                            'FontRegular'),
+                                                14.0,
+                                                Theme.of(context).hintColor,
+                                                FontWeight.w400,
+                                                'FontRegular'),
                                       ),
                                       isExpanded: true,
                                       value: selectedIssueCountryType,
@@ -2512,17 +2542,14 @@ class _KYCPageState extends State<KYBPage> {
                               Text(
                                 "Note: Country code of the business’ principal place of business operations",
                                 style: CustomWidget(context: context)
-                                    .CustomSizedTextStyle(
-                                    10.0,
-                                    Colors.red,
-                                    FontWeight.w500,
-                                    'FontRegular'),
+                                    .CustomSizedTextStyle(10.0, Colors.red,
+                                        FontWeight.w500, 'FontRegular'),
                                 softWrap: true,
                               ),
                               SizedBox(
                                 height: 10.0,
                               ),
-                              InkWell(
+                              selectedIdProof=="Passport"?               InkWell(
                                 onTap: () async {
                                   onRequestPermission(true);
                                 },
@@ -2571,7 +2598,7 @@ class _KYCPageState extends State<KYBPage> {
                                     ],
                                   ),
                                 ),
-                              ),
+                              ):Container(),
                               const SizedBox(
                                 height: 10.0,
                               ),
@@ -2579,7 +2606,7 @@ class _KYCPageState extends State<KYBPage> {
                                 controller: zipController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 1,
                                 // enabled: emailVerify,
@@ -2587,24 +2614,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.number,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Zip / Postal Code",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -2649,7 +2676,7 @@ class _KYCPageState extends State<KYBPage> {
                                 controller: addressController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 5,
                                 // enabled: emailVerify,
@@ -2657,24 +2684,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.streetAddress,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Address Line 1",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -2695,7 +2722,7 @@ class _KYCPageState extends State<KYBPage> {
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
                                         color:
-                                        CustomTheme.of(context).splashColor,
+                                            CustomTheme.of(context).splashColor,
                                         width: 1.0),
                                   ),
                                   errorBorder: OutlineInputBorder(
@@ -2718,7 +2745,7 @@ class _KYCPageState extends State<KYBPage> {
                                 controller: addressLineController,
                                 // autocorrect: _autoValidate,
                                 autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                                    AutovalidateMode.onUserInteraction,
                                 // focusNode: emailFocus,
                                 maxLines: 5,
                                 // enabled: emailVerify,
@@ -2726,24 +2753,24 @@ class _KYCPageState extends State<KYBPage> {
                                 keyboardType: TextInputType.streetAddress,
                                 style: CustomWidget(context: context)
                                     .CustomTextStyle(
-                                    Theme.of(context).splashColor,
-                                    FontWeight.w400,
-                                    'FontRegular'),
+                                        Theme.of(context).splashColor,
+                                        FontWeight.w400,
+                                        'FontRegular'),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.only(
                                       left: 12, right: 0, top: 2, bottom: 2),
                                   hintText: "Address Line 2",
                                   hintStyle: CustomWidget(context: context)
                                       .CustomSizedTextStyle(
-                                      14.0,
-                                      Theme.of(context)
-                                          .splashColor
-                                          .withOpacity(0.5),
-                                      FontWeight.w300,
-                                      'FontRegular'),
+                                          14.0,
+                                          Theme.of(context)
+                                              .splashColor
+                                              .withOpacity(0.5),
+                                          FontWeight.w300,
+                                          'FontRegular'),
                                   filled: true,
                                   fillColor:
-                                  CustomTheme.of(context).backgroundColor,
+                                      CustomTheme.of(context).backgroundColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
@@ -2764,7 +2791,7 @@ class _KYCPageState extends State<KYBPage> {
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide(
                                         color:
-                                        CustomTheme.of(context).splashColor,
+                                            CustomTheme.of(context).splashColor,
                                         width: 1.0),
                                   ),
                                   errorBorder: OutlineInputBorder(
@@ -2783,7 +2810,6 @@ class _KYCPageState extends State<KYBPage> {
                               SizedBox(
                                 height: 10.0,
                               ),
-
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -3036,26 +3062,25 @@ class _KYCPageState extends State<KYBPage> {
             entityController.text.toString(),
             selectedEntityCountryType!.name.toString(),
             bis_stateController.text.toString(),
-        companydobController.text.toString(),
-        select_org.toString(),
-        select_purpose.toString(),
-        select_business.toString(),
+            companydobController.text.toString(),
+            select_org.toString(),
+            select_purpose.toString(),
+            select_business.toString(),
             reg_numController.text.toString(),
             descripController.text.toString(),
-        selectedPrinCountryType!.code.toString(),
+            selectedPrinCountryType!.code.toString(),
             principal_stateController.text.toString(),
             principal_cityController.text.toString(),
             principal_addressController.text.toString(),
             principal_codeController.text.toString(),
-        select_purpose.toString(),
+            select_purpose.toString(),
             zipController.text.toString(),
             addressController.text.toString(),
             addressLineController.text.toString(),
-            selectedIdProof.toString().toLowerCase(),
+            selectedIdProof.toString()=="Aadhaar Card"?"aadhaar_card": selectedIdProof.toString().toLowerCase(),
             idController.text.toString(),
             expController.text.toString(),
-            AadharImg
-            )
+            AadharImg)
         .then((CommonModel loginData) {
       if (loginData.status!) {
         setState(() {
