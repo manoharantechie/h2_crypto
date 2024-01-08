@@ -17,3 +17,6 @@ keytool -genkey -v -keystore /Users/alpharivetech/Desktop/jks/h2crypto.jks -keya
 
 
 
+keytool -list -v -keystore /Users/alpharivetech/Desktop/jks/h2crypto.jks -keyalg RSA -keysize 2048 -validity 10000 -alias h2crypto
+ SHA1: 19:D3:55:2C:CE:64:72:05:01:79:38:20:58:70:6A:5B:82:48:C8:11
+  SHA256: BF:FF:BC:EF:A9:43:64:7D:FB:F2:F0:54:7C:04:68:EA:35:CB:84:63:4F:55:31:C8:80:A9:F2:37:02:49:07:0D

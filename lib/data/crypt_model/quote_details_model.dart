@@ -34,9 +34,9 @@ class QuoteDetails {
   String? side;
   DateTime? dateExpiry;
   DateTime? dateQuote;
-  double? amount;
-  double? quantity;
-  double? buyPrice;
+  dynamic amount;
+  dynamic quantity;
+  dynamic buyPrice;
 
   QuoteDetails({
     this.quoteId,
@@ -56,8 +56,8 @@ class QuoteDetails {
     dateExpiry: DateTime.parse(json["date_expiry"]),
     dateQuote: DateTime.parse(json["date_quote"]),
     amount: json["amount"].toDouble(),
-    quantity: json["quantity"].toDouble(),
-    buyPrice: json["buy_price"].toDouble(),
+    quantity: json["quantity"],
+    buyPrice: json["buy_price"],
   );
 
   Map<String, dynamic> toJson() => {
