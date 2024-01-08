@@ -89,8 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
     //
     // email=TextEditingController(text: "manoharan.alpharive@gmail.com");
     // email_password=TextEditingController(text: "Password@123");
-    // email=TextEditingController(text: "me@jakeiperez.com");
-    // email_password=TextEditingController(text: "Temppassword123!");
+    email=TextEditingController(text: "me@jakeiperez.com");
+    email_password=TextEditingController(text: "Temppassword123!");
     initCountry();
     super.initState();
   }
