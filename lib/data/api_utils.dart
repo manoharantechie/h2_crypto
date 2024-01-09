@@ -22,6 +22,8 @@ import 'package:h2_crypto/data/crypt_model/trade_pair_list_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
+import 'crypt_model/userbalance_model.dart';
+
 class APIUtils {
   /*static const baseURL = 'http://43.205.10.212';*/
   /* static const baseURL = 'http://43.205.149.22';*/
@@ -72,6 +74,7 @@ class APIUtils {
   static const String resendOTP = 'api/withdraw-resend-otp';
   static const String changePassUrl = 'api/change-password';
   static const String deactiveAccUrl = 'api/deactivateaccount';
+  static const String coinBalanceUrl = 'api/coinbalance';
 
   Future<CommonModel> doVerifyRegister(
       String first_name,
@@ -749,6 +752,7 @@ print(spotStopData);
 
     return CommonModel.fromJson(json.decode(response.body));
   }
+
   Future<CommonModel> updateKybDetails(
       String fname,
       String lastname,
@@ -834,5 +838,20 @@ print(spotStopData);
 
     return CommonModel.fromJson(json.decode(response.body.toString()));
   }
+
+  Future<UserBalanceModel> doCoinBal(String Coin) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var emailbodyData = {
+      'currency': Coin,
+    };
+
+    final response = await http.post(Uri.parse(crypto_baseURL + coinBalanceUrl),
+        headers: {
+          "authorization": "Bearer " + preferences.getString("token").toString()
+        },
+        body: emailbodyData);
+    return UserBalanceModel.fromJson(json.decode(response.body));
+  }
+
 }
 

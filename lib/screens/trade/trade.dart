@@ -17,6 +17,7 @@ import 'package:web_socket_channel/io.dart';
 import '../../../common/colors.dart';
 import '../../../common/localization/localizations.dart';
 import '../../../common/theme/custom_theme.dart';
+import '../../data/crypt_model/userbalance_model.dart';
 
 class TradeScreen extends StatefulWidget {
   const TradeScreen({Key? key}) : super(key: key);
@@ -48,7 +49,7 @@ class _SellTradeScreenState extends State<TradeScreen>
   final _formKey = GlobalKey<FormState>();
   List<OpenOrderList> openOrders = [];
   List<OpenOrderList> historyOrders = [];
-  bool buySell = true;
+  bool buySell = false;
   bool loanErr = false;
 
   late TabController _tabController, tradeTabController;
@@ -127,6 +128,8 @@ class _SellTradeScreenState extends State<TradeScreen>
   String selectedMarginType = " ";
 
   String token = "";
+  String userpairBalance = "";
+  String userpairName = "";
 
   List<BalanceData> availableBalance = [];
   int _remainingTime = 10; //initial time in seconds
@@ -148,6 +151,7 @@ class _SellTradeScreenState extends State<TradeScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
+    buySell = true;
     selectedTime = chartTime.first;
     selectedMarginType = marginType.first;
 
@@ -165,6 +169,7 @@ class _SellTradeScreenState extends State<TradeScreen>
     channelOpenOrder = IOWebSocketChannel.connect(
         Uri.parse("wss://ws.sfox.com/ws"),
         pingInterval: Duration(seconds: 30));
+
   }
 
   getData() async {
@@ -4568,6 +4573,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                       totalAmount = "0.0";
                       _currentSliderValue = 0;
                       tleverageVal = "1";
+                      userpairName= QuickselectPair!.marketAsset.toString();
 
                       QuickfirstCoin = QuickselectPair!.baseAsset.toString();
                       QuicksecondCoin = QuickselectPair!.marketAsset.toString();
@@ -4624,7 +4630,7 @@ class _SellTradeScreenState extends State<TradeScreen>
                         tleverageVal = "1";
                         quoteID = "";
                         quote = false;
-
+                        userpairName= QuickselectPair!.baseAsset.toString();
                         QuickfirstCoin = QuickselectPair!.baseAsset.toString();
                         QuicksecondCoin =
                             QuickselectPair!.marketAsset.toString();
@@ -6306,6 +6312,32 @@ class _SellTradeScreenState extends State<TradeScreen>
       }
     }).catchError((Object error) {
       print("not working");
+    });
+  }
+
+  doUserPairBalance() {
+    apiUtils.doCoinBal(userpairName.toString())
+        .then((UserBalanceModel loginData) {
+
+      if (loginData.success!) {
+        setState(() {
+          loading = false;
+          userpairBalance = loginData.result!;
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), true);
+        });
+      }
+      else {
+        setState(() {
+          loading = false;
+          CustomWidget(context: context)
+              .custombar("H2Crypto", loginData.message.toString(), false);
+        });
+      }
+    }).catchError((Object error) {
+      setState(() {
+        loading = false;
+      });
     });
   }
 
